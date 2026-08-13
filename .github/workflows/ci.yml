@@ -5,6 +5,12 @@ on:
     branches: ["**"]
   pull_request:
 
+# The job runs a third-party npm package (npx skills-ref) with the workflow token
+# in its environment. Nothing here writes to the repository, so the token is held
+# to read access instead of whatever the repository default happens to be.
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
