@@ -4,12 +4,12 @@
     "name": "ba0918"
   },
   "metadata": {
-    "description": "Normative rules for AI coding agents, packaged as Agent Skills",
-    "version": "0.1.0"
+    "description": "Normative rules for AI coding agents, packaged as Agent Skills"
   },
   "plugins": [
     {
       "name": "ba0918-rules",
+      "version": "0.1.0",
       "description": "Design principles, information placement, test-first contract, testing anti-patterns, commit conventions, secret handling, and generation of a project's AGENTS.md routing table",
       "source": "./",
       "strict": false,

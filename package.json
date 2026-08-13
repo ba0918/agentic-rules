@@ -1,0 +1,27 @@
+{
+  "name": "agentic-rules",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Normative rules for AI coding agents, packaged as Agent Skills",
+  "type": "module",
+  "main": ".opencode/plugins/agentic-rules.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ba0918/agentic-rules.git"
+  },
+  "keywords": [
+    "opencode",
+    "skills",
+    "rules",
+    "design",
+    "tdd",
+    "commit"
+  ],
+  "files": [
+    "skills/",
+    ".opencode/",
+    "LICENSE",
+    "README.md"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "ba0918-rules",
+  "version": "0.1.0",
+  "description": "Design principles, information placement, test-first contract, testing anti-patterns, commit conventions, secret handling, and generation of a project's AGENTS.md routing table",
+  "author": {
+    "name": "ba0918"
+  },
+  "repository": "https://github.com/ba0918/agentic-rules",
+  "license": "MIT",
+  "keywords": [
+    "rules",
+    "design",
+    "tdd",
+    "testing",
+    "commit",
+    "secrets"
+  ]
+}
