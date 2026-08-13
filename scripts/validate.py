@@ -30,9 +30,18 @@ ROUTING_REQUIRED_PATTERN = re.compile(r"^required:[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
 class Violation(NamedTuple):
+    """One rule breach, located in the repository where a rule can locate it.
+
+    A rule that scans lines fills path and line so an editor or a CI annotation
+    can jump to the site; a rule about a whole skill or the manifest leaves them
+    unset and is reported against its subject alone.
+    """
+
     skill: str
     rule: str
     message: str
+    path: Optional[str] = None
+    line: Optional[int] = None
 
 
 class Skill(NamedTuple):
@@ -53,6 +62,11 @@ class Skill(NamedTuple):
             return None
         value = metadata.get(ROUTING_FIELD)
         return value if isinstance(value, str) else None
+
+
+def repository_path(skill_name: str, relative_path: str) -> str:
+    """Where a file inside a skill directory sits relative to the repository root."""
+    return f"{SKILLS_DIRECTORY}/{skill_name}/{relative_path}"
 
 
 # --- Rules: each takes a parsed skill and returns the violations it finds ---
@@ -83,7 +97,7 @@ def check_self_containment(skill: Skill) -> List[Violation]:
     """
     violations = []
     for relative_path, text in sorted(skill.files.items()):
-        for line in text.splitlines():
+        for number, line in enumerate(text.splitlines(), start=1):
             reference = escaping_reference(line)
             if reference is None:
                 continue
@@ -91,8 +105,9 @@ def check_self_containment(skill: Skill) -> List[Violation]:
                 Violation(
                     skill.name,
                     "external-reference",
-                    f"{relative_path} refers outside the skill directory "
-                    f"with {reference!r}",
+                    f"{reference!r} refers outside the skill directory",
+                    repository_path(skill.name, relative_path),
+                    number,
                 )
             )
     return violations
@@ -219,7 +234,7 @@ def check_scalar_quoting(skill: Skill) -> List[Violation]:
     Agent Skills validator rejects.
     """
     violations = []
-    for line in frontmatter_lines(skill.skill_md):
+    for number, line in frontmatter_lines(skill.skill_md):
         key, separator, value = line.strip().partition(":")
         if not separator:
             continue
@@ -232,6 +247,8 @@ def check_scalar_quoting(skill: Skill) -> List[Violation]:
                 "frontmatter-unquoted-colon",
                 f"frontmatter value of {key.strip()!r} contains {AMBIGUOUS_COLON!r} "
                 "and must be quoted",
+                repository_path(skill.name, "SKILL.md"),
+                number,
             )
         )
     return violations
@@ -247,7 +264,7 @@ def check_block_scalar(skill: Skill) -> List[Violation]:
     declared instead of silently mis-parsed.
     """
     violations = []
-    for line in frontmatter_lines(skill.skill_md):
+    for number, line in frontmatter_lines(skill.skill_md):
         key, separator, value = line.strip().partition(":")
         if not separator or not BLOCK_SCALAR_PATTERN.match(value.strip()):
             continue
@@ -257,6 +274,8 @@ def check_block_scalar(skill: Skill) -> List[Violation]:
                 "frontmatter-blockscalar",
                 f"frontmatter value of {key.strip()!r} is a YAML block scalar; "
                 "this validator reads inline values only",
+                repository_path(skill.name, "SKILL.md"),
+                number,
             )
         )
     return violations
@@ -430,16 +449,20 @@ def unquote(value: str) -> str:
     return value[1:-1] if is_quoted(value) else value
 
 
-def frontmatter_lines(text: str) -> List[str]:
-    """The raw lines between the opening and closing frontmatter delimiters."""
+def frontmatter_lines(text: str) -> List[Tuple[int, str]]:
+    """The raw lines between the frontmatter delimiters, with their line numbers.
+
+    Numbering is 1-based and counted from the start of the file, so a reported
+    violation names the line an editor would open.
+    """
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
         return []
     body = []
-    for line in lines[1:]:
+    for number, line in enumerate(lines[1:], start=2):
         if line.strip() == "---":
             return body
-        body.append(line)
+        body.append((number, line))
     return []
 
 
@@ -574,6 +597,15 @@ def validate_repository(root: Path) -> List[Violation]:
     return scan_repository(root)[1]
 
 
+def describe_location(violation: Violation) -> str:
+    """Where the violation is, as a jumpable `path:line` if the rule knows one."""
+    if violation.path is None:
+        return violation.skill
+    if violation.line is None:
+        return violation.path
+    return f"{violation.path}:{violation.line}"
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -589,7 +621,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     skills, violations = scan_repository(root)
     for violation in violations:
-        print(f"{violation.skill}: {violation.rule}: {violation.message}")
+        print(f"{describe_location(violation)}: {violation.rule}: {violation.message}")
     print(f"{len(skills)} skills checked, {len(violations)} violations")
     return 1 if violations else 0
 

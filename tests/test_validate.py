@@ -394,6 +394,55 @@ def test_command_line_run_on_a_path_that_is_not_a_directory_exits_two(tmp_path):
     assert validate.main([str(tmp_path / "does-not-exist")]) == 2
 
 
+def add_escaping_reference(repo):
+    """Append an escaping link to a fixture file and return its 1-based line number."""
+    target = repo / "skills" / "ba0918-beta" / "references" / "notes.md"
+    text = target.read_text()
+    target.write_text(text + "\nSee [shared](../ba0918-alpha/SKILL.md).\n")
+    return len(text.splitlines()) + 2
+
+
+def test_reference_violation_carries_the_file_and_line_it_was_found_on(conforming_repo):
+    line_number = add_escaping_reference(conforming_repo)
+
+    [violation] = validate.validate_repository(conforming_repo)
+
+    assert (violation.path, violation.line) == (
+        "skills/ba0918-beta/references/notes.md",
+        line_number,
+    )
+
+
+def test_frontmatter_violation_carries_the_file_and_line_it_was_found_on(
+    conforming_repo,
+):
+    skill_md = conforming_repo / "skills" / "ba0918-alpha" / "SKILL.md"
+    kept = [
+        "description: Baseline skill. 日本語キーワード: 正常系"
+        if line.startswith("description:")
+        else line
+        for line in skill_md.read_text().splitlines()
+    ]
+    skill_md.write_text("\n".join(kept))
+
+    [violation] = validate.validate_repository(conforming_repo)
+
+    assert (violation.path, violation.line) == ("skills/ba0918-alpha/SKILL.md", 3)
+
+
+def test_command_line_run_prints_a_located_violation_as_path_and_line(
+    conforming_repo, capsys
+):
+    line_number = add_escaping_reference(conforming_repo)
+
+    validate.main([str(conforming_repo)])
+
+    assert (
+        f"skills/ba0918-beta/references/notes.md:{line_number}: external-reference: "
+        in capsys.readouterr().out
+    )
+
+
 def subjects_of(violations):
     return sorted((v.skill, v.rule) for v in violations)
 
