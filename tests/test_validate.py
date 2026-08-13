@@ -593,6 +593,18 @@ def test_unreadable_channel_manifest_violation_names_the_file_without_a_line(
     assert (violation.path, violation.line) == ("package.json", None)
 
 
+def test_channel_manifest_shipped_without_a_version_key_is_accepted(conforming_repo):
+    """Naming no version opts a channel out, exactly as not shipping it does.
+
+    The file is shipped and readable; it simply offers nothing to compare, and
+    the canonical version is asked for agreement only from the channels that
+    declare one.
+    """
+    edit_file(conforming_repo, ".claude-plugin/plugin.json", '"version": "0.1.0",', "")
+
+    assert validate.validate_repository(conforming_repo) == []
+
+
 def test_repository_declaring_versions_without_a_canonical_one_is_reported(
     conforming_repo,
 ):
