@@ -6,9 +6,11 @@ import json
 import re
 import sys
 from pathlib import Path, PurePosixPath
-from typing import Callable, Dict, List, NamedTuple, Optional, Set
+from typing import Callable, Dict, List, NamedTuple, Optional, Set, Tuple
 
 MANIFEST_PATH = ".claude-plugin/marketplace.json"
+SKILLS_DIRECTORY = "skills"
+REPOSITORY_SUBJECT = "(repository)"
 NAME_PREFIX = "ba0918-"
 REQUIRED_FIELDS = ("name", "description")
 DESCRIPTION_LIMIT = 1024
@@ -76,8 +78,20 @@ def check_self_containment(skill: Skill) -> List[Violation]:
     ]
 
 
+def check_skill_document_present(skill: Skill) -> List[Violation]:
+    if "SKILL.md" in skill.files:
+        return []
+    return [
+        Violation(
+            skill.name,
+            "skill-md-missing",
+            "the skill directory contains no SKILL.md",
+        )
+    ]
+
+
 def check_frontmatter_presence(skill: Skill) -> List[Violation]:
-    if skill.fields is not None:
+    if skill.fields is not None or "SKILL.md" not in skill.files:
         return []
     return [
         Violation(
@@ -201,6 +215,7 @@ def is_valid_routing(value: str) -> bool:
 SKILL_RULES: "tuple[Callable[[Skill], List[Violation]], ...]" = (
     check_line_limit,
     check_self_containment,
+    check_skill_document_present,
     check_frontmatter_presence,
     check_required_fields,
     check_name_agreement,
@@ -215,18 +230,62 @@ def check_skill(skill: Skill) -> List[Violation]:
     return [violation for rule in SKILL_RULES for violation in rule(skill)]
 
 
-def check_marketplace(listed: Set[str], present: Set[str]) -> List[Violation]:
-    return [
+def check_manifest(
+    entries: Optional[List[str]], present: Set[str]
+) -> List[Violation]:
+    """Compare the manifest's skill entries against the skills on disk.
+
+    Entries are compared as paths, not as basenames: a manifest naming
+    './skil/ba0918-x' advertises a directory that does not exist, and comparing
+    only the last segment would call that agreement.
+    """
+    if entries is None:
+        return [
+            Violation(
+                REPOSITORY_SUBJECT,
+                "marketplace-unreadable",
+                f"{MANIFEST_PATH} is missing or is not valid JSON",
+            )
+        ]
+
+    violations: List[Violation] = []
+    names: List[str] = []
+    for entry in entries:
+        parts = [part for part in PurePosixPath(entry).parts if part != "."]
+        name = parts[-1] if parts else entry
+        names.append(name)
+        if len(parts) != 2 or parts[0] != SKILLS_DIRECTORY:
+            violations.append(
+                Violation(
+                    name,
+                    "marketplace-path",
+                    f"manifest entry {entry!r} must be './{SKILLS_DIRECTORY}/<name>'",
+                )
+            )
+
+    violations.extend(
+        Violation(
+            name,
+            "marketplace-duplicate",
+            f"{MANIFEST_PATH} lists this skill {names.count(name)} times",
+        )
+        for name in sorted({n for n in names if names.count(n) > 1})
+    )
+
+    listed = set(names)
+    violations.extend(
         Violation(name, "marketplace-missing", f"skill is absent from {MANIFEST_PATH}")
         for name in sorted(present - listed)
-    ] + [
+    )
+    violations.extend(
         Violation(
             name,
             "marketplace-orphan",
             f"{MANIFEST_PATH} lists a skill that does not exist",
         )
         for name in sorted(listed - present)
-    ]
+    )
+    return violations
 
 
 # --- Parsing ---
@@ -319,7 +378,7 @@ def read_text_files(directory: Path, root: Path) -> Dict[str, str]:
 
 
 def collect_skills(root: Path) -> List[Skill]:
-    skills_dir = root / "skills"
+    skills_dir = root / SKILLS_DIRECTORY
     if not skills_dir.is_dir():
         return []
     skills = []
@@ -335,30 +394,35 @@ def collect_skills(root: Path) -> List[Skill]:
     return skills
 
 
-def read_manifest_skills(root: Path) -> Set[str]:
-    """The set of skill names the marketplace manifest advertises."""
+def read_manifest_entries(root: Path) -> Optional[List[str]]:
+    """The raw skill entries the manifest advertises, or None if unreadable."""
     path = root / MANIFEST_PATH
     if not path.is_file() or not is_inside(path, root):
-        return set()
+        return None
     try:
         manifest = json.loads(path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError, UnicodeDecodeError):
-        return set()
-    return {
-        PurePosixPath(entry).name
+        return None
+    return [
+        entry
         for plugin in manifest.get("plugins", [])
         for entry in plugin.get("skills", [])
-    }
+    ]
 
 
-def validate_repository(root: Path) -> List[Violation]:
+def scan_repository(root: Path) -> Tuple[List[Skill], List[Violation]]:
+    """Read the repository once and return what was found alongside the verdict."""
     root = Path(root)
     skills = collect_skills(root)
     violations = [v for skill in skills for v in check_skill(skill)]
     violations.extend(
-        check_marketplace(read_manifest_skills(root), {s.name for s in skills})
+        check_manifest(read_manifest_entries(root), {s.name for s in skills})
     )
-    return violations
+    return skills, violations
+
+
+def validate_repository(root: Path) -> List[Violation]:
+    return scan_repository(root)[1]
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -374,12 +438,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"not a directory: {root}")
         return 2
 
-    violations = validate_repository(root)
+    skills, violations = scan_repository(root)
     for violation in violations:
         print(f"{violation.skill}: {violation.rule}: {violation.message}")
-    print(
-        f"{len(collect_skills(root))} skills checked, {len(violations)} violations"
-    )
+    print(f"{len(skills)} skills checked, {len(violations)} violations")
     return 1 if violations else 0
 
 
