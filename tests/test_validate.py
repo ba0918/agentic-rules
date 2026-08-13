@@ -54,6 +54,20 @@ def test_skill_name_outside_the_permitted_character_grammar_is_reported(
     assert rules_of(validate.validate_repository(conforming_repo)) == ["name-charset"]
 
 
+def test_skill_name_longer_than_the_name_limit_is_reported(conforming_repo):
+    rename_skill(conforming_repo, "ba0918-alpha", "ba0918-" + "a" * 58)
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == ["name-length"]
+
+
+def test_skill_name_at_exactly_the_name_limit_is_accepted(conforming_repo):
+    at_limit = "ba0918-" + "a" * 57
+    rename_skill(conforming_repo, "ba0918-alpha", at_limit)
+
+    assert len(at_limit) == 64
+    assert validate.validate_repository(conforming_repo) == []
+
+
 def test_skill_without_a_description_is_reported(conforming_repo):
     skill_md = conforming_repo / "skills" / "ba0918-alpha" / "SKILL.md"
     kept = [

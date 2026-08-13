@@ -14,6 +14,7 @@ REPOSITORY_SUBJECT = "(repository)"
 NAME_PREFIX = "ba0918-"
 REQUIRED_FIELDS = ("name", "description")
 DESCRIPTION_LIMIT = 1024
+NAME_LIMIT = 64
 LINE_LIMIT = 500
 ESCAPING_REFERENCE = "../"
 AMBIGUOUS_COLON = ": "
@@ -149,6 +150,15 @@ def check_name_grammar(skill: Skill) -> List[Violation]:
                 skill.name,
                 "name-prefix",
                 f"skill name must start with {NAME_PREFIX!r}",
+            )
+        )
+    if len(skill.name) > NAME_LIMIT:
+        violations.append(
+            Violation(
+                skill.name,
+                "name-length",
+                f"skill name is {len(skill.name)} characters, over the "
+                f"{NAME_LIMIT} character limit",
             )
         )
     return violations
