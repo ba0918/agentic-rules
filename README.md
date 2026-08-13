@@ -61,6 +61,25 @@ collisions in a flat global skill namespace, and never changes. The domain noun 
 short common words. Names are lowercase alphanumerics and hyphens, at most 64 characters, and
 match the directory name.
 
+## Skill document structure
+
+Every `SKILL.md` presents five sections in this relative order:
+
+1. **Scope** — when the rule applies, and what it deliberately does not cover.
+2. **Rules** — short imperatives, one instruction per line.
+3. **Judgment** — criteria and exceptions, each with its reason.
+4. **Examples** — minimal Good/Bad pairs.
+5. **Evidence** — the observable output to produce when claiming the work is done.
+
+Further sections may be interleaved where a rule carries material that fits none of the five —
+an iron-law block, a quick-reference table, a step-by-step procedure. The five must still appear
+in the order above.
+
+Evidence sections demand producible output — a test run, a search result, a diff. A gate phrased
+as a question to ask yourself is not evidence and does not belong there.
+
+Section order is a review concern; the validator does not check it.
+
 ## Verification
 
 ```
