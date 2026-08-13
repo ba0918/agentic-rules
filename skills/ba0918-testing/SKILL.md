@@ -8,8 +8,8 @@ description: "Testing anti-patterns and how to escape them — asserting on mock
 ## Scope
 
 Applies to the tests themselves: what they assert, what they replace with doubles, and whether
-they would notice a real defect. It does not govern the order of writing test and code — that is
-the test-first contract — nor the structure of the code under test.
+they would notice a real defect. It does not govern the order of writing test and code (the skill
+`ba0918-tdd`) nor the structure of the code under test (the skill `ba0918-design`).
 
 Because testability is the point of the design rules, a broken test is a broken safety net. These
 anti-patterns all produce tests that pass while the system is wrong.

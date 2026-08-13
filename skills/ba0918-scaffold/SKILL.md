@@ -30,7 +30,7 @@ becomes impossible rather than merely discouraged.
 List the skill directories your runtime loads from, and select the ones whose directory name
 begins with `ba0918-`. Cover both scopes: the personal scope (for Claude Code, `~/.claude/skills/`
 and installed plugin skill directories) and the project scope (`.claude/skills/` inside the
-repository). Report which locations you searched.
+repository).
 
 ### 2. Read the routing metadata
 
@@ -43,8 +43,8 @@ cases exist:
 | `required:<trigger>` | mandatory for one kind of work | goes in the `<trigger>` row |
 | absent | fires from its own description | no row |
 
-A value in any other form is a defect in that skill, not something to interpret. Report it and
-leave the skill out of the table.
+A value in any other form is a defect in that skill, not something to interpret. Leave such a
+skill out of the table.
 
 ### 3. Generate AGENTS.md
 
@@ -52,8 +52,7 @@ Use `references/agents-template.md` as the skeleton. It has four parts in order:
 universal principles, the generated routing table, a pointer to `PROJECT.md`, and nothing else.
 
 Group `required:<trigger>` skills by trigger so each trigger is one row listing every skill it
-requires. Refer to each skill by name only — never by a filesystem path, because the path differs
-per installation and per runtime.
+requires.
 
 ### 4. Generate PROJECT.md when absent
 
@@ -76,6 +75,11 @@ untouched.
 **Overwriting is the one irreversible move here.** An existing `AGENTS.md` usually carries
 hand-written project decisions that no metadata can reconstruct. Present a diff and let a human
 choose; regenerating in place destroys information the generator never had.
+
+**Names travel; paths do not.** A skill directory sits at a different location on every
+installation and under every runtime, so a generated file that names a path works only on the
+machine that generated it. A name reference also degrades gracefully: where the skill is not
+installed, the row simply goes unread instead of pointing at nothing.
 
 **The router stays thin on purpose.** Every project-specific sentence added to `AGENTS.md` is a
 sentence that must be re-read on every task and re-merged on every regeneration. `PROJECT.md`

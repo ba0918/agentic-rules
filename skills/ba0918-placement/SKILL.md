@@ -34,7 +34,7 @@ itself is broken — see Judgment.
 - Delete a comment that says anything a reader would learn by reading the code.
 - Do not put a mock name, an internal method name, or a private field name in a test name.
 - Do not write `TODO: explain later`. Why not can only be recorded while you still know it.
-- When a change needs no explanation beyond the diff, split the commit until it does.
+- When you cannot state why the change was needed, split the commit until each part has one reason.
 
 ## Judgment
 

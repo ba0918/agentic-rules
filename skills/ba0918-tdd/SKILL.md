@@ -66,10 +66,18 @@ what changed or what made a change unnecessary.
 behaviour cannot be reached without a database or a live clock, the problem is the shape of the
 code. Change the design rather than growing the harness.
 
-**Detecting the test command is part of the cycle.** Look for the project's own configuration —
-`package.json` scripts, `Cargo.toml`, `go.mod`, `pyproject.toml` or `pytest.ini`, a `test` target
-in a `Makefile` — and use what the project already uses. When detection is ambiguous, ask rather
-than inventing a command.
+**Detecting the test command is part of the cycle.** Use what the project already uses, taking the
+marker file as the signal:
+
+| Marker file | Test command |
+|---|---|
+| `package.json` with a `test` script | `npm test` (or `npx vitest` / `npx jest`) |
+| `Cargo.toml` | `cargo test` |
+| `go.mod` | `go test ./...` |
+| `pyproject.toml`, `setup.py`, `pytest.ini` | `pytest` |
+| `Makefile` with a `test` target | `make test` |
+
+When detection is ambiguous, ask rather than inventing a command.
 
 ## Red flags
 

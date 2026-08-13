@@ -12,8 +12,8 @@ metadata:
 Applies to every decision about structure: where a responsibility lives, what depends on what,
 what a function takes and returns, and whether a change is made by adding or by editing.
 
-It does not cover how tests are written (that is a testing concern) or how work is recorded
-(that is an information-placement concern).
+It does not cover how tests are written (the skill `ba0918-testing`) or where a given piece of
+information is recorded (the skill `ba0918-placement`).
 
 ## The one goal these rules serve
 
@@ -53,12 +53,16 @@ without a running database, a live clock, or a network call, the design is wrong
 to abstract the dependency — not to add a heavier test harness.
 
 **Mutation needs a stated reason.** Immutability is the default because it removes a whole class
-of bugs. Mutating in place is allowed when a measured constraint demands it. Record the
-constraint next to the code, because the next reader will otherwise convert it back.
+of bugs and because it makes state transitions testable directly: given state A and event X,
+expect state B. Update by producing a copy with the changed fields. Mutating in place is allowed
+when a measured constraint demands it — record the constraint next to the code, because the next
+reader will otherwise convert it back.
 
-**Extension by addition has a diagnostic.** If adding one feature requires touching many
-existing files, the abstraction boundary is in the wrong place. Move the boundary before adding
-the feature.
+**Extension by addition has a mechanism and a diagnostic.** The mechanism is a contract plus one
+implementation per variant — an interface with a strategy or a registry — so that adding a
+variant leaves existing code and existing tests untouched. The diagnostic is the inverse: if
+adding one feature requires touching many existing files, the abstraction boundary is in the
+wrong place. Move the boundary before adding the feature.
 
 **Security is structural.** Path traversal defence, input sanitisation, and prototype pollution
 defence belong in the shape of the system — one validator at one boundary — not sprinkled as
