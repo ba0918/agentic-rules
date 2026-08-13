@@ -64,6 +64,18 @@ class Skill(NamedTuple):
         return value if isinstance(value, str) else None
 
 
+class Repository(NamedTuple):
+    """The repository-level material, read into memory and parsed.
+
+    A repository rule receives this and returns violations, exactly as a skill
+    rule receives a Skill: reading happens once, in one place, and a rule stays
+    a pure function of what was found.
+    """
+
+    manifest: Optional[Dict[str, object]]
+    skill_names: Set[str]
+
+
 def repository_path(skill_name: str, relative_path: str) -> str:
     """Where a file inside a skill directory sits relative to the repository root."""
     return f"{SKILLS_DIRECTORY}/{skill_name}/{relative_path}"
@@ -357,9 +369,7 @@ def check_manifest_metadata(manifest: Dict[str, object]) -> List[Violation]:
     return violations
 
 
-def check_manifest(
-    manifest: Optional[Dict[str, object]], present: Set[str]
-) -> List[Violation]:
+def check_manifest(repository: Repository) -> List[Violation]:
     """Compare the manifest against the skills on disk.
 
     Entries are checked as paths, not as basenames: a manifest naming
@@ -371,6 +381,7 @@ def check_manifest(
     the skill it was meant to name is not additionally reported as absent, but
     it is kept out of the orphan comparison so a typo is not reported twice.
     """
+    manifest = repository.manifest
     entries = manifest_entries(manifest) if manifest is not None else None
     if entries is None:
         return [
@@ -414,7 +425,7 @@ def check_manifest(
     )
     violations.extend(
         Violation(name, "marketplace-missing", f"skill is absent from {MANIFEST_PATH}")
-        for name in sorted(present - set(listed))
+        for name in sorted(repository.skill_names - set(listed))
     )
     violations.extend(
         Violation(
@@ -422,9 +433,16 @@ def check_manifest(
             "marketplace-orphan",
             f"{MANIFEST_PATH} lists a skill that does not exist",
         )
-        for name in sorted(set(resolvable) - present)
+        for name in sorted(set(resolvable) - repository.skill_names)
     )
     return violations
+
+
+REPO_RULES: "tuple[Callable[[Repository], List[Violation]], ...]" = (check_manifest,)
+
+
+def check_repository(repository: Repository) -> List[Violation]:
+    return [violation for rule in REPO_RULES for violation in rule(repository)]
 
 
 # --- Parsing ---
@@ -586,10 +604,12 @@ def scan_repository(root: Path) -> Tuple[List[Skill], List[Violation]]:
     """Read the repository once and return what was found alongside the verdict."""
     root = Path(root)
     skills = collect_skills(root)
-    violations = [v for skill in skills for v in check_skill(skill)]
-    violations.extend(
-        check_manifest(read_manifest(root), {s.name for s in skills})
+    repository = Repository(
+        manifest=read_manifest(root),
+        skill_names={s.name for s in skills},
     )
+    violations = [v for skill in skills for v in check_skill(skill)]
+    violations.extend(check_repository(repository))
     return skills, violations
 
 
