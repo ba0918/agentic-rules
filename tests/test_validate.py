@@ -9,6 +9,12 @@ def rules_of(violations):
     return sorted(v.rule for v in violations)
 
 
+def edit_file(repo, relative_path, old, new):
+    """Rewrite one spelling inside a fixture file, leaving everything else intact."""
+    target = repo / relative_path
+    target.write_text(target.read_text().replace(old, new))
+
+
 def rename_skill(repo, old_name, new_name):
     """Rename a skill everywhere it is spelled, so only the new name is under test."""
     skills = repo / "skills"
@@ -297,8 +303,7 @@ def test_description_written_as_a_block_scalar_is_reported(
 
 
 def edit_manifest(repo, old, new):
-    manifest = repo / ".claude-plugin" / "marketplace.json"
-    manifest.write_text(manifest.read_text().replace(old, new))
+    edit_file(repo, ".claude-plugin/marketplace.json", old, new)
 
 
 @pytest.mark.parametrize(
@@ -497,11 +502,6 @@ def test_manifest_missing_an_identity_field_is_reported(conforming_repo, removed
     assert rules_of(validate.validate_repository(conforming_repo)) == [
         "marketplace-metadata"
     ]
-
-
-def edit_file(repo, relative_path, old, new):
-    target = repo / relative_path
-    target.write_text(target.read_text().replace(old, new))
 
 
 def test_plugin_manifest_version_disagreeing_with_the_canonical_one_is_reported(
