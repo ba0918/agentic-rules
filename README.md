@@ -69,6 +69,12 @@ Add the repository to `plugin` in `opencode.json` — either the project's or th
 }
 ```
 
+While this repository is private, npm and Bun cannot fetch that `git+https` source by
+themselves — a `gh auth login` session does not carry over to them. Until it is public, either
+point the entry at a local clone (`"plugin": ["/absolute/path/to/agentic-rules"]`) or give npm
+and Bun git credentials they can use. The form above works as written once the repository is
+public.
+
 `.opencode/plugins/agentic-rules.js` registers `skills/` as a skill path and does nothing
 else: the skills become loadable through OpenCode's native `skill` tool, and nothing is
 injected into the session. `package.json` exists to make this repository installable by that
