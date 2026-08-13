@@ -1,0 +1,22 @@
+{
+  "name": "fixture-marketplace",
+  "owner": {
+    "name": "ba0918"
+  },
+  "metadata": {
+    "description": "Fixture marketplace used by the validator tests",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "fixture-rules",
+      "description": "Fixture plugin listing every skill in the fixture repository",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/ba0918-alpha",
+        "./skills/ba0918-beta"
+      ]
+    }
+  ]
+}
