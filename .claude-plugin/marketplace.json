@@ -1,0 +1,27 @@
+{
+  "name": "agentic-rules",
+  "owner": {
+    "name": "ba0918"
+  },
+  "metadata": {
+    "description": "Normative rules for AI coding agents, packaged as Agent Skills",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "ba0918-rules",
+      "description": "Design principles, information placement, test-first contract, testing anti-patterns, commit conventions, secret handling, and generation of a project's AGENTS.md routing table",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/ba0918-commit",
+        "./skills/ba0918-design",
+        "./skills/ba0918-placement",
+        "./skills/ba0918-scaffold",
+        "./skills/ba0918-secrets",
+        "./skills/ba0918-tdd",
+        "./skills/ba0918-testing"
+      ]
+    }
+  ]
+}
