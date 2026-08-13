@@ -193,6 +193,25 @@ def test_unquoted_frontmatter_value_containing_a_colon_is_reported(conforming_re
     ]
 
 
+@pytest.mark.parametrize("block_indicator", ["|", ">", "|-", ">-", "|+", ">2"])
+def test_description_written_as_a_block_scalar_is_reported(
+    conforming_repo, block_indicator
+):
+    skill_md = conforming_repo / "skills" / "ba0918-alpha" / "SKILL.md"
+    overlong = "d" * 2000
+    kept = [
+        f"description: {block_indicator}\n  {overlong}"
+        if line.startswith("description:")
+        else line
+        for line in skill_md.read_text().splitlines()
+    ]
+    skill_md.write_text("\n".join(kept))
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "frontmatter-blockscalar"
+    ]
+
+
 def edit_manifest(repo, old, new):
     manifest = repo / ".claude-plugin" / "marketplace.json"
     manifest.write_text(manifest.read_text().replace(old, new))

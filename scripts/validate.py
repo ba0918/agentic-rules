@@ -18,6 +18,7 @@ LINE_LIMIT = 500
 ESCAPING_REFERENCE = "../"
 AMBIGUOUS_COLON = ": "
 NAME_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+BLOCK_SCALAR_PATTERN = re.compile(r"^[|>](?:[0-9][+-]?|[+-][0-9]?)?$")
 ROUTING_FIELD = "ba0918-routing"
 ROUTING_ALWAYS = "always"
 ROUTING_REQUIRED_PATTERN = re.compile(r"^required:[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -208,6 +209,31 @@ def check_scalar_quoting(skill: Skill) -> List[Violation]:
     return violations
 
 
+def check_block_scalar(skill: Skill) -> List[Violation]:
+    """Reject a frontmatter value written as a YAML block scalar.
+
+    The in-house parser reads a value as the text after the first colon on the
+    same line, so `description: >` parses as the literal ">" and every check
+    against the description — its presence and its length — then inspects a one
+    character string. Rejecting the form keeps the parser's supported surface
+    declared instead of silently mis-parsed.
+    """
+    violations = []
+    for line in frontmatter_lines(skill.skill_md):
+        key, separator, value = line.strip().partition(":")
+        if not separator or not BLOCK_SCALAR_PATTERN.match(value.strip()):
+            continue
+        violations.append(
+            Violation(
+                skill.name,
+                "frontmatter-blockscalar",
+                f"frontmatter value of {key.strip()!r} is a YAML block scalar; "
+                "this validator reads inline values only",
+            )
+        )
+    return violations
+
+
 def is_valid_routing(value: str) -> bool:
     return value == ROUTING_ALWAYS or bool(ROUTING_REQUIRED_PATTERN.match(value))
 
@@ -223,6 +249,7 @@ SKILL_RULES: "tuple[Callable[[Skill], List[Violation]], ...]" = (
     check_name_grammar,
     check_routing_value,
     check_scalar_quoting,
+    check_block_scalar,
 )
 
 
