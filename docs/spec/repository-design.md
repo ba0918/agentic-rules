@@ -20,15 +20,25 @@ AI コーディングエージェントに与える「ルール」(設計原則�
 
 ## 配布と更新
 
-導入経路は 2 系統を提供する。リポジトリを `skills/<スキル名>/SKILL.md` レイアウトにし、
-`.claude-plugin/marketplace.json`(Claude Code のプラグイン配布用メタデータ)を置くことで
-両対応になる。
+導入経路は 2 型を提供する。リポジトリを `skills/<スキル名>/SKILL.md` レイアウトにし、
+配布用メタデータを置くことで全経路に対応する。
 
-1. **marketplace 経路**(Claude Code プラグインとして導入): 更新が自動で届く。
-   個人環境向け
-2. **copy 経路**(gh skill / npx skills — GitHub リポジトリからスキルを取り込む CLI 群):
+1. **plugin 型**(更新が自動または git 追従で届く。個人環境向け):
+   - Claude Code plugin marketplace(`.claude-plugin/marketplace.json`)
+   - Codex CLI plugin(同じ `.claude-plugin/` の manifest を読む)
+   - OpenCode plugin(`package.json` + `.opencode/plugins/` の config hook で
+     スキルパスを登録する。セッションへの注入は行わない — 常時適用ルールの
+     配達は scaffold が生成する AGENTS.md に一本化する)
+2. **copy 型**(gh skill / npx skills — GitHub リポジトリからスキルを取り込む CLI 群):
    導入時にコピーされ、更新は明示的なコマンド実行で取り込む。バージョン固定ができるため
    プロジェクト・チーム・CI 向け
+
+OpenCode 用の `package.json` は配布用 manifest であり、公開 npm パッケージではない
+(`private: true` で誤公開を防ぐ)。
+
+バージョンの正本(canonical)は `.claude-plugin/marketplace.json` の
+`plugins[0].version` とする。他の manifest(plugin.json / package.json)の version と
+CHANGELOG の最新リリース見出しは canonical との一致をバリデータが機械検証する。
 
 入手方法と再現性ポリシーは別物として扱う。リポジトリ側の義務は「リリースにタグを打つ」
 「後方互換のない変更(ルールの意味が変わる変更)を区別して changelog に残す」まで。
