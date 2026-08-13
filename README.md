@@ -63,22 +63,10 @@ match the directory name.
 
 ## Skill document structure
 
-Every `SKILL.md` presents five sections in this relative order:
-
-1. **Scope** — when the rule applies, and what it deliberately does not cover.
-2. **Rules** — short imperatives, one instruction per line.
-3. **Judgment** — criteria and exceptions, each with its reason.
-4. **Examples** — minimal Good/Bad pairs.
-5. **Evidence** — the observable output to produce when claiming the work is done.
-
-Further sections may be interleaved where a rule carries material that fits none of the five —
-an iron-law block, a quick-reference table, a step-by-step procedure. The five must still appear
-in the order above.
-
-Evidence sections demand producible output — a test run, a search result, a diff. A gate phrased
-as a question to ask yourself is not evidence and does not belong there.
-
-Section order is a review concern; the validator does not check it.
+Every `SKILL.md` presents Scope, Rules, Judgment, Examples and Evidence in that relative order,
+and the conventions governing them are defined in
+[docs/spec/repository-design.md](docs/spec/repository-design.md). Section order is a review
+concern; the validator does not check it.
 
 ## Verification
 
