@@ -412,7 +412,18 @@ def check_manifest(
 
 
 def is_quoted(value: str) -> bool:
-    return len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'"
+    """Whether the value is one quoted scalar rather than merely edged by quotes.
+
+    The interior must be free of the delimiter: `"a" b: "c"` opens and closes on
+    the same character without being a single scalar, and reading it as quoted
+    would hide the unquoted ': ' between the two quoted runs.
+    """
+    return (
+        len(value) >= 2
+        and value[0] == value[-1]
+        and value[0] in "\"'"
+        and value[0] not in value[1:-1]
+    )
 
 
 def unquote(value: str) -> str:

@@ -262,6 +262,21 @@ def test_unquoted_frontmatter_value_containing_a_colon_is_reported(conforming_re
     ]
 
 
+def test_frontmatter_value_quoted_only_at_its_edges_is_reported(conforming_repo):
+    skill_md = conforming_repo / "skills" / "ba0918-alpha" / "SKILL.md"
+    kept = [
+        'description: "Baseline skill" 日本語キーワード: "正常系"'
+        if line.startswith("description:")
+        else line
+        for line in skill_md.read_text().splitlines()
+    ]
+    skill_md.write_text("\n".join(kept))
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "frontmatter-unquoted-colon"
+    ]
+
+
 @pytest.mark.parametrize("block_indicator", ["|", ">", "|-", ">-", "|+", ">2"])
 def test_description_written_as_a_block_scalar_is_reported(
     conforming_repo, block_indicator
