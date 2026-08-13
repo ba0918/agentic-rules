@@ -30,9 +30,11 @@ to generate a consuming project's routing table. Only two forms are valid: `alwa
 
 ## Install
 
-Two routes are supported. They differ in how updates reach you, not in what you get.
+Two kinds of route are supported — plugin and copy. They differ in how updates reach you,
+not in what you get. Three agents install by the plugin route, each from the metadata already
+in this repository.
 
-### Marketplace (Claude Code plugin)
+### Claude Code (plugin marketplace)
 
 Updates arrive automatically. Suited to a personal environment.
 
@@ -40,6 +42,38 @@ Updates arrive automatically. Suited to a personal environment.
 /plugin marketplace add ba0918/agentic-rules
 /plugin install ba0918-rules@agentic-rules
 ```
+
+### Codex CLI (plugin marketplace)
+
+Codex reads the same `.claude-plugin/marketplace.json`, and the skills appear to the model
+under the plugin name, as `ba0918-rules:ba0918-design` and so on.
+
+```
+codex plugin marketplace add ba0918/agentic-rules
+codex plugin add ba0918-rules@agentic-rules
+```
+
+Codex installs from the marketplace manifest alone; `.claude-plugin/plugin.json` is not
+required by it. That file is kept because it is where the plugin's own identity — its version,
+license and repository — is declared for the agents that read it.
+
+### OpenCode (plugin)
+
+Add the repository to `plugin` in `opencode.json` — either the project's or the global
+`~/.config/opencode/opencode.json` — and restart OpenCode.
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["agentic-rules@git+https://github.com/ba0918/agentic-rules.git"]
+}
+```
+
+`.opencode/plugins/agentic-rules.js` registers `skills/` as a skill path and does nothing
+else: the skills become loadable through OpenCode's native `skill` tool, and nothing is
+injected into the session. `package.json` exists to make this repository installable by that
+plugin route. It is a distribution manifest, not a published npm package — `private: true`
+keeps it off the registry.
 
 ### Copy (`gh skill` / `npx skills`)
 
@@ -80,6 +114,10 @@ run it. It checks frontmatter completeness, the naming convention, the 500-line 
 1024-character description limit, the routing value grammar, the absence of references escaping
 a skill directory, and agreement between `.claude-plugin/marketplace.json` and the actual
 contents of `skills/`.
+
+It also checks that the repository names one version. The canonical one is `plugins[0].version`
+in `.claude-plugin/marketplace.json`, and `.claude-plugin/plugin.json`, `package.json` and the
+newest release heading of [CHANGELOG.md](CHANGELOG.md) are required to agree with it.
 
 It exits 0 when it finds no violation, 1 when it reports at least one, and 2 when the path
 given to it is not a directory.
