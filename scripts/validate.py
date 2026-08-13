@@ -519,6 +519,49 @@ def version_disagreement(
     ]
 
 
+def version_declaring_paths(repository: Repository) -> List[str]:
+    """Every path that names a version, in the order a report should list them."""
+    release = latest_release(repository.changelog)
+    declared = (
+        (PLUGIN_MANIFEST_PATH, declared_version(repository.plugin_manifest.document)),
+        (PACKAGE_MANIFEST_PATH, declared_version(repository.package_manifest.document)),
+        (CHANGELOG_PATH, release[1] if release is not None else None),
+    )
+    return [path for path, version in declared if version is not None]
+
+
+def check_canonical_version(repository: Repository) -> List[Violation]:
+    """Report versions left with no canonical version to be checked against.
+
+    A repository that names no version anywhere has not released and is left
+    unchecked, but one whose channels name versions while the marketplace
+    manifest names none is already in the state the other three rules exist to
+    catch: with the canonical version gone they all fall silent, so its absence
+    is itself the disagreement.
+
+    A manifest that cannot be read at all is passed over rather than reported
+    twice: marketplace-unreadable already names that file, and a second
+    violation would only restate that the same file could not be read.
+    """
+    if (
+        marketplace_entries(repository) is None
+        or canonical_version(repository) is not None
+    ):
+        return []
+    paths = version_declaring_paths(repository)
+    if not paths:
+        return []
+    return [
+        Violation(
+            REPOSITORY_SUBJECT,
+            "version-sync-canonical",
+            f"{MANIFEST_PATH} declares no version for its first plugin, "
+            f"but {', '.join(paths)} declare one",
+            MANIFEST_PATH,
+        )
+    ]
+
+
 def check_json_channel(
     manifest: JsonFile,
     path: str,
@@ -598,6 +641,7 @@ def check_changelog_version(repository: Repository) -> List[Violation]:
 
 REPO_RULES: "tuple[Callable[[Repository], List[Violation]], ...]" = (
     check_manifest,
+    check_canonical_version,
     check_plugin_manifest,
     check_package_manifest,
     check_changelog_version,

@@ -593,8 +593,30 @@ def test_unreadable_channel_manifest_violation_names_the_file_without_a_line(
     assert (violation.path, violation.line) == ("package.json", None)
 
 
-def test_repository_declaring_no_canonical_version_is_accepted(conforming_repo):
+def test_repository_declaring_versions_without_a_canonical_one_is_reported(
+    conforming_repo,
+):
+    """A missing canonical version is drift, because it silences every sync rule.
+
+    The other three rules all compare against the canonical version, so losing
+    it while the channels still declare versions would turn the whole guarantee
+    off without a word.
+    """
     edit_manifest(conforming_repo, '"version": "0.1.0",', "")
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "version-sync-canonical"
+    ]
+
+
+def test_repository_declaring_no_version_anywhere_is_accepted(conforming_repo):
+    """A repository that has not released names no version to be checked."""
+    edit_manifest(conforming_repo, '"version": "0.1.0",', "")
+    edit_file(conforming_repo, ".claude-plugin/plugin.json", '"version": "0.1.0",', "")
+    edit_file(conforming_repo, "package.json", '"version": "0.1.0",', "")
+    (conforming_repo / "CHANGELOG.md").write_text(
+        "# Changelog\n\n## [Unreleased]\n\n### Added\n\n- Nothing released yet.\n"
+    )
 
     assert validate.validate_repository(conforming_repo) == []
 
