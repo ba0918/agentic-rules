@@ -289,3 +289,70 @@ def test_file_symlinked_outside_the_repository_is_not_read(conforming_repo, tmp_
 
 def test_command_line_run_on_a_path_that_is_not_a_directory_exits_two(tmp_path):
     assert validate.main([str(tmp_path / "does-not-exist")]) == 2
+
+
+def subjects_of(violations):
+    return sorted((v.skill, v.rule) for v in violations)
+
+
+@pytest.mark.parametrize(
+    "manifest_json",
+    [
+        '[]',
+        '{"plugins": 5}',
+        '{"plugins": "./skills/ba0918-alpha"}',
+        '{"plugins": {"not": "a list"}}',
+        '{"plugins": ["not a mapping"]}',
+        '{"plugins": [{"skills": 5}]}',
+        '{"plugins": [{"skills": [7]}]}',
+        '{"plugins": [{"skills": [null]}]}',
+    ],
+)
+def test_structurally_invalid_manifest_is_reported_without_crashing(
+    conforming_repo, manifest_json
+):
+    (conforming_repo / ".claude-plugin" / "marketplace.json").write_text(manifest_json)
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "marketplace-unreadable"
+    ]
+
+
+def test_manifest_entry_using_windows_separators_is_reported_once(conforming_repo):
+    edit_manifest(conforming_repo, "./skills/ba0918-alpha", ".\\\\skills\\\\ba0918-alpha")
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == ["marketplace-path"]
+
+
+def test_manifest_entry_with_a_bad_path_is_not_also_reported_as_an_orphan(
+    conforming_repo,
+):
+    edit_manifest(conforming_repo, "./skills/ba0918-alpha", "./skills/deep/ba0918-ghost")
+
+    assert subjects_of(validate.validate_repository(conforming_repo)) == [
+        ("ba0918-alpha", "marketplace-missing"),
+        ("ba0918-ghost", "marketplace-path"),
+    ]
+
+
+@pytest.mark.parametrize(
+    "removed",
+    ['"name": "fixture-marketplace",', '"name": "fixture-rules",', '"source": "./",'],
+)
+def test_manifest_missing_an_identity_field_is_reported(conforming_repo, removed):
+    edit_manifest(conforming_repo, removed, "")
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "marketplace-metadata"
+    ]
+
+
+def test_repository_without_a_skills_directory_reports_the_listed_skills_as_orphans(
+    conforming_repo,
+):
+    shutil.rmtree(conforming_repo / "skills")
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "marketplace-orphan",
+        "marketplace-orphan",
+    ]

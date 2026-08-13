@@ -230,31 +230,72 @@ def check_skill(skill: Skill) -> List[Violation]:
     return [violation for rule in SKILL_RULES for violation in rule(skill)]
 
 
-def check_manifest(
-    entries: Optional[List[str]], present: Set[str]
-) -> List[Violation]:
-    """Compare the manifest's skill entries against the skills on disk.
+def is_present_string(value: object) -> bool:
+    return isinstance(value, str) and bool(value.strip())
 
-    Entries are compared as paths, not as basenames: a manifest naming
+
+def check_manifest_metadata(manifest: Dict[str, object]) -> List[Violation]:
+    """Check the identity fields the plugin install command is built from."""
+    violations = []
+    if not is_present_string(manifest.get("name")):
+        violations.append(
+            Violation(
+                REPOSITORY_SUBJECT,
+                "marketplace-metadata",
+                f"{MANIFEST_PATH} has no top-level 'name'",
+            )
+        )
+    plugins = manifest.get("plugins")
+    for index, plugin in enumerate(plugins if isinstance(plugins, list) else []):
+        for field in ("name", "source"):
+            if not is_present_string(plugin.get(field)):
+                violations.append(
+                    Violation(
+                        REPOSITORY_SUBJECT,
+                        "marketplace-metadata",
+                        f"plugin at index {index} has no {field!r}",
+                    )
+                )
+    return violations
+
+
+def check_manifest(
+    manifest: Optional[Dict[str, object]], present: Set[str]
+) -> List[Violation]:
+    """Compare the manifest against the skills on disk.
+
+    Entries are checked as paths, not as basenames: a manifest naming
     './skil/ba0918-x' advertises a directory that does not exist, and comparing
-    only the last segment would call that agreement.
+    only the last segment would call that agreement. A trailing slash is
+    accepted, since it denotes the same directory.
+
+    A malformed entry is reported once. Its basename still counts as listed, so
+    the skill it was meant to name is not additionally reported as absent, but
+    it is kept out of the orphan comparison so a typo is not reported twice.
     """
+    entries = manifest_entries(manifest) if manifest is not None else None
     if entries is None:
         return [
             Violation(
                 REPOSITORY_SUBJECT,
                 "marketplace-unreadable",
-                f"{MANIFEST_PATH} is missing or is not valid JSON",
+                f"{MANIFEST_PATH} is missing, is not valid JSON, "
+                "or is not shaped as a marketplace manifest",
             )
         ]
 
-    violations: List[Violation] = []
-    names: List[str] = []
+    violations = check_manifest_metadata(manifest or {})
+    listed: List[str] = []
+    resolvable: List[str] = []
     for entry in entries:
-        parts = [part for part in PurePosixPath(entry).parts if part != "."]
+        parts = [
+            part
+            for part in PurePosixPath(entry.replace("\\", "/")).parts
+            if part != "."
+        ]
         name = parts[-1] if parts else entry
-        names.append(name)
-        if len(parts) != 2 or parts[0] != SKILLS_DIRECTORY:
+        listed.append(name)
+        if "\\" in entry or len(parts) != 2 or parts[0] != SKILLS_DIRECTORY:
             violations.append(
                 Violation(
                     name,
@@ -262,20 +303,20 @@ def check_manifest(
                     f"manifest entry {entry!r} must be './{SKILLS_DIRECTORY}/<name>'",
                 )
             )
+        else:
+            resolvable.append(name)
 
     violations.extend(
         Violation(
             name,
             "marketplace-duplicate",
-            f"{MANIFEST_PATH} lists this skill {names.count(name)} times",
+            f"{MANIFEST_PATH} lists this skill {listed.count(name)} times",
         )
-        for name in sorted({n for n in names if names.count(n) > 1})
+        for name in sorted({n for n in listed if listed.count(n) > 1})
     )
-
-    listed = set(names)
     violations.extend(
         Violation(name, "marketplace-missing", f"skill is absent from {MANIFEST_PATH}")
-        for name in sorted(present - listed)
+        for name in sorted(present - set(listed))
     )
     violations.extend(
         Violation(
@@ -283,7 +324,7 @@ def check_manifest(
             "marketplace-orphan",
             f"{MANIFEST_PATH} lists a skill that does not exist",
         )
-        for name in sorted(listed - present)
+        for name in sorted(set(resolvable) - present)
     )
     return violations
 
@@ -394,8 +435,8 @@ def collect_skills(root: Path) -> List[Skill]:
     return skills
 
 
-def read_manifest_entries(root: Path) -> Optional[List[str]]:
-    """The raw skill entries the manifest advertises, or None if unreadable."""
+def read_manifest(root: Path) -> Optional[Dict[str, object]]:
+    """The parsed marketplace manifest, or None if it cannot be read as one."""
     path = root / MANIFEST_PATH
     if not path.is_file() or not is_inside(path, root):
         return None
@@ -403,11 +444,29 @@ def read_manifest_entries(root: Path) -> Optional[List[str]]:
         manifest = json.loads(path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError, UnicodeDecodeError):
         return None
-    return [
-        entry
-        for plugin in manifest.get("plugins", [])
-        for entry in plugin.get("skills", [])
-    ]
+    return manifest if isinstance(manifest, dict) else None
+
+
+def manifest_entries(manifest: Dict[str, object]) -> Optional[List[str]]:
+    """The advertised skill entries, or None if the manifest is misshapen.
+
+    Returning None rather than raising keeps a hand-edited typo in the
+    distribution metadata reportable as a named rule instead of a traceback.
+    """
+    plugins = manifest.get("plugins", [])
+    if not isinstance(plugins, list):
+        return None
+    entries: List[str] = []
+    for plugin in plugins:
+        if not isinstance(plugin, dict):
+            return None
+        skills = plugin.get("skills", [])
+        if not isinstance(skills, list):
+            return None
+        if not all(isinstance(entry, str) for entry in skills):
+            return None
+        entries.extend(skills)
+    return entries
 
 
 def scan_repository(root: Path) -> Tuple[List[Skill], List[Violation]]:
@@ -416,7 +475,7 @@ def scan_repository(root: Path) -> Tuple[List[Skill], List[Violation]]:
     skills = collect_skills(root)
     violations = [v for skill in skills for v in check_skill(skill)]
     violations.extend(
-        check_manifest(read_manifest_entries(root), {s.name for s in skills})
+        check_manifest(read_manifest(root), {s.name for s in skills})
     )
     return skills, violations
 
