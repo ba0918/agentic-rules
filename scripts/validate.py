@@ -69,6 +69,23 @@ class Skill(NamedTuple):
         return value if isinstance(value, str) else None
 
 
+class JsonFile(NamedTuple):
+    """A JSON file as the repository offers it: absent, unreadable, or parsed.
+
+    Absence and unreadability are kept apart because they say different things
+    about a distribution channel: a manifest the repository does not ship is a
+    channel it does not offer, while one it ships but nobody can parse is a
+    channel that is broken.
+    """
+
+    present: bool
+    document: Optional[Dict[str, object]]
+
+    @property
+    def unreadable(self) -> bool:
+        return self.present and self.document is None
+
+
 class Repository(NamedTuple):
     """The repository-level material, read into memory and parsed.
 
@@ -77,9 +94,9 @@ class Repository(NamedTuple):
     a pure function of what was found.
     """
 
-    manifest: Optional[Dict[str, object]]
-    plugin_manifest: Optional[Dict[str, object]]
-    package_manifest: Optional[Dict[str, object]]
+    manifest: JsonFile
+    plugin_manifest: JsonFile
+    package_manifest: JsonFile
     changelog: Optional[str]
     skill_names: Set[str]
 
@@ -377,6 +394,17 @@ def check_manifest_metadata(manifest: Dict[str, object]) -> List[Violation]:
     return violations
 
 
+def marketplace_entries(repository: Repository) -> Optional[List[str]]:
+    """The skill entries the marketplace manifest advertises.
+
+    None means the manifest cannot be read as a marketplace manifest at all —
+    absent, unparseable, or misshapen — which is the single condition under
+    which the repository has no distribution metadata to be judged against.
+    """
+    document = repository.manifest.document
+    return manifest_entries(document) if document is not None else None
+
+
 def check_manifest(repository: Repository) -> List[Violation]:
     """Compare the manifest against the skills on disk.
 
@@ -389,8 +417,8 @@ def check_manifest(repository: Repository) -> List[Violation]:
     the skill it was meant to name is not additionally reported as absent, but
     it is kept out of the orphan comparison so a typo is not reported twice.
     """
-    manifest = repository.manifest
-    entries = manifest_entries(manifest) if manifest is not None else None
+    manifest = repository.manifest.document
+    entries = marketplace_entries(repository)
     if entries is None:
         return [
             Violation(
@@ -459,7 +487,7 @@ def canonical_version(repository: Repository) -> Optional[str]:
     the copy the plugin install command shows, and every other version in the
     repository is checked against it.
     """
-    plugins = (repository.manifest or {}).get("plugins")
+    plugins = (repository.manifest.document or {}).get("plugins")
     first = plugins[0] if isinstance(plugins, list) and plugins else None
     return declared_version(first if isinstance(first, dict) else None)
 
@@ -491,20 +519,50 @@ def version_disagreement(
     ]
 
 
-def check_plugin_version(repository: Repository) -> List[Violation]:
+def check_json_channel(
+    manifest: JsonFile,
+    path: str,
+    unreadable_rule: str,
+    sync_rule: str,
+    canonical: Optional[str],
+) -> List[Violation]:
+    """Check one JSON distribution manifest: readable at all, then in agreement.
+
+    Both violations name the file but no line: json.loads reports no position
+    for the value it parsed, and tracking one would mean hand-rolling a JSON
+    parser for the sake of a jumpable column. The changelog rule carries a line
+    only because it already reads the file line by line.
+    """
+    if manifest.unreadable:
+        return [
+            Violation(
+                REPOSITORY_SUBJECT,
+                unreadable_rule,
+                f"{path} is present but cannot be read as a JSON object",
+                path,
+            )
+        ]
     return version_disagreement(
-        "version-sync-plugin",
+        sync_rule, path, declared_version(manifest.document), canonical
+    )
+
+
+def check_plugin_manifest(repository: Repository) -> List[Violation]:
+    return check_json_channel(
+        repository.plugin_manifest,
         PLUGIN_MANIFEST_PATH,
-        declared_version(repository.plugin_manifest),
+        "plugin-manifest-unreadable",
+        "version-sync-plugin",
         canonical_version(repository),
     )
 
 
-def check_package_version(repository: Repository) -> List[Violation]:
-    return version_disagreement(
-        "version-sync-package",
+def check_package_manifest(repository: Repository) -> List[Violation]:
+    return check_json_channel(
+        repository.package_manifest,
         PACKAGE_MANIFEST_PATH,
-        declared_version(repository.package_manifest),
+        "package-manifest-unreadable",
+        "version-sync-package",
         canonical_version(repository),
     )
 
@@ -540,8 +598,8 @@ def check_changelog_version(repository: Repository) -> List[Violation]:
 
 REPO_RULES: "tuple[Callable[[Repository], List[Violation]], ...]" = (
     check_manifest,
-    check_plugin_version,
-    check_package_version,
+    check_plugin_manifest,
+    check_package_manifest,
     check_changelog_version,
 )
 
@@ -682,16 +740,24 @@ def read_file(root: Path, relative_path: str) -> Optional[str]:
         return None
 
 
-def read_json_object(root: Path, relative_path: str) -> Optional[Dict[str, object]]:
-    """The parsed JSON object at this path, or None if it cannot be read as one."""
+def read_json_file(root: Path, relative_path: str) -> JsonFile:
+    """How this JSON file stands: not shipped, shipped but unreadable, or parsed.
+
+    Presence is decided on disk rather than on the read succeeding, so a file
+    that exists yet cannot be decoded or parsed stays distinguishable from one
+    the repository never shipped.
+    """
+    path = root / relative_path
+    if not path.is_file() or not is_inside(path, root):
+        return JsonFile(present=False, document=None)
     text = read_file(root, relative_path)
-    if text is None:
-        return None
     try:
-        document = json.loads(text)
+        document = json.loads(text) if text is not None else None
     except json.JSONDecodeError:
-        return None
-    return document if isinstance(document, dict) else None
+        document = None
+    return JsonFile(
+        present=True, document=document if isinstance(document, dict) else None
+    )
 
 
 def manifest_entries(manifest: Dict[str, object]) -> Optional[List[str]]:
@@ -721,9 +787,9 @@ def scan_repository(root: Path) -> Tuple[List[Skill], List[Violation]]:
     root = Path(root)
     skills = collect_skills(root)
     repository = Repository(
-        manifest=read_json_object(root, MANIFEST_PATH),
-        plugin_manifest=read_json_object(root, PLUGIN_MANIFEST_PATH),
-        package_manifest=read_json_object(root, PACKAGE_MANIFEST_PATH),
+        manifest=read_json_file(root, MANIFEST_PATH),
+        plugin_manifest=read_json_file(root, PLUGIN_MANIFEST_PATH),
+        package_manifest=read_json_file(root, PACKAGE_MANIFEST_PATH),
         changelog=read_file(root, CHANGELOG_PATH),
         skill_names={s.name for s in skills},
     )

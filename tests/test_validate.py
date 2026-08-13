@@ -565,6 +565,34 @@ def test_repository_not_shipping_a_channel_manifest_is_accepted(
     assert validate.validate_repository(conforming_repo) == []
 
 
+@pytest.mark.parametrize(
+    "unreadable_text", ["{ not json", "[]", '"a string, not an object"']
+)
+@pytest.mark.parametrize(
+    "manifest_path, rule",
+    [
+        (".claude-plugin/plugin.json", "plugin-manifest-unreadable"),
+        ("package.json", "package-manifest-unreadable"),
+    ],
+)
+def test_channel_manifest_that_is_shipped_but_unreadable_is_reported(
+    conforming_repo, manifest_path, rule, unreadable_text
+):
+    (conforming_repo / manifest_path).write_text(unreadable_text)
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [rule]
+
+
+def test_unreadable_channel_manifest_violation_names_the_file_without_a_line(
+    conforming_repo,
+):
+    (conforming_repo / "package.json").write_text("{ not json")
+
+    [violation] = validate.validate_repository(conforming_repo)
+
+    assert (violation.path, violation.line) == ("package.json", None)
+
+
 def test_repository_declaring_no_canonical_version_is_accepted(conforming_repo):
     edit_manifest(conforming_repo, '"version": "0.1.0",', "")
 
