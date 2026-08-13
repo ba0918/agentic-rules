@@ -4,12 +4,12 @@
     "name": "ba0918"
   },
   "metadata": {
-    "description": "Fixture marketplace used by the validator tests",
-    "version": "0.1.0"
+    "description": "Fixture marketplace used by the validator tests"
   },
   "plugins": [
     {
       "name": "fixture-rules",
+      "version": "0.1.0",
       "description": "Fixture plugin listing every skill in the fixture repository",
       "source": "./",
       "strict": false,

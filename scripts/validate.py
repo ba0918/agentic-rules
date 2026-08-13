@@ -9,6 +9,11 @@ from pathlib import Path, PurePosixPath
 from typing import Callable, Dict, List, NamedTuple, Optional, Set, Tuple
 
 MANIFEST_PATH = ".claude-plugin/marketplace.json"
+PLUGIN_MANIFEST_PATH = ".claude-plugin/plugin.json"
+PACKAGE_MANIFEST_PATH = "package.json"
+CHANGELOG_PATH = "CHANGELOG.md"
+RELEASE_HEADING_PATTERN = re.compile(r"^##\s+\[([^\]]+)\]")
+UNRELEASED_HEADING = "unreleased"
 SKILLS_DIRECTORY = "skills"
 REPOSITORY_SUBJECT = "(repository)"
 NAME_PREFIX = "ba0918-"
@@ -73,6 +78,9 @@ class Repository(NamedTuple):
     """
 
     manifest: Optional[Dict[str, object]]
+    plugin_manifest: Optional[Dict[str, object]]
+    package_manifest: Optional[Dict[str, object]]
+    changelog: Optional[str]
     skill_names: Set[str]
 
 
@@ -438,7 +446,104 @@ def check_manifest(repository: Repository) -> List[Violation]:
     return violations
 
 
-REPO_RULES: "tuple[Callable[[Repository], List[Violation]], ...]" = (check_manifest,)
+def declared_version(document: Optional[Dict[str, object]]) -> Optional[str]:
+    """The version this document declares, or None if it declares none."""
+    version = (document or {}).get("version")
+    return version.strip() if is_present_string(version) else None
+
+
+def canonical_version(repository: Repository) -> Optional[str]:
+    """The one version the repository is released under.
+
+    It is read from the first plugin entry of the marketplace manifest, which is
+    the copy the plugin install command shows, and every other version in the
+    repository is checked against it.
+    """
+    plugins = (repository.manifest or {}).get("plugins")
+    first = plugins[0] if isinstance(plugins, list) and plugins else None
+    return declared_version(first if isinstance(first, dict) else None)
+
+
+def version_disagreement(
+    rule: str,
+    path: str,
+    declared: Optional[str],
+    canonical: Optional[str],
+    line: Optional[int] = None,
+) -> List[Violation]:
+    """Report a version that disagrees with the canonical one.
+
+    A version that is absent is not a disagreement: a manifest a repository does
+    not ship is a distribution channel it does not offer, and a repository that
+    declares no canonical version has nothing to be checked against.
+    """
+    if canonical is None or declared is None or declared == canonical:
+        return []
+    return [
+        Violation(
+            REPOSITORY_SUBJECT,
+            rule,
+            f"{path} declares version {declared!r}, but {MANIFEST_PATH} "
+            f"declares {canonical!r}",
+            path,
+            line,
+        )
+    ]
+
+
+def check_plugin_version(repository: Repository) -> List[Violation]:
+    return version_disagreement(
+        "version-sync-plugin",
+        PLUGIN_MANIFEST_PATH,
+        declared_version(repository.plugin_manifest),
+        canonical_version(repository),
+    )
+
+
+def check_package_version(repository: Repository) -> List[Violation]:
+    return version_disagreement(
+        "version-sync-package",
+        PACKAGE_MANIFEST_PATH,
+        declared_version(repository.package_manifest),
+        canonical_version(repository),
+    )
+
+
+def latest_release(changelog: Optional[str]) -> Optional[Tuple[int, str]]:
+    """The newest release heading in the changelog, as its line and its version.
+
+    The 'Unreleased' section Keep a Changelog puts above the releases names no
+    version, so it is passed over instead of compared. A changelog holding only
+    that section describes a repository that has not released yet, and returning
+    None leaves it with nothing to check.
+    """
+    for number, line in enumerate((changelog or "").splitlines(), start=1):
+        match = RELEASE_HEADING_PATTERN.match(line)
+        if match and match.group(1).strip().lower() != UNRELEASED_HEADING:
+            return number, match.group(1).strip()
+    return None
+
+
+def check_changelog_version(repository: Repository) -> List[Violation]:
+    release = latest_release(repository.changelog)
+    if release is None:
+        return []
+    line, version = release
+    return version_disagreement(
+        "version-sync-changelog",
+        CHANGELOG_PATH,
+        version,
+        canonical_version(repository),
+        line,
+    )
+
+
+REPO_RULES: "tuple[Callable[[Repository], List[Violation]], ...]" = (
+    check_manifest,
+    check_plugin_version,
+    check_package_version,
+    check_changelog_version,
+)
 
 
 def check_repository(repository: Repository) -> List[Violation]:
@@ -566,16 +671,27 @@ def collect_skills(root: Path) -> List[Skill]:
     return skills
 
 
-def read_manifest(root: Path) -> Optional[Dict[str, object]]:
-    """The parsed marketplace manifest, or None if it cannot be read as one."""
-    path = root / MANIFEST_PATH
+def read_file(root: Path, relative_path: str) -> Optional[str]:
+    """The text of this file, or None if the repository does not offer it."""
+    path = root / relative_path
     if not path.is_file() or not is_inside(path, root):
         return None
     try:
-        manifest = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError, UnicodeDecodeError):
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
         return None
-    return manifest if isinstance(manifest, dict) else None
+
+
+def read_json_object(root: Path, relative_path: str) -> Optional[Dict[str, object]]:
+    """The parsed JSON object at this path, or None if it cannot be read as one."""
+    text = read_file(root, relative_path)
+    if text is None:
+        return None
+    try:
+        document = json.loads(text)
+    except json.JSONDecodeError:
+        return None
+    return document if isinstance(document, dict) else None
 
 
 def manifest_entries(manifest: Dict[str, object]) -> Optional[List[str]]:
@@ -605,7 +721,10 @@ def scan_repository(root: Path) -> Tuple[List[Skill], List[Violation]]:
     root = Path(root)
     skills = collect_skills(root)
     repository = Repository(
-        manifest=read_manifest(root),
+        manifest=read_json_object(root, MANIFEST_PATH),
+        plugin_manifest=read_json_object(root, PLUGIN_MANIFEST_PATH),
+        package_manifest=read_json_object(root, PACKAGE_MANIFEST_PATH),
+        changelog=read_file(root, CHANGELOG_PATH),
         skill_names={s.name for s in skills},
     )
     violations = [v for skill in skills for v in check_skill(skill)]

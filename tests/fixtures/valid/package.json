@@ -1,0 +1,9 @@
+{
+  "name": "fixture-rules",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fixture package manifest used by the validator tests",
+  "type": "module",
+  "main": ".opencode/plugins/fixture-rules.js",
+  "license": "MIT"
+}

@@ -499,6 +499,78 @@ def test_manifest_missing_an_identity_field_is_reported(conforming_repo, removed
     ]
 
 
+def edit_file(repo, relative_path, old, new):
+    target = repo / relative_path
+    target.write_text(target.read_text().replace(old, new))
+
+
+def test_plugin_manifest_version_disagreeing_with_the_canonical_one_is_reported(
+    conforming_repo,
+):
+    edit_file(
+        conforming_repo, ".claude-plugin/plugin.json", '"version": "0.1.0"', '"version": "0.2.0"'
+    )
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "version-sync-plugin"
+    ]
+
+
+def test_package_manifest_version_disagreeing_with_the_canonical_one_is_reported(
+    conforming_repo,
+):
+    edit_file(conforming_repo, "package.json", '"version": "0.1.0"', '"version": "0.2.0"')
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "version-sync-package"
+    ]
+
+
+def test_latest_changelog_release_disagreeing_with_the_canonical_version_is_reported(
+    conforming_repo,
+):
+    edit_file(conforming_repo, "CHANGELOG.md", "## [0.1.0]", "## [0.2.0]")
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "version-sync-changelog"
+    ]
+
+
+def test_changelog_version_violation_carries_the_heading_it_was_found_on(
+    conforming_repo,
+):
+    edit_file(conforming_repo, "CHANGELOG.md", "## [0.1.0]", "## [0.2.0]")
+
+    [violation] = validate.validate_repository(conforming_repo)
+
+    assert (violation.path, violation.line) == ("CHANGELOG.md", 5)
+
+
+def test_changelog_holding_only_an_unreleased_section_is_accepted(conforming_repo):
+    (conforming_repo / "CHANGELOG.md").write_text(
+        "# Changelog\n\n## [Unreleased]\n\n### Added\n\n- Something not released yet.\n"
+    )
+
+    assert validate.validate_repository(conforming_repo) == []
+
+
+@pytest.mark.parametrize(
+    "absent_manifest", [".claude-plugin/plugin.json", "package.json"]
+)
+def test_repository_not_shipping_a_channel_manifest_is_accepted(
+    conforming_repo, absent_manifest
+):
+    (conforming_repo / absent_manifest).unlink()
+
+    assert validate.validate_repository(conforming_repo) == []
+
+
+def test_repository_declaring_no_canonical_version_is_accepted(conforming_repo):
+    edit_manifest(conforming_repo, '"version": "0.1.0",', "")
+
+    assert validate.validate_repository(conforming_repo) == []
+
+
 def test_repository_without_a_skills_directory_reports_the_listed_skills_as_orphans(
     conforming_repo,
 ):

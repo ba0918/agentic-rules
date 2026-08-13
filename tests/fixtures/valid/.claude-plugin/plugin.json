@@ -1,0 +1,9 @@
+{
+  "name": "fixture-rules",
+  "version": "0.1.0",
+  "description": "Fixture plugin manifest used by the validator tests",
+  "author": {
+    "name": "ba0918"
+  },
+  "license": "MIT"
+}
