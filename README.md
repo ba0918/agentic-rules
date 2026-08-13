@@ -81,6 +81,9 @@ run it. It checks frontmatter completeness, the naming convention, the 500-line 
 a skill directory, and agreement between `.claude-plugin/marketplace.json` and the actual
 contents of `skills/`.
 
+It exits 0 when it finds no violation, 1 when it reports at least one, and 2 when the path
+given to it is not a directory.
+
 `pytest` is the only development dependency. If it is not installed, `uv run --with pytest --
 pytest` runs the suite without installing anything permanently.
 
