@@ -31,8 +31,8 @@ to generate a consuming project's routing table. Only two forms are valid: `alwa
 ## Install
 
 Two kinds of route are supported — plugin and copy. They differ in how updates reach you,
-not in what you get. Three agents install by the plugin route, each from the metadata already
-in this repository.
+not in what you get. Claude Code, Codex CLI and OpenCode install by the plugin route, each from
+the metadata already in this repository; `gh skill` and `npx skills` install by the copy route.
 
 ### Claude Code (plugin marketplace)
 
