@@ -117,6 +117,61 @@ def test_reference_escaping_the_skill_directory_is_reported(
 
 
 @pytest.mark.parametrize(
+    "escaping_link",
+    [
+        "[shared](..\\ba0918-alpha\\SKILL.md)",
+        "[shared](/home/someone/dotfiles/ai/shared/design-principles.md)",
+        "[shared](~/.claude/skills/ba0918-alpha/SKILL.md)",
+        "[shared](C:\\skills\\ba0918-alpha\\SKILL.md)",
+    ],
+)
+def test_link_target_outside_the_skill_directory_is_reported(
+    conforming_repo, escaping_link
+):
+    target = conforming_repo / "skills" / "ba0918-beta" / "SKILL.md"
+    target.write_text(target.read_text() + f"\nSee {escaping_link}.\n")
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "external-reference"
+    ]
+
+
+def test_reference_definition_pointing_outside_the_skill_directory_is_reported(
+    conforming_repo,
+):
+    target = conforming_repo / "skills" / "ba0918-beta" / "SKILL.md"
+    target.write_text(
+        target.read_text()
+        + "\n[shared]: /home/someone/dotfiles/ai/shared/design-principles.md\n"
+    )
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "external-reference"
+    ]
+
+
+def test_prose_naming_an_installation_path_is_not_reported_as_a_reference(
+    conforming_repo,
+):
+    target = conforming_repo / "skills" / "ba0918-beta" / "SKILL.md"
+    target.write_text(
+        target.read_text()
+        + "\nSkills are installed into `~/.claude/skills/` or /usr/share/skills.\n"
+    )
+
+    assert validate.validate_repository(conforming_repo) == []
+
+
+def test_link_to_an_external_url_is_accepted(conforming_repo):
+    target = conforming_repo / "skills" / "ba0918-beta" / "SKILL.md"
+    target.write_text(
+        target.read_text() + "\nSee the [specification](https://agentskills.io).\n"
+    )
+
+    assert validate.validate_repository(conforming_repo) == []
+
+
+@pytest.mark.parametrize(
     "malformed_routing", ["sometimes", "required", "required:", "always:commit"]
 )
 def test_routing_value_outside_the_two_permitted_forms_is_reported(

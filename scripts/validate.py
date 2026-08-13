@@ -16,7 +16,11 @@ REQUIRED_FIELDS = ("name", "description")
 DESCRIPTION_LIMIT = 1024
 NAME_LIMIT = 64
 LINE_LIMIT = 500
-ESCAPING_REFERENCE = "../"
+RELATIVE_ESCAPES = ("../", "..\\")
+OUTSIDE_TARGET_PREFIXES = ("/", "~")
+WINDOWS_DRIVE_PATTERN = re.compile(r"^[A-Za-z]:[\\/]")
+INLINE_LINK_PATTERN = re.compile(r"\]\(\s*<?([^)\s>]+)")
+REFERENCE_DEFINITION_PATTERN = re.compile(r"^\s{0,3}\[[^\]]+\]:\s*<?([^\s>]+)")
 AMBIGUOUS_COLON = ": "
 NAME_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 BLOCK_SCALAR_PATTERN = re.compile(r"^[|>](?:[0-9][+-]?|[+-][0-9]?)?$")
@@ -68,16 +72,30 @@ def check_line_limit(skill: Skill) -> List[Violation]:
 
 
 def check_self_containment(skill: Skill) -> List[Violation]:
-    return [
-        Violation(
-            skill.name,
-            "external-reference",
-            f"{relative_path} refers outside the skill directory "
-            f"with {ESCAPING_REFERENCE!r}",
-        )
-        for relative_path, text in sorted(skill.files.items())
-        if ESCAPING_REFERENCE in text
-    ]
+    """Reject references pointing outside the skill directory.
+
+    A relative escape (`../`, `..\\`) is matched anywhere in the line, because a
+    path written in prose breaks a single-directory install just as a link does.
+    An absolute or home-anchored path is judged only where it is the target of a
+    markdown link or reference definition: a skill may legitimately name an
+    installation directory such as `~/.claude/skills/` in prose, and matching
+    those as raw text would report the sentence describing the install.
+    """
+    violations = []
+    for relative_path, text in sorted(skill.files.items()):
+        for line in text.splitlines():
+            reference = escaping_reference(line)
+            if reference is None:
+                continue
+            violations.append(
+                Violation(
+                    skill.name,
+                    "external-reference",
+                    f"{relative_path} refers outside the skill directory "
+                    f"with {reference!r}",
+                )
+            )
+    return violations
 
 
 def check_skill_document_present(skill: Skill) -> List[Violation]:
@@ -242,6 +260,30 @@ def check_block_scalar(skill: Skill) -> List[Violation]:
             )
         )
     return violations
+
+
+def escaping_reference(line: str) -> Optional[str]:
+    """The first reference on this line that leaves the skill directory."""
+    for marker in RELATIVE_ESCAPES:
+        if marker in line:
+            return marker
+    for target in link_targets(line):
+        if points_outside(target):
+            return target
+    return None
+
+
+def link_targets(line: str) -> List[str]:
+    """Every markdown link and reference-definition target written on the line."""
+    targets = INLINE_LINK_PATTERN.findall(line)
+    definition = REFERENCE_DEFINITION_PATTERN.match(line)
+    return targets + ([definition.group(1)] if definition else [])
+
+
+def points_outside(target: str) -> bool:
+    return target.startswith(OUTSIDE_TARGET_PREFIXES) or bool(
+        WINDOWS_DRIVE_PATTERN.match(target)
+    )
 
 
 def is_valid_routing(value: str) -> bool:
