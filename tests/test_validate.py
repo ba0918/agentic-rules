@@ -134,7 +134,7 @@ def add_skill(repo, name):
     directory = repo / "skills" / name
     directory.mkdir()
     (directory / "SKILL.md").write_text(
-        f"---\nname: {name}\ndescription: An added skill. 日本語キーワード: 追加\n---\n\n# {name}\n"
+        f'---\nname: {name}\ndescription: "An added skill. 日本語キーワード: 追加"\n---\n\n# {name}\n'
     )
 
 
@@ -176,3 +176,18 @@ def test_command_line_run_reports_each_violation_and_exits_nonzero(
 
     assert exit_code == 1
     assert "marketplace-orphan" in capsys.readouterr().out
+
+
+def test_unquoted_frontmatter_value_containing_a_colon_is_reported(conforming_repo):
+    skill_md = conforming_repo / "skills" / "ba0918-alpha" / "SKILL.md"
+    kept = [
+        'description: Baseline skill. 日本語キーワード: 正常系'
+        if line.startswith("description:")
+        else line
+        for line in skill_md.read_text().splitlines()
+    ]
+    skill_md.write_text("\n".join(kept))
+
+    assert rules_of(validate.validate_repository(conforming_repo)) == [
+        "frontmatter-unquoted-colon"
+    ]

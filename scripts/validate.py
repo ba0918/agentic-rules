@@ -14,6 +14,7 @@ REQUIRED_FIELDS = ("name", "description")
 DESCRIPTION_LIMIT = 1024
 LINE_LIMIT = 500
 ESCAPING_REFERENCE = "../"
+AMBIGUOUS_COLON = ": "
 NAME_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 ROUTING_FIELD = "ba0918-routing"
 ROUTING_ALWAYS = "always"
@@ -166,6 +167,33 @@ def check_routing_value(skill: Skill) -> List[Violation]:
     ]
 
 
+def check_scalar_quoting(skill: Skill) -> List[Violation]:
+    """Reject frontmatter values a YAML parser would read as a nested mapping.
+
+    A plain scalar containing ': ' is not valid YAML, and the Japanese trigger
+    keywords every description carries are introduced by exactly that sequence.
+    Without this rule the lenient in-house parser accepts a file the published
+    Agent Skills validator rejects.
+    """
+    violations = []
+    for line in frontmatter_lines(skill.skill_md):
+        key, separator, value = line.strip().partition(":")
+        if not separator:
+            continue
+        value = value.strip()
+        if not value or is_quoted(value) or AMBIGUOUS_COLON not in value:
+            continue
+        violations.append(
+            Violation(
+                skill.name,
+                "frontmatter-unquoted-colon",
+                f"frontmatter value of {key.strip()!r} contains {AMBIGUOUS_COLON!r} "
+                "and must be quoted",
+            )
+        )
+    return violations
+
+
 def is_valid_routing(value: str) -> bool:
     return value == ROUTING_ALWAYS or bool(ROUTING_REQUIRED_PATTERN.match(value))
 
@@ -179,6 +207,7 @@ SKILL_RULES: "tuple[Callable[[Skill], List[Violation]], ...]" = (
     check_description_length,
     check_name_grammar,
     check_routing_value,
+    check_scalar_quoting,
 )
 
 
@@ -203,10 +232,25 @@ def check_marketplace(listed: Set[str], present: Set[str]) -> List[Violation]:
 # --- Parsing ---
 
 
+def is_quoted(value: str) -> bool:
+    return len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'"
+
+
 def unquote(value: str) -> str:
-    if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
-        return value[1:-1]
-    return value
+    return value[1:-1] if is_quoted(value) else value
+
+
+def frontmatter_lines(text: str) -> List[str]:
+    """The raw lines between the opening and closing frontmatter delimiters."""
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return []
+    body = []
+    for line in lines[1:]:
+        if line.strip() == "---":
+            return body
+        body.append(line)
+    return []
 
 
 def parse_frontmatter(text: str) -> Optional[Dict[str, object]]:

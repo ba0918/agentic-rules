@@ -1,6 +1,6 @@
 ---
 name: ba0918-alpha
-description: Baseline fixture skill that satisfies every repository convention. Use when exercising the validator against a clean repository. 日本語キーワード: 正常系 サンプル
+description: "Baseline fixture skill that satisfies every repository convention. Use when exercising the validator against a clean repository. 日本語キーワード: 正常系 サンプル"
 metadata:
   ba0918-routing: always
 ---

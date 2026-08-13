@@ -1,6 +1,6 @@
 ---
 name: ba0918-beta
-description: Baseline fixture skill carrying a trigger-scoped routing value and a skill-internal reference. 日本語キーワード: 正常系 参照あり
+description: "Baseline fixture skill carrying a trigger-scoped routing value and a skill-internal reference. 日本語キーワード: 正常系 参照あり"
 metadata:
   ba0918-routing: required:commit
 ---
