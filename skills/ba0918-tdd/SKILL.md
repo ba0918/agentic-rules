@@ -10,8 +10,8 @@ metadata:
 ## Scope
 
 Applies to production code with behaviour: a function, a module, a bug fix, a new branch of
-logic. It governs the order of work, not the quality of the resulting tests — that is a testing
-concern — and not the structure of the code — that is a design concern.
+logic. It governs the order of work, not the quality of the resulting tests (the skill
+`ba0918-testing`) and not the structure of the code (the skill `ba0918-design`).
 
 It does not apply to natural-language artifacts (documentation, prompts, rule documents) or to
 pure configuration with no behaviour of its own.
