@@ -53,6 +53,8 @@ to run the reference validator in CI and the OpenCode plugin hook.
 - Every user-visible change must bump the canonical version
   (`.claude-plugin/marketplace.json` → `plugins[0].version`). An unbumped change is never
   delivered to plugin-type consumers, so "the update will arrive automatically" is false here.
+  The bump itself lands at release time as one operation of the release discipline; between
+  releases, user-visible changes accumulate under the CHANGELOG's Unreleased heading.
 - `.agents/` is session-local working state, excluded via `.git/info/exclude`; it must never
   be committed.
 - CI pins the reference validator (`skills-ref@0.1.5`) so a validator release cannot silently
