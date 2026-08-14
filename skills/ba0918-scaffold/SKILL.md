@@ -1,6 +1,6 @@
 ---
 name: ba0918-scaffold
-description: "Generate a project's AGENTS.md routing table and PROJECT.md skeleton from the rule skills actually installed, by reading each skill's ba0918-routing metadata instead of hand-maintaining the list. Use only when the user explicitly requests this setup work itself — setting up agent instructions for a project, refreshing the routing table after installing or removing a rule skill, or splitting an overgrown AGENTS.md into a router plus project context. Never run it as a side effect of another task. 日本語キーワード: AGENTS.md PROJECT.md 生成 雛形 ルーティング表 セットアップ 初期化 スキャフォールド 指示ファイル"
+description: "Generate a project's AGENTS.md routing table and PROJECT.md skeleton from the rule skills actually installed, by reading each skill's ba0918-routing metadata instead of hand-maintaining the list, plus a one-line CLAUDE.md shim so Claude Code reads the router. Use only when the user explicitly requests this setup work itself — setting up agent instructions for a project, refreshing the routing table after installing or removing a rule skill, or splitting an overgrown AGENTS.md into a router plus project context. Never run it as a side effect of another task. 日本語キーワード: AGENTS.md PROJECT.md 生成 雛形 ルーティング表 セットアップ 初期化 スキャフォールド 指示ファイル"
 ---
 
 # AGENTS.md and PROJECT.md Scaffold
@@ -12,9 +12,9 @@ from the rule skills that are actually installed.
 
 Runs only when the user explicitly requests this scaffolding work itself, never as a side effect
 of another task. Being loaded as a candidate from its description is not permission to write
-files. It writes two files and nothing else: `AGENTS.md`, a thin
-router pointing at rule skills, and `PROJECT.md`, the project-specific context that a router must
-not absorb.
+files. It writes at most three files and nothing else: `AGENTS.md`, a thin router pointing at
+rule skills; `PROJECT.md`, the project-specific context that a router must not absorb; and
+`CLAUDE.md`, a one-line shim (`@AGENTS.md`) that makes Claude Code read the router.
 
 It does not author rules. Everything it writes about a rule comes from that rule's own metadata.
 
@@ -62,12 +62,22 @@ If `PROJECT.md` does not exist, write the skeleton from `references/project-temp
 headings present and the content left for a human to fill in. If it already exists, leave it
 untouched.
 
+### 5. Generate the CLAUDE.md shim
+
+Claude Code reads `CLAUDE.md`, not `AGENTS.md`, so without a shim the generated router goes
+unread there. If `CLAUDE.md` does not exist, write it containing the single line `@AGENTS.md`.
+If it already contains an equivalent reference to `AGENTS.md`, do nothing — the step is
+idempotent. Never overwrite any other existing `CLAUDE.md`: show the difference and let a human
+apply it.
+
 ## Rules
 
 - Derive every routing row from installed metadata. Never hand-write a row.
 - Refer to skills by name. Never write a path to a skill directory.
 - Do not overwrite an existing `AGENTS.md`. Show the difference and let a human apply it.
 - Do not overwrite an existing `PROJECT.md`.
+- Do not overwrite an existing `CLAUDE.md`. Leave one that already references `AGENTS.md`
+  untouched; for any other content, show the difference and let a human apply it.
 - Keep project-specific content out of `AGENTS.md`; it belongs in `PROJECT.md`.
 - Report a skill whose routing value is malformed instead of guessing what was meant.
 - Report which skill locations were searched, so an empty table can be distinguished from a failed search.
@@ -90,6 +100,13 @@ exists so the router can be regenerated freely.
 **An empty routing table is ambiguous.** It means either no rule skills are installed or the
 search looked in the wrong place. Always state the locations searched so the reader can tell
 which.
+
+**The shim is the wiring that makes the router reachable from Claude Code.** Claude Code loads
+`CLAUDE.md`, not `AGENTS.md`, so without the shim the generated router silently goes unread — the
+scaffold appears to have worked while changing nothing. Asking a human to hand-write that one
+line is exactly the manual wiring this skill exists to remove. The shim carries no content of its
+own, so a `CLAUDE.md` that already reaches `AGENTS.md` needs nothing, and one carrying anything
+else gets the same treatment as an existing `AGENTS.md`: a diff, not an overwrite.
 
 **Skills without routing metadata are not omissions.** A skill that fires from its description is
 deliberately outside the table. Adding it as a row would make it mandatory, which is a change of
@@ -126,3 +143,6 @@ Show these outputs rather than asserting the scaffold is correct.
   of enumerated skills, with no name in one and not the other.
 - **Nothing was overwritten**: `git status --short` showing `AGENTS.md` as added, or the diff that
   was presented for a human decision instead of applied.
+- **Shim state**: the content of `CLAUDE.md` after the run — the created `@AGENTS.md` line, the
+  pre-existing equivalent reference left untouched, or the diff presented instead of an
+  overwrite.
