@@ -27,12 +27,13 @@ applies to every entry written here.
 - Record where that location is in the project's specification or `PROJECT.md`. When no such
   record exists, decide the location and record it before releasing anything.
 - Treat every other declaration of the project's own current version as a follower of the
-  canonical one, and check their agreement mechanically. Where no such check exists, add one
-  before relying on the agreement.
+  canonical one, and check their agreement mechanically.
+- Where no mechanical version check exists, add one before relying on the declarations agreeing.
 - Bump the canonical version in any release carrying a user-visible change: a rule, a feature, an
-  install procedure, or the composition of what is distributed. Shipping such a change with the
-  version left standing is not an option to weigh.
-- Record a change that alters meaning separately from a compatible one, and mark it as breaking.
+  install procedure, or the composition of what is distributed. Do not ship such a change with
+  the version left standing.
+- In the changelog, record a change that alters meaning separately from a compatible one, and
+  mark it as breaking.
 - Write the changelog entry when the change is made, under an unreleased section.
 - Promote the unreleased section to a version heading at release time, and make that heading match
   the canonical version exactly.
@@ -65,8 +66,7 @@ different versions of itself. Declare it once, derive or verify the rest.
 **For a rule aimed at an agent, a change of meaning is a change of instructed behaviour.**
 Rewording, reformatting and adding an example leave the instruction intact. A change that makes an
 agent act differently from before does not, however small the diff. That distinction, not the size
-of the change, decides which component of the version increases, in whatever scheme the project
-follows.
+of the change, decides how far the version moves, in whatever scheme the project follows.
 
 **Split the release when the unreleased entries span unrelated concerns.** A version heading is
 the unit a consumer reads to decide whether to upgrade and what to re-check. When it mixes an
@@ -112,8 +112,8 @@ Show these outputs rather than asserting the release is consistent.
 
 - **The canonical location is recorded**: the line of the project's specification or `PROJECT.md`
   that names it, quoted.
-- **The bump happened**: `git show <the bump commit>` over the canonical declaration, with the old
-  and the new value both visible. Where the version is derived from the tag rather than declared,
+- **The bump happened**: `git show <the bump commit> -- <the canonical file>`, with the old and
+  the new value both visible. Where the version is derived from the tag rather than declared,
   the tag creation itself is that evidence.
 - **Every declaration agrees**: the project's version check, run after the bump, reporting no
   mismatch.
