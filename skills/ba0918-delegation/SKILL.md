@@ -61,7 +61,8 @@ escalated to a human when it exceeds the orchestrator's mandate.
   in the delegation prompt and have it return the deliverable in its reply body, which the
   orchestrator transcribes.
 - For long-running work, state explicitly that the call runs synchronously and how long it is
-  allowed to take — or design the flow so that a result never returned does no harm.
+  allowed to take — or design the flow so that a result never returned does no harm. When the
+  work must run detached, name the durable result location and who collects it before launching.
 - Keep one executor table per environment, at the user-level instruction location, with the
   columns Role / Executor / Evidence.
 - Write each executor as a stable, fully qualified identifier, never an alias whose resolution
