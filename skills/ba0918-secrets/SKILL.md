@@ -41,8 +41,11 @@ hints, not the test.
 - Keep the real value out of prompts, issue reports, and pasted output; replace it with a placeholder.
 - Reference a credential by the name of its variable, never by its value.
 - Use an obviously fake placeholder in documentation and tests, never a real value that is "expired".
-- Report a suspected leak rather than quietly fixing it.
-- Revoke first, clean history second.
+- Report a suspected leak as the first, blocking task — before any fix, and never quietly.
+- While approval for the response is pending, stop external operations that involve the affected
+  credential.
+- Revoke first, clean history second. Urge revocation as the first move; a human executes it, or
+  the agent does only under explicit approval.
 
 ## Judgment
 
@@ -50,6 +53,13 @@ hints, not the test.
 from the current branch, but the value may already exist in a clone, a fork, a CI log, a
 notification, or a build cache. Until it is revoked and replaced, assume it is live. History
 cleanup matters, but it is the second step, not the first.
+
+**Revocation is irreversible in the same way rewriting shared history is.** A revoked credential
+cannot be un-revoked, and cutting it can break running services far beyond the current session.
+So the agent's part is to raise the alarm and push for revocation, not to execute it: a human
+runs the revocation, or the agent does under explicit approval. Reporting first is not a delay —
+it is what makes the exposure known to the people who own the credential, so containment does not
+depend on one session quietly handling it.
 
 **Redaction has to happen before the value is recorded, not after.** Once a credential reaches a
 log file, a chat transcript, or a model prompt, you no longer control every copy. The moment to
@@ -96,14 +106,18 @@ Good: git status --short   # read it
 
 ## First moves after a leak
 
-1. **Revoke and rotate** the credential at its provider. Do this before anything else.
+1. **Revoke and rotate** the credential at its provider, before any cleanup. Report the leak as
+   the first, blocking task and urge immediate revocation; a human executes it, or the agent does
+   only under explicit approval. While that approval is pending, stop external operations that
+   involve the affected credential.
 2. **Determine the exposure**: which commits, branches, remotes, logs, CI runs, and transcripts
    contain it. Assume anything pushed has been fetched.
 3. **Remove it from history** and force-update the affected refs, coordinating with anyone who
    has a clone.
 4. **Prevent recurrence**: add the path to the ignore file and record what allowed it through.
 
-Step 3 is destructive and rewrites shared history — get explicit approval before running it.
+Step 1 cuts off a live credential and step 3 rewrites shared history; both are irreversible —
+get explicit approval before running either.
 
 ## Evidence
 
