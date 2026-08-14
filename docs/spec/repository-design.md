@@ -98,5 +98,7 @@ plugin 型で導入した利用者には届かない。
 | ba0918-commit | コミット規約 | 既存文書の移植 |
 | ba0918-secrets | 機密情報の扱い | 新規(スコープ: 検出・ステージング禁止・露出防止) |
 | ba0918-scaffold | AGENTS.md / PROJECT.md の生成 | 新規(メタスキル) |
+| ba0918-release | リリース規律(canonical version・bump・タグ・changelog) | 運用実績の蒸留 |
 
-dependencies / review / changelog / 言語別ルールは、必要が実際に発生した時点で追加する。
+dependencies / review / 言語別ルールは、必要が実際に発生した時点で追加する
+(changelog 系は ba0918-release として追加済み — 延期トリガー「必要の実発生」の発火による)。
