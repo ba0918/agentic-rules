@@ -10,7 +10,7 @@
     {
       "name": "ba0918-rules",
       "version": "0.1.0",
-      "description": "Design principles, information placement, test-first contract, testing anti-patterns, commit conventions, secret handling, and generation of a project's AGENTS.md routing table",
+      "description": "Design principles, information placement, test-first contract, testing anti-patterns, commit conventions, secret handling, release discipline, and generation of a project's AGENTS.md routing table",
       "source": "./",
       "strict": false,
       "skills": [
