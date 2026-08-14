@@ -593,16 +593,28 @@ def test_unreadable_channel_manifest_violation_names_the_file_without_a_line(
     assert (violation.path, violation.line) == ("package.json", None)
 
 
-def test_channel_manifest_shipped_without_a_version_key_is_accepted(conforming_repo):
-    """Naming no version opts a channel out, exactly as not shipping it does.
+@pytest.mark.parametrize(
+    "unusable_version", ["", '"version": "",', '"version": 5,']
+)
+@pytest.mark.parametrize(
+    "manifest_path, rule",
+    [
+        (".claude-plugin/plugin.json", "version-sync-plugin"),
+        ("package.json", "version-sync-package"),
+    ],
+)
+def test_shipped_channel_manifest_naming_no_version_string_is_reported(
+    conforming_repo, manifest_path, rule, unusable_version
+):
+    """A shipped channel must name the released version, not merely not contradict it.
 
-    The file is shipped and readable; it simply offers nothing to compare, and
-    the canonical version is asked for agreement only from the channels that
-    declare one.
+    Were the absent version passed over, deleting the key would be the way to
+    silence a disagreement instead of resolving it, and a channel would ship
+    under a version nobody declared.
     """
-    edit_file(conforming_repo, ".claude-plugin/plugin.json", '"version": "0.1.0",', "")
+    edit_file(conforming_repo, manifest_path, '"version": "0.1.0",', unusable_version)
 
-    assert validate.validate_repository(conforming_repo) == []
+    assert rules_of(validate.validate_repository(conforming_repo)) == [rule]
 
 
 def test_repository_declaring_versions_without_a_canonical_one_is_reported(

@@ -501,9 +501,13 @@ def version_disagreement(
 ) -> List[Violation]:
     """Report a version that disagrees with the canonical one.
 
-    A version that is absent is not a disagreement: a manifest a repository does
-    not ship is a distribution channel it does not offer, and a repository that
-    declares no canonical version has nothing to be checked against.
+    An absent version is judged by the caller, not here, because the two callers
+    read it differently: a changelog holding no release describes a repository
+    that has not released, while a shipped JSON manifest naming no version is a
+    channel shipping under a version nobody declared.
+
+    A repository that declares no canonical version has nothing to be checked
+    against either way.
     """
     if canonical is None or declared is None or declared == canonical:
         return []
@@ -571,7 +575,13 @@ def check_json_channel(
 ) -> List[Violation]:
     """Check one JSON distribution manifest: readable at all, then in agreement.
 
-    Both violations name the file but no line: json.loads reports no position
+    A manifest the repository does not ship is a channel it does not offer and
+    is passed over. One it does ship is required to name the released version:
+    were a version absent, empty or not a string passed over as nothing to
+    compare, deleting the key would silence a disagreement rather than resolve
+    it, and the channel would ship under a version nobody declared.
+
+    Every violation names the file but no line: json.loads reports no position
     for the value it parsed, and tracking one would mean hand-rolling a JSON
     parser for the sake of a jumpable column. The changelog rule carries a line
     only because it already reads the file line by line.
@@ -585,9 +595,20 @@ def check_json_channel(
                 path,
             )
         ]
-    return version_disagreement(
-        sync_rule, path, declared_version(manifest.document), canonical
-    )
+    if not manifest.present or canonical is None:
+        return []
+    declared = declared_version(manifest.document)
+    if declared is None:
+        return [
+            Violation(
+                REPOSITORY_SUBJECT,
+                sync_rule,
+                f"{path} declares no version, but {MANIFEST_PATH} "
+                f"declares {canonical!r}",
+                path,
+            )
+        ]
+    return version_disagreement(sync_rule, path, declared, canonical)
 
 
 def check_plugin_manifest(repository: Repository) -> List[Violation]:
