@@ -24,7 +24,9 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 ### Changed
 
 - The version in `.claude-plugin/marketplace.json` moved from `metadata.version` to
-  `plugins[0].version`, so the file names the version once.
+  `plugins[0].version`, so the file names the version once. Declaring it there also decides how
+  updates reach the plugin routes: an installed copy follows this version instead of the latest
+  commit, so a user-visible change ships only once the version is bumped.
 
 ## [0.1.0] - 2026-08-13
 

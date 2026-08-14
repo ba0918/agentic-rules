@@ -36,7 +36,10 @@ the metadata already in this repository; `gh skill` and `npx skills` install by 
 
 ### Claude Code (plugin marketplace)
 
-Updates arrive automatically. Suited to a personal environment.
+Updates arrive when the plugin's version is bumped. The marketplace entry declares
+`plugins[0].version`, and an installed copy follows that version rather than the latest commit,
+so a change that leaves the version untouched does not reach it. Suited to a personal
+environment.
 
 ```
 /plugin marketplace add ba0918/agentic-rules
@@ -46,7 +49,8 @@ Updates arrive automatically. Suited to a personal environment.
 ### Codex CLI (plugin marketplace)
 
 Codex reads the same `.claude-plugin/marketplace.json`, and the skills appear to the model
-under the plugin name, as `ba0918-rules:ba0918-design` and so on.
+under the plugin name, as `ba0918-rules:ba0918-design` and so on. Updates are bump-driven here
+too, since the version is declared in that same manifest.
 
 ```
 codex plugin marketplace add ba0918/agentic-rules

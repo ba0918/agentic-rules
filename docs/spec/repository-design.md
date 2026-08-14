@@ -23,8 +23,10 @@ AI コーディングエージェントに与える「ルール」(設計原則�
 導入経路は 2 型を提供する。リポジトリを `skills/<スキル名>/SKILL.md` レイアウトにし、
 配布用メタデータを置くことで全経路に対応する。
 
-1. **plugin 型**(更新が自動または git 追従で届く。個人環境向け):
-   - Claude Code plugin marketplace(`.claude-plugin/marketplace.json`)
+1. **plugin 型**(導入時の設定のまま更新が届く。個人環境向け):
+   - Claude Code plugin marketplace(`.claude-plugin/marketplace.json`)。
+     `plugins[0].version` を宣言しているため、更新は commit 追従ではなく
+     この版が上がったときに配信される
    - Codex CLI plugin(同じ `.claude-plugin/` の manifest を読む)
    - OpenCode plugin(`package.json` + `.opencode/plugins/` の config hook で
      スキルパスを登録する。セッションへの注入は行わない — 常時適用ルールの
@@ -39,6 +41,11 @@ OpenCode 用の `package.json` は配布用 manifest であり、公開 npm パ�
 バージョンの正本(canonical)は `.claude-plugin/marketplace.json` の
 `plugins[0].version` とする。他の manifest(plugin.json / package.json)の version と
 CHANGELOG の最新リリース見出しは canonical との一致をバリデータが機械検証する。
+
+canonical は版の表示であると同時に、plugin 型の更新が配信される条件でもある。
+リリース規律として、利用者に見える変更(ルール本文・スキル構成・導入手順の変更)を
+入れるときは必ず canonical を bump する。canonical を据え置いたままの変更は、
+plugin 型で導入した利用者には届かない。
 
 入手方法と再現性ポリシーは別物として扱う。リポジトリ側の義務は「リリースにタグを打つ」
 「後方互換のない変更(ルールの意味が変わる変更)を区別して changelog に残す」まで。
