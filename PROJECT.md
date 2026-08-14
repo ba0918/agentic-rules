@@ -5,7 +5,8 @@
 A single source of normative rules for AI coding agents — design principles, test discipline,
 information placement, commit conventions, secret handling and release discipline — packaged as
 [Agent Skills](https://agentskills.io) and distributed from here to many projects and many
-agents (Claude Code, Codex CLI, OpenCode, and any `gh skill` / `npx skills` consumer). This
+agents (Claude Code, Codex CLI, OpenCode, APM (microsoft/apm), and any `gh skill` /
+`npx skills` consumer). This
 repository holds domain rules only; workflow automation lives elsewhere and is never depended
 on from here.
 

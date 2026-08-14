@@ -113,15 +113,17 @@ managed from one manifest.
 ### Copy (`gh skill` / `npx skills`)
 
 Skills are copied into the project at install time, and updates are pulled by running the
-command again. Because a tag can be pinned, this route suits projects, teams and CI.
+command again. Because `gh skill` can pin a commit or tag (`@<ref>`), this route suits
+projects, teams and CI.
 
 ```
 gh skill install ba0918/agentic-rules
 npx skills add ba0918/agentic-rules
 ```
 
-Pin a release tag when reproducibility matters. Releases are tagged, and changes that alter
-the meaning of a rule are recorded separately in [CHANGELOG.md](CHANGELOG.md).
+Pin a commit SHA when reproducibility matters, or a release tag (`v{version}`) once releases
+are tagged. Changes that alter the meaning of a rule are recorded separately in
+[CHANGELOG.md](CHANGELOG.md).
 
 ## Naming
 

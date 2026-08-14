@@ -20,7 +20,7 @@ AI コーディングエージェントに与える「ルール」(設計原則�
 
 ## 配布と更新
 
-導入経路は 2 型を提供する。リポジトリを `skills/<スキル名>/SKILL.md` レイアウトにし、
+導入経路は 3 型を提供する。リポジトリを `skills/<スキル名>/SKILL.md` レイアウトにし、
 配布用メタデータを置くことで全経路に対応する。
 
 1. **plugin 型**(導入時の設定のまま更新が届く。個人環境向け):
@@ -34,6 +34,11 @@ AI コーディングエージェントに与える「ルール」(設計原則�
 2. **copy 型**(gh skill / npx skills — GitHub リポジトリからスキルを取り込む CLI 群):
    導入時にコピーされ、更新は明示的なコマンド実行で取り込む。バージョン固定ができるため
    プロジェクト・チーム・CI 向け
+3. **package-manager 型**(APM — microsoft/apm): apm.yml で複数エージェントの設定を
+   一括管理する利用者向け。リポジトリ側の追加物はなく、`.claude-plugin/plugin.json` を
+   持つリポジトリを plugin collection として解決し `skills/` を自動検出する。利用側は
+   apm.yml の参照(タグ/SHA)で版を固定し、lockfile が解決結果を記録する。更新は利用側の
+   `apm update` で取り込む
 
 OpenCode 用の `package.json` は配布用 manifest であり、公開 npm パッケージではない
 (`private: true` で誤公開を防ぐ)。
