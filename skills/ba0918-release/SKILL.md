@@ -42,7 +42,7 @@ applies to every entry written here.
 - Create the tag only on a state that has passed the project's checks; the tag publishes a
   verified release, it does not start one.
 - Issue a tag for every release, and issue the tag, the version heading and the comparison link
-  as one operation, leaving no state where one exists without the others.
+  as one operation, leaving no release standing where one exists without the others.
 - Treat a tag pushed to the shared remote as published: never move, reuse or re-create a
   published tag under the same name. Fix a published release by releasing a new version. A tag
   that exists only locally is unpublished and may be deleted.
@@ -79,9 +79,14 @@ unrelated set of changes, that decision gets harder to make from the heading alo
 revert of one part has to take the unrelated part with it.
 
 **The tag confirms verification; it does not start it.** Run the project's checks on the commit
-a release would tag, and create the tag only once they pass. When the checks fail at that point,
-no tag exists yet: nothing was published, and neither a version nor a tag name has been consumed
-by the failure. The fix lands, the checks run again, and the release proceeds as if the failed
+a release would tag, and create the tag only once they pass. Running them between the promote
+commit and the tag is the inside of that one operation, not a break in it — the one-operation
+rule is about the durable end state, no release left standing with one artifact and not the
+others, and a promotion still under verification has not ended yet. When the checks fail at that
+point, no tag exists: nothing was published, and neither a version nor a tag name has been
+consumed by the failure. The fix lands, the promotion is redone on top of it and supersedes the
+failed promote commit, which is never tagged; the checks run again, and the tag — created only
+then — points at a commit carrying the version heading and the comparison link, as if the failed
 attempt had never been cut.
 
 **Consuming a new patch version for a post-publication fix is the cost of an honest history.**
@@ -145,8 +150,8 @@ Show these outputs rather than asserting the release is consistent.
   mismatch.
 - **The release is one operation**: `git show <tag>`, containing the version heading and the
   comparison link in the commit the tag points at.
-- **The tag points at a verified state**: the project's checks, run at the tagged commit,
-  reporting success.
+- **The tag points at a state that passes the checks**: the project's checks, run at the tagged
+  commit, reporting success — anyone can re-check the state by re-running them at that commit.
 - **The entry stands alone**: the released section as it reads at the tag
   (`git show <tag>:<the changelog file>`), each line naming what changed and what it does to a
   project that has installed this one.
