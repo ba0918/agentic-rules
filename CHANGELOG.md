@@ -12,6 +12,9 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Added
 
+- `ba0918-release` — release discipline: one canonical version location per project, a bump
+  whenever a release carries a user-visible change, a change of meaning recorded as breaking, and
+  the tag, the version heading and the comparison link issued as one operation.
 - Codex CLI as an install route — `.claude-plugin/plugin.json` declares the plugin's identity,
   and Codex installs from the marketplace manifest this repository already carried.
 - OpenCode as an install route — `package.json` and `.opencode/plugins/agentic-rules.js`
