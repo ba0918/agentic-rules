@@ -1,0 +1,69 @@
+# Project Context
+
+## What this is
+
+A single source of normative rules for AI coding agents — design principles, test discipline,
+information placement, commit conventions, secret handling and release discipline — packaged as
+[Agent Skills](https://agentskills.io) and distributed from here to many projects and many
+agents (Claude Code, Codex CLI, OpenCode, and any `gh skill` / `npx skills` consumer). This
+repository holds domain rules only; workflow automation lives elsewhere and is never depended
+on from here.
+
+## Stack and layout
+
+Python 3.12 (standard library only) for the validator; pytest for its tests; Node is used only
+to run the reference validator in CI and the OpenCode plugin hook.
+
+- `skills/` — the product: rule skills named `ba0918-<domain-noun>`, one directory per skill
+- `scripts/validate.py` — this repository's own conventions, as a registry of rules
+- `tests/` — pytest suite for the validator
+- `.claude-plugin/marketplace.json` — distribution metadata; `plugins[0].version` is the
+  canonical version of the whole repository
+- `.claude-plugin/plugin.json` — identity declaration; its `description` must stay identical
+  to the one in `marketplace.json`
+- `.opencode/plugins/agentic-rules.js` — OpenCode plugin, config hook only
+- `docs/spec/repository-design.md` — the authoritative design spec (Japanese)
+
+## Commands
+
+| Purpose | Command |
+|---|---|
+| Install | none — the validator is stdlib-only; pytest is fetched per-run via `uv` |
+| Build | none — skills are distributed as-is |
+| Test | `timeout 180 uv run --with pytest -- pytest tests/ -q` |
+| Lint | `python3 scripts/validate.py` (repo conventions) / `npx --yes skills-ref@0.1.5 validate skills/<name>/` (Agent Skills spec) |
+| Run locally | n/a — nothing runs; this repository is consumed by installing its skills |
+
+## Conventions specific to this project
+
+- `docs/spec/repository-design.md` is the source of truth. Change the spec deliberately and
+  first; never let it drift behind the implementation as a side effect.
+- Skill bodies are project-agnostic English: no repository-specific paths, tool-specific
+  commands, or references to this repository's own layout inside a skill.
+- Skills refer to each other by name only, never by path.
+- Any change to a skill's shared wording must keep `plugin.json` and `marketplace.json`
+  descriptions as the same string — updating only one is a defect.
+- Do not install packages into the user environment; run pytest through `uv run --with pytest`.
+
+## Constraints
+
+- Every user-visible change must bump the canonical version
+  (`.claude-plugin/marketplace.json` → `plugins[0].version`). An unbumped change is never
+  delivered to plugin-type consumers, so "the update will arrive automatically" is false here.
+- `.agents/` is session-local working state, excluded via `.git/info/exclude`; it must never
+  be committed.
+- CI pins the reference validator (`skills-ref@0.1.5`) so a validator release cannot silently
+  change what a green build means; bump the pin deliberately.
+- The repository is currently private; the OpenCode `git+https` install path only works after
+  it goes public.
+
+## Glossary
+
+- **Rule skill** — a skill that states norms (what good work looks like), as opposed to a
+  workflow skill that automates a procedure. Only rule skills belong in this repository.
+- **Canonical version** — the single version number of this repository as a distribution,
+  held in `marketplace.json` `plugins[0].version`; every other version-looking field follows it.
+- **Routing** — the `ba0918-routing` frontmatter metadata (`always` / `required:<trigger>` /
+  absent) that ba0918-scaffold reads to generate a project's AGENTS.md routing table.
+- **Bump** — raising the canonical version; here it is the delivery condition for plugin-type
+  consumers, not a cosmetic release step.
