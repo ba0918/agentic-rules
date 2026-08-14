@@ -17,11 +17,10 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   eight-rung search ladder per layer — from questioning whether the layer is needed at
   all, through the codebase, the standard library, the platform, installed dependencies
   and not-yet-installed ecosystem staples, through a few lines written in place, down to
-  minimal self-implementation — an
-  adopt-or-build record with a one-line reason for every layer with no exemption for
-  human-suggested technology, judgment of the record rather than the verdict, a
-  project-set time limit on the search, and escalation to a human before any forced
-  large self-implementation.
+  minimal self-implementation — an adopt-or-build record with a one-line reason for
+  every layer with no exemption for human-suggested technology, judgment of the record
+  rather than the verdict, a project-set time limit on the search, and escalation to a
+  human before any forced large self-implementation.
 
 ## [0.2.0] - 2026-08-14
 
