@@ -21,6 +21,7 @@ belongs elsewhere and must not be depended on from here.
 | `ba0918-release` | Release discipline: canonical version, bump, breaking changes, changelog, tag | `required:release` |
 | `ba0918-delegation` | Delegation discipline: orchestrator principle, five role contracts, executor table | `required:delegate` |
 | `ba0918-verification` | Verification discipline: evidence demands, worst-of aggregation, hand-off hygiene | `required:review` |
+| `ba0918-reuse` | Reuse-before-build: layer decomposition, an eight-rung search ladder, adopt-or-build records | `required:design` |
 | `ba0918-testing` | Testing anti-patterns | fires from its description |
 | `ba0918-scaffold` | Generates `AGENTS.md` / `PROJECT.md` for a consuming project | invoked explicitly |
 
