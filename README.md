@@ -33,9 +33,10 @@ to generate a consuming project's routing table. Only two forms are valid: `alwa
 
 ## Install
 
-Two kinds of route are supported — plugin and copy. They differ in how updates reach you,
-not in what you get. Claude Code, Codex CLI and OpenCode install by the plugin route, each from
-the metadata already in this repository; `gh skill` and `npx skills` install by the copy route.
+Three kinds of route are supported — plugin, package manager and copy. They differ in how
+updates reach you, not in what you get. Claude Code, Codex CLI and OpenCode install by the
+plugin route, each from the metadata already in this repository; APM installs by the
+package-manager route; `gh skill` and `npx skills` install by the copy route.
 
 ### Claude Code (plugin marketplace)
 
@@ -87,6 +88,31 @@ else: the skills become loadable through OpenCode's native `skill` tool, and not
 injected into the session. `package.json` exists to make this repository installable by that
 plugin route. It is a distribution manifest, not a published npm package — `private: true`
 keeps it off the registry.
+
+### APM (package manager)
+
+[APM](https://github.com/microsoft/apm) manages skills and configuration for several AI
+agents from one manifest, the way npm manages packages: installing adds one dependency line
+to the project's `apm.yml`, `apm.lock.yaml` pins the resolved commit, and `apm update` moves
+it forward. Suited to a project that provisions more than one agent from the same
+declaration.
+
+```
+apm install ba0918/agentic-rules --target claude
+apm install -g ba0918/agentic-rules
+```
+
+The first form installs into the project: for Claude Code the skills land in
+`.claude/skills/`, while `--target opencode` and the other cross-tool targets (Copilot,
+Cursor, Codex and others) place them in the shared `.agents/skills/`. The second form
+installs into the user scope under `~/.apm/`. APM warns when a dependency is unpinned; pin a
+commit SHA today, or a release tag (`ba0918/agentic-rules#v{version}`) once releases are
+tagged.
+
+This repository carries no APM-specific file: APM resolves a repository holding
+`.claude-plugin/plugin.json` as a plugin collection and discovers `skills/` on its own. For
+OpenCode alone the plugin route above is enough; APM earns its place when several agents are
+managed from one manifest.
 
 ### Copy (`gh skill` / `npx skills`)
 

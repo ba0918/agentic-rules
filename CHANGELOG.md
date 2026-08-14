@@ -31,6 +31,10 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   tag issued for every release — created only after the project's checks pass, and issued with
   the version heading and the comparison link as one operation — and published tags never moved
   or reused: a published release is fixed by releasing a new version.
+- APM ([microsoft/apm](https://github.com/microsoft/apm)) as an install route, documented in
+  the README — APM resolves the `.claude-plugin/plugin.json` this repository already carries
+  as a plugin collection and discovers `skills/` on its own, so no repository-side change was
+  needed.
 - Codex CLI as an install route — `.claude-plugin/plugin.json` declares the plugin's identity,
   and Codex installs from the marketplace manifest this repository already carried.
 - OpenCode as an install route — `package.json` and `.opencode/plugins/agentic-rules.js`
