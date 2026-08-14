@@ -14,8 +14,10 @@
 |---|---|
 | Always | ba0918-design, ba0918-placement, ba0918-secrets |
 | commit | ba0918-commit |
+| delegate | ba0918-delegation |
 | implement | ba0918-tdd |
 | release | ba0918-release |
+| review | ba0918-verification |
 
 Refer to each rule by its skill name. Read every rule that applies before starting the work it
 governs.
