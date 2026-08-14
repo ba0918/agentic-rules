@@ -116,3 +116,5 @@ description による発火(候補としてスキルが読み込まれること)
 
 dependencies / review / 言語別ルールは、必要が実際に発生した時点で追加する
 (changelog 系は ba0918-release として追加済み — 延期トリガー「必要の実発生」の発火による)。
+ここでの review はコードレビュー規約の領域を指す。検証規範 ba0918-verification
+(routing の `required:review`)は別領域であり、この延期項目を消費しない。
