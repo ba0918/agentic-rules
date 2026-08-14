@@ -27,8 +27,10 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   reference is left untouched (idempotent), and any other existing `CLAUDE.md` gets a diff
   presented instead of an overwrite, the same gate as `AGENTS.md`.
 - `ba0918-release` — release discipline: one canonical version location per project, a bump
-  whenever a release carries a user-visible change, a change of meaning recorded as breaking, and
-  the tag, the version heading and the comparison link issued as one operation.
+  whenever a release carries a user-visible change, a change of meaning recorded as breaking, a
+  tag issued for every release — created only after the project's checks pass, and issued with
+  the version heading and the comparison link as one operation — and published tags never moved
+  or reused: a published release is fixed by releasing a new version.
 - Codex CLI as an install route — `.claude-plugin/plugin.json` declares the plugin's identity,
   and Codex installs from the marketplace manifest this repository already carried.
 - OpenCode as an install route — `package.json` and `.opencode/plugins/agentic-rules.js`
