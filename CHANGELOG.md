@@ -12,6 +12,16 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Added
 
+- `ba0918-delegation` — delegation discipline: an orchestrator that delegates work instead of
+  performing it, five fixed role contracts (orchestrator / implementer / investigator /
+  reviewer / bulk-executor), self-contained delegation prompts, a take-home contract for
+  results, and an executor table that binds roles to executors in the user's own environment —
+  no model, vendor or price bindings inside the skill itself.
+- `ba0918-verification` — verification discipline: observable evidence instead of completion
+  claims, worst-of aggregation of review verdicts with a missing required reviewer recorded as
+  UNVERIFIED, findings treated as data rather than authority, hand-off hygiene toward external
+  systems (scoped diff only, credential scan, sealing delimiters), and narrow escalation
+  conditions.
 - `ba0918-scaffold` now generates a `CLAUDE.md` shim — a single `@AGENTS.md` line — when none
   exists, so the generated router is actually read by Claude Code. An existing equivalent
   reference is left untouched (idempotent), and any other existing `CLAUDE.md` gets a diff
