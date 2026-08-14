@@ -61,6 +61,9 @@ escalated to a human when it exceeds the orchestrator's mandate.
 - For long-running work, state explicitly that the call runs synchronously and how long it is
   allowed to take — or design the flow so that a result never returned does no harm. When the
   work must run detached, name the durable result location and who collects it before launching.
+- Never retry a failed delegation unchanged. Alter something identified before re-delegating —
+  the prompt, the decomposition, or the executor — and escalate to a stronger executor as
+  attempts accumulate.
 - Keep one executor table per environment, at the user-level instruction location, with the
   columns Role / Executor / Evidence.
 - Write each executor as a stable, fully qualified identifier, never an alias whose resolution
@@ -98,6 +101,14 @@ work; the artifact is the work. A delegation whose result exists only inside the
 reply — when it was expected as a file — has lost its result the moment the reply scrolls out
 of context, which is why the fallback of returning the deliverable in the body must be agreed
 at delegation time, not discovered at reporting time.
+
+**Retrying unchanged is speculation; escalating is measurement.** The same prompt, the same
+decomposition and the same executor produce the same failure, so a retry must change one of
+them deliberately. Escalating the executor as attempts accumulate is the default ladder: each
+rung either resolves the task or demonstrates, by observation, that the role's current binding
+was too weak for work of this kind — and that demonstration is precisely an Evidence entry for
+the executor table. A retry loop that never escalates converts repeated failure into spent
+context instead of into a measurement.
 
 **The Evidence column is what keeps the table honest.** A row that cannot cite the observed
 failure or measurement that put it there is an opinion in table form. Evidence-bearing rows can
