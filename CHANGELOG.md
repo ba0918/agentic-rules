@@ -12,6 +12,10 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Added
 
+- `ba0918-scaffold` now generates a `CLAUDE.md` shim — a single `@AGENTS.md` line — when none
+  exists, so the generated router is actually read by Claude Code. An existing equivalent
+  reference is left untouched (idempotent), and any other existing `CLAUDE.md` gets a diff
+  presented instead of an overwrite, the same gate as `AGENTS.md`.
 - `ba0918-release` — release discipline: one canonical version location per project, a bump
   whenever a release carries a user-visible change, a change of meaning recorded as breaking, and
   the tag, the version heading and the comparison link issued as one operation.
@@ -26,6 +30,19 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Changed
 
+- **BREAKING** — `ba0918-secrets`: revoking a leaked credential is now executed by a human, or
+  by the agent only under explicit approval — the same gate as rewriting shared history.
+  Reporting the leak becomes the first, blocking task, and external operations involving the
+  affected credential stop while approval is pending. "Revoke first, clean history second"
+  keeps its priority; only the actor changed.
+- **BREAKING** — `ba0918-scaffold` runs only when the user explicitly requests the scaffolding
+  work itself, never as a side effect of another task. Being loaded as a candidate from its
+  description is not permission to write files; the description now states the same condition.
+- The design spec's shared-source migration trigger became a staged clause: duplication between
+  skills is accepted (self-containment outranks deduplication), a validator sync check is added
+  only if drift between copies causes real harm, and a shared source is reconsidered only if
+  that fails. A new spec section requires file-writing procedural skills to run only on an
+  explicit request.
 - The version in `.claude-plugin/marketplace.json` moved from `metadata.version` to
   `plugins[0].version`, so the file names the version once. Declaring it there also decides how
   updates reach the plugin routes: an installed copy follows this version instead of the latest
