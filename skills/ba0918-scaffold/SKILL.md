@@ -1,6 +1,6 @@
 ---
 name: ba0918-scaffold
-description: "Generate a project's AGENTS.md routing table and PROJECT.md skeleton from the rule skills actually installed, by reading each skill's ba0918-routing metadata instead of hand-maintaining the list. Use when setting up agent instructions for a project, refreshing the routing table after installing or removing a rule skill, or splitting an overgrown AGENTS.md into a router plus project context. 日本語キーワード: AGENTS.md PROJECT.md 生成 雛形 ルーティング表 セットアップ 初期化 スキャフォールド 指示ファイル"
+description: "Generate a project's AGENTS.md routing table and PROJECT.md skeleton from the rule skills actually installed, by reading each skill's ba0918-routing metadata instead of hand-maintaining the list. Use only when the user explicitly requests this setup work itself — setting up agent instructions for a project, refreshing the routing table after installing or removing a rule skill, or splitting an overgrown AGENTS.md into a router plus project context. Never run it as a side effect of another task. 日本語キーワード: AGENTS.md PROJECT.md 生成 雛形 ルーティング表 セットアップ 初期化 スキャフォールド 指示ファイル"
 ---
 
 # AGENTS.md and PROJECT.md Scaffold
@@ -10,7 +10,9 @@ description: "Generate a project's AGENTS.md routing table and PROJECT.md skelet
 Applies when a project needs agent instructions, or when its existing instructions have drifted
 from the rule skills that are actually installed.
 
-Runs only when invoked explicitly. It writes two files and nothing else: `AGENTS.md`, a thin
+Runs only when the user explicitly requests this scaffolding work itself, never as a side effect
+of another task. Being loaded as a candidate from its description is not permission to write
+files. It writes two files and nothing else: `AGENTS.md`, a thin
 router pointing at rule skills, and `PROJECT.md`, the project-specific context that a router must
 not absorb.
 
