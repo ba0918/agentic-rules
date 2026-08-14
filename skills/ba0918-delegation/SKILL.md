@@ -42,8 +42,7 @@ escalated to a human when it exceeds the orchestrator's mandate.
 
 ## Rules
 
-- Delegate the work; keep the decisions. The orchestrator's first duty is preserving its own
-  context, and every file it reads and every command it runs in person spends it.
+- Delegate the work; keep the decisions.
 - Apply the role contracts regardless of binding. A role with no entry in the executor table
   degrades to the delegating agent's default mechanism — the separation rules still apply;
   degradation changes who performs the role, never what the role is allowed to do.
@@ -56,10 +55,9 @@ escalated to a human when it exceeds the orchestrator's mandate.
 - Make every delegation prompt self-contained: inline the contracts to follow, the context
   needed, and the exact paths involved. Never assume the delegate has read a rules file, a
   skill, or the conversation that produced the task.
-- Require the delegate to write its deliverable durably before reporting completion; the report
-  announces the artifact, it does not replace it. Where the delegate cannot write files, say so
-  in the delegation prompt and have it return the deliverable in its reply body, which the
-  orchestrator transcribes.
+- Require the delegate to write its deliverable durably before reporting completion. Where the
+  delegate cannot write files, say so in the delegation prompt and have it return the
+  deliverable in its reply body for the orchestrator to transcribe.
 - For long-running work, state explicitly that the call runs synchronously and how long it is
   allowed to take — or design the flow so that a result never returned does no harm. When the
   work must run detached, name the durable result location and who collects it before launching.
