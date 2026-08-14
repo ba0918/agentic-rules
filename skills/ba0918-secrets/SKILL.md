@@ -116,8 +116,10 @@ Good: git status --short   # read it
    has a clone.
 4. **Prevent recurrence**: add the path to the ignore file and record what allowed it through.
 
-Step 1 cuts off a live credential and step 3 rewrites shared history; both are irreversible —
-get explicit approval before running either.
+Executing the revocation in step 1 cuts off a live credential and step 3 rewrites shared
+history; both are irreversible — get explicit approval before executing either. Reporting the
+leak and urging revocation are not gated on that approval: they come first, precisely so the
+approval can be given.
 
 ## Evidence
 
