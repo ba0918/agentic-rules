@@ -59,8 +59,6 @@ to run the reference validator in CI and the OpenCode plugin hook.
   be committed.
 - CI pins the reference validator (`skills-ref@0.1.5`) so a validator release cannot silently
   change what a green build means; bump the pin deliberately.
-- The repository is currently private; the OpenCode `git+https` install path only works after
-  it goes public.
 
 ## Glossary
 
