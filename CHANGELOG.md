@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-14
+
 ### Added
 
 - `ba0918-delegation` — delegation discipline: an orchestrator that delegates work instead of
@@ -78,3 +80,6 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `scripts/validate.py` — validator for this repository's conventions, standard library only.
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
+
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/ba0918/agentic-rules/releases/tag/v0.2.0
