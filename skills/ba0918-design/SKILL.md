@@ -40,6 +40,9 @@ because it makes something testable that would otherwise not be.
 - Default to immutable data. Produce a new value instead of mutating an existing one.
 - Grant the least privilege and expose the smallest surface that works.
 - Route every boundary through one canonical validator rather than repeating ad-hoc checks.
+- Keep representations specific to a dependency or a storage mechanism inside their declared boundary.
+- When changing a persisted format, test the chosen change path: compatible read, migration, or explicit rejection.
+- Do not add an abstraction whose only justification is a future replacement.
 
 ## Judgment
 
@@ -67,6 +70,14 @@ wrong place. Move the boundary before adding the feature.
 **Security is structural.** Path traversal defence, input sanitisation, and prototype pollution
 defence belong in the shape of the system — one validator at one boundary — not sprinkled as
 later patches. A rule enforced in one place can be tested in one place.
+
+**Replaceability is a boundary test, not a prediction.** If swapping an implementation forces
+changes to its callers, to domain rules, or to their tests, the tests are pinning implementation
+details instead of a contract. Fix the tests and the boundary — do not add speculative
+abstraction to make future deletion feel cheap. Fixation itself is not the violation: a persisted
+format or a public API declared as a contract and covered by contract tests may legitimately stay
+fixed. The violation is an undeclared implementation detail leaking into stored data or consumers
+with no tested change path. Judge by what is declared and what is tested, never by stated intent.
 
 ## Examples
 
@@ -114,3 +125,8 @@ Show these outputs rather than asserting the design is sound.
   added and existing modules untouched.
 - **Type-level verification**: the type checker or compiler run, exit code 0, with no suppressed
   errors introduced by the change.
+- **Boundary containment**: for a change that touches a declared boundary, the diff of the
+  changed public surface, showing no newly exposed dependency-specific or storage-specific
+  representation. Scoped to this change — a repository-wide absence proof is not required.
+- **Persisted-format change**: a test run showing a representative value of the old format
+  passing through the chosen change path (compatible read, migration, or explicit rejection).
