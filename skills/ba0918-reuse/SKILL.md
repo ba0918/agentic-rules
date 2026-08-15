@@ -34,6 +34,9 @@ building are both legitimate verdicts once the reason for the choice is written 
 - Do not count the whole task as one layer when its parts have different alternatives.
 - Walk the ladder below for each layer, in order, and stop at the first rung that holds.
 - Record, for every layer, whether it was adopted or built, plus a one-line reason.
+- When a newly adopted dependency fixes a persisted format or a public contract, include what
+  it fixes in the adoption record. Record this only when it applies — do not add a boilerplate
+  "no fixation" line to records it does not apply to.
 - Record the layers a human suggested a technology for in the same form as the layers
   nobody mentioned. A suggestion is not an exemption from the record.
 - Put a short reason in a why-not comment next to the code; put a reason that compares
@@ -89,6 +92,12 @@ reason to build.
 **Detection rides the project's existing review process.** This rule adds no lint step, CI
 job or other machinery. Whoever reviews the change checks that the enumeration exists and
 that every layer carries its reason line.
+
+**Fixation by self-built parts is not recorded here.** A hand-rolled schema, identifier scheme,
+or event name fixes stored data and consumers just as an adopted dependency does, but that is a
+structural concern governed by the boundary rules of the skill `ba0918-design`. This record
+covers only the moment a new dependency is adopted, and it stays conditional on purpose: an
+unconditional record line degrades into boilerplate that reviewers rubber-stamp.
 
 ## Examples
 
