@@ -10,6 +10,20 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-design` — a replaceability lens, framed as a facet of testability rather than a
+  second principle: keep representations specific to a dependency or a storage mechanism
+  inside their declared boundary; when changing a persisted format, test the chosen change
+  path (compatible read, migration, or explicit rejection); never add an abstraction whose
+  only justification is a future replacement. Judged by declared contracts and tested change
+  paths, never by stated intent; evidence is scoped to the changed public surface of the
+  diff at hand.
+- `ba0918-reuse` — a conditional addition to the adoption record: when a newly adopted
+  dependency fixes a persisted format or a public contract, the record states what it fixes.
+  No unconditional boilerplate line; fixation by self-built parts stays with the boundary
+  rules of `ba0918-design`.
+
 ## [0.3.0] - 2026-08-15
 
 ### Added
