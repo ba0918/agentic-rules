@@ -22,9 +22,9 @@ it through are reversible, and an active incident is understood sooner for them.
 
 ## When the leak is a credential
 
-1. **Revoke and rotate** the credential at its provider, before any cleanup. Report the leak as
-   the first, blocking task and urge immediate revocation. While approval is pending, stop
-   external operations that involve the affected credential.
+1. **Revoke and rotate** the credential at its provider, before any cleanup. Press for immediate
+   revocation; while approval is pending, stop external operations that involve the affected
+   credential.
 2. **Determine the exposure**: which commits, branches, remotes, logs, CI runs, and transcripts
    contain it. Assume anything pushed has been fetched.
 3. **Remove it from history** and force-update the affected refs, coordinating with anyone who
@@ -33,10 +33,9 @@ it through are reversible, and an active incident is understood sooner for them.
 
 ## When the leak is information, not a credential
 
-There is nothing to revoke, so containment replaces revocation — and reporting still comes
-first, never quietly.
+There is nothing to revoke, so containment replaces revocation.
 
-1. **Report and pause**: state what leaked and where; hold further pushes and edits to the
+1. **Scope the pause**: state what leaked and where, and hold further pushes and edits to the
    affected destination until the response is approved.
 2. **Name the leaked material, then determine its exposure.** What leaked may be an identifier,
    or a passage or snippet that carries no stable name — a paraphrased document, copied code. An
