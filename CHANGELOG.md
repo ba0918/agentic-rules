@@ -18,17 +18,20 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   wider than the source's — a public repository's code, documentation, commit logs, issues and
   pull request text, and a broader private one alike. The test is the destination's audience,
   not the value's shape; for unlicensed copyrighted works the licence decides instead, in any
-  destination, a private one included. The leak-response section gains
-  an information-leak variant where containment replaces revocation, taken per exposed surface
-  — history rewritten across every affected commit, ref names, discussion titles, bodies and
-  comments with their edit histories — each surface re-checked after the cleanup, since
-  cleaning one never clears another. Leaked material with no stable identifier (a paraphrased
-  document, copied code) is located from its provenance rather than by search, through
-  inventory, prevention and re-check alike. Evidence gains four checks that make the new class verifiable rather than asserted:
-  outgoing text against a list of private identifiers held outside the working tree, a named
-  source and audience comparison for document-derived passages (a paraphrase carries no name
-  for a search to find), the licence and its attribution for each copy of third-party
-  material, and the post-containment re-check of every exposed surface.
+  destination, a private one included. The leak-response section gains an information-leak
+  variant where containment replaces revocation, taken per exposed surface — history rewritten
+  across every affected commit, ref names, discussion titles, bodies and comments with their
+  edit histories — each surface re-checked after the cleanup, since cleaning one never clears
+  another. That rewrite carries the same explicit approval gate as the credential path. Leaked
+  material with no stable identifier (a paraphrased document, copied code) is located from its
+  provenance rather than by search, through inventory, prevention and re-check alike. Evidence
+  gains four checks that make the new class verifiable rather than asserted: outgoing text
+  against a list of private identifiers held outside the working tree, a named source and
+  audience comparison for document-derived passages (a paraphrase carries no name for a search
+  to find), the licence and its attribution for each copy of third-party material, and a
+  post-containment accounting that separates the surfaces the response reached from the ones
+  beyond it — fetched clones, forks, caches — recorded as unresolved rather than claimed as a
+  purge.
 
 ## [0.4.0] - 2026-08-16
 
