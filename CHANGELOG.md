@@ -16,10 +16,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   alongside credentials: internal project and product names, internal hostnames, customer
   names, confidential document content, and unlicensed copyrighted works are kept out of
   public destinations (code, documentation, commit logs, issues, pull request text). The test
-  is the destination's audience, not the value's shape. The leak-response section gains an
-  information-leak variant where containment (history rewrite, body edits, revision deletion)
-  replaces revocation, and evidence gains an outgoing-text check against a locally kept list
-  of private identifiers.
+  is the destination's audience, not the value's shape; for third-party material the licence
+  decides instead, in any destination. The leak-response section gains an information-leak
+  variant where containment replaces revocation, taken per exposed surface — history rewritten
+  across every affected commit, ref names, discussion titles, bodies and comments with their
+  edit histories — and evidence gains an outgoing-text check against a list of private
+  identifiers held outside the working tree.
 
 ## [0.4.0] - 2026-08-16
 
