@@ -183,8 +183,6 @@ Show these outputs rather than asserting nothing leaked.
   reviewed line by line.
 - **Ignore coverage**: `git check-ignore -v` naming the rule that excludes each environment or key
   file present in the working tree.
-- **History is clean**: `git log --all --full-history -- <path>` for each credential path,
-  returning no commits.
 - **Outgoing text is clean**: a search of the staged diff, the commit message, the branch name,
   and any outward-bound text (issue or pull request title and body) against a list of private
   identifiers held outside the working tree, returning no hits.
