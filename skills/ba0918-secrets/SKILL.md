@@ -221,3 +221,7 @@ Show these outputs rather than asserting nothing leaked.
 - **Outgoing text is clean**: a search of the staged diff, the commit message, the branch name,
   and any outward-bound text (issue or pull request title and body) against a list of private
   identifiers held outside the working tree, returning no hits.
+- **Document-derived text is cleared**: for each passage written from a private document, its
+  source named and the destination's audience compared with the source's. An identifier search
+  cannot see a paraphrase that carries no name, so this one is stated and reviewed, not
+  searched — the identifier list does not stand in for it.
