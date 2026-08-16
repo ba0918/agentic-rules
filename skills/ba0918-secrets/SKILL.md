@@ -225,3 +225,6 @@ Show these outputs rather than asserting nothing leaked.
   source named and the destination's audience compared with the source's. An identifier search
   cannot see a paraphrase that carries no name, so this one is stated and reviewed, not
   searched — the identifier list does not stand in for it.
+- **Copied material is licensed**: for each copy of third-party material, the source, the
+  licence that permits the copy, and the attribution or notice that licence requires — present
+  in the artifact, not promised.
