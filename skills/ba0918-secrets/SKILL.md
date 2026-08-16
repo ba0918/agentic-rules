@@ -73,9 +73,13 @@ confidential context discloses existence — the test is the audience, not the v
   identifiers removed.
 - When private work motivates a public change, keep the structural lesson and drop the
   identity: "a real project's friction measurement", never the project's name.
-- Never reproduce confidential document content or unlicensed third-party material in any
-  artifact. Refer to it by a pointer the destination's audience can legitimately reach — or
-  not at all.
+- Never carry confidential document content across an audience boundary. Within the audience
+  already authorised for it, working from it — implementing what it requires in code, tests,
+  or internal documentation — is ordinary work. Outward of that audience, refer to the
+  document by a pointer that audience can legitimately reach, or not at all.
+- Never reproduce third-party material without a licence that permits the copy. Here the
+  licence decides, not the audience: a private destination does not make an unlicensed copy
+  acceptable.
 
 ## Judgment
 
