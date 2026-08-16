@@ -10,6 +10,17 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-secrets` — confidential context and third-party material as a second protected class
+  alongside credentials: internal project and product names, internal hostnames, customer
+  names, confidential document content, and unlicensed copyrighted works are kept out of
+  public destinations (code, documentation, commit logs, issues, pull request text). The test
+  is the destination's audience, not the value's shape. The leak-response section gains an
+  information-leak variant where containment (history rewrite, body edits, revision deletion)
+  replaces revocation, and evidence gains an outgoing-text check against a locally kept list
+  of private identifiers.
+
 ## [0.4.0] - 2026-08-16
 
 ### Added
