@@ -200,8 +200,10 @@ first, never quietly.
      what a ref points at never changes the ref's own name.
    - **Discussion text**: edit or delete the affected titles, bodies, comments and review
      comments, then delete the superseded revisions where the platform allows it.
-   - A guaranteed purge is a platform-support request. For third-party material, removal plus
-     resolving the licence question.
+   - **Beyond your reach**: platform support can delete revisions the platform still holds, and
+     will say what it deleted; it reaches nothing already fetched into a clone, fork, mirror,
+     notification or cache. Ask, then record what support confirmed — never report a purge.
+   - For third-party material, removal plus resolving the licence question.
 4. **Prevent recurrence**: record what allowed it through, and add what will catch a repeat.
    For an identifier that is a list outgoing text is checked against; for material with no
    identifier no search term represents it, so the source itself goes on record as one whose
