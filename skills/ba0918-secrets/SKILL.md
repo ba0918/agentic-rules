@@ -241,9 +241,12 @@ Show these outputs rather than asserting nothing leaked.
 - **Copied material is licensed**: for each copy of third-party material, the source, the
   licence that permits the copy, and the attribution or notice that licence requires — present
   in the artifact, not promised.
-- **Containment is complete**: after a cleanup, every surface named in the exposure inventory
-  re-checked and returning no hits — a content search across all refs and their full history,
-  the list of ref names, and a re-read of the affected titles, bodies, comments and their edit
-  histories on the platform. Where the material has no searchable form, the surfaces the
-  inventory named are re-read rather than searched. Each surface is confirmed on its own:
-  cleaning one never clears another, and a cleanup that was not re-checked is not containment.
+- **Containment is accounted for**: after a cleanup, every surface in the exposure inventory
+  carries a stated outcome, with no blanks. The surfaces you control return no hits — a content
+  search across all refs and their full history, the list of ref names, and a re-read of the
+  affected titles, bodies, comments and their edit histories on the platform; where the material
+  has no searchable form, those surfaces are re-read rather than searched. The surfaces beyond
+  reach — fetched clones, forks, mirrors, notifications, caches — are listed as unresolved,
+  together with whatever platform support confirmed it deleted. Each surface is accounted for on
+  its own: cleaning one never clears another, and a cleanup that was not re-checked is not
+  containment. What this evidence shows is a bounded response, never a purge.
