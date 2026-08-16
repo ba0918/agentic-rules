@@ -35,13 +35,13 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Changed
 
-- **BREAKING** — `ba0918-secrets` moves its two leak-response procedures and the evidence they
-  owe into `references/leak-response.md`, read when a leak actually happens. No rule changed
-  meaning, but an `always`-routed skill is consumed as always-loaded context, and about a
-  quarter of what consumers received by default now sits behind a pointer. `SKILL.md` keeps the
-  part that must not wait — report first, stop what is still moving, and the explicit approval
-  gate on revoking a credential, rewriting shared history or deleting discussion revisions —
-  and names the file to read next.
+- `ba0918-secrets` moves its two leak-response procedures and the evidence they owe into
+  `references/leak-response.md`, read when a leak is suspected or confirmed. No rule changed
+  meaning and nothing left the distribution unit — the skill directory is what ships — so the
+  relocation is compatible under the criterion above. `SKILL.md` keeps the part that must not
+  wait: suspicion alone is enough to report and to stop what is still moving, and the explicit
+  approval gate covers revoking a credential, rewriting shared history and deleting discussion
+  revisions. It names the file to read next.
 - `ba0918-secrets` states each norm once. The approval gate and the report-first rule each
   stood in five places across rules, judgment and two procedures; `Rules` now covers prevention
   only and a single `After a leak` section covers response. Three bullets keeping a credential
