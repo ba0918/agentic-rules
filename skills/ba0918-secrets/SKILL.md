@@ -14,7 +14,8 @@ access tokens, private keys, passwords, connection strings, session cookies, and
 files that hold them.
 
 It covers four things: recognising a credential, keeping it out of version control, keeping it
-out of anything that gets recorded or transmitted, and the first moves after a leak.
+out of anything that records it or carries it where it was not meant to go, and the first moves
+after a leak.
 
 It applies the same four moves to **confidential context and third-party material**: information
 that identifies or reproduces private or protected content — internal project and product names,
