@@ -14,9 +14,11 @@ Reporting comes first, always, and is never gated on approval — it is what mak
 known to the people who own it, so containment does not depend on one session quietly handling
 it.
 
-Executing the response is gated. Revoking a credential, rewriting shared history, and deleting
-discussion revisions are irreversible: a human executes them, or the agent does only under
-explicit approval. Holding pushes while a response is "agreed" is not that approval.
+Three actions are gated, and only these three: revoking a credential, rewriting shared history,
+and deleting discussion revisions. Each is irreversible, so a human executes it, or the agent
+does only under explicit approval — and holding pushes while a response is "agreed" is not that
+approval. Everything else proceeds at once: determining the exposure and recording what allowed
+it through are reversible, and an active incident is understood sooner for them.
 
 ## When the leak is a credential
 
