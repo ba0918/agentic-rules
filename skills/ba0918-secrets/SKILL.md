@@ -157,9 +157,10 @@ Good: git status --short   # read it
 
 ## After a leak
 
-Report it first: a blocking task, before any fix, and never quietly. Stop what is still moving —
-external operations involving the affected credential, further pushes and edits to the affected
-destination.
+Suspicion is the trigger; confirmation is not a precondition. Report it first: a blocking task,
+before any fix, and never quietly. Stop what is still moving — external operations involving the
+affected credential, further pushes and edits to the affected destination. Establish what
+actually happened after those two moves, not before them.
 
 Revoking a credential, rewriting shared history, and deleting discussion revisions are
 irreversible: a human executes them, or the agent does only under explicit approval. Reporting is
