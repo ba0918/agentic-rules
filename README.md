@@ -15,7 +15,7 @@ belongs elsewhere and must not be depended on from here.
 |---|---|---|
 | `ba0918-design` | Design principles, with testability as the supreme goal | `always` |
 | `ba0918-placement` | Where each kind of information belongs: code / tests / commit logs / comments | `always` |
-| `ba0918-secrets` | Handling credentials and confidential material: detection, staging ban, exposure prevention, audience boundary for public destinations, incident response | `always` |
+| `ba0918-secrets` | Handling credentials and confidential material: detection, staging ban, exposure prevention, audience boundary for public destinations, third-party licence compliance in any destination, incident response | `always` |
 | `ba0918-tdd` | Test-first contract (RED → GREEN → REFACTOR) | `required:implement` |
 | `ba0918-commit` | Commit splitting and message conventions | `required:commit` |
 | `ba0918-release` | Release discipline: canonical version, bump, breaking changes, changelog, tag | `required:release` |
