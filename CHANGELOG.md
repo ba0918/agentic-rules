@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-08-16
+
 ### Added
 
 - `ba0918-secrets` — confidential context and third-party material as a second protected class
@@ -46,8 +48,11 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   stood in five places across rules, judgment and two procedures; `Rules` now covers prevention
   only and a single `After a leak` section covers response. Three bullets keeping a credential
   out of commit messages, out of logs and out of prompts became one bullet naming every
-  destination, `Judgment` took back the rationale that had drifted into the evidence checklist,
-  and two sentences that had become hard to parse were rewritten.
+  destination — with an explicit exclusion for presenting the value to the service it
+  authenticates against, since the general-principle wording would otherwise widen the ban
+  beyond the scope of the previous specific list. `Judgment` took back the rationale that had
+  drifted into the evidence checklist, and two sentences that had become hard to parse were
+  rewritten.
 - The design spec gains a division of labour between `SKILL.md` and `references/`. The 500-line
   cap is a limit, not a budget: what a skill is read for in every session stays in `SKILL.md`,
   what only a specific situation needs moves to `references/`, safety reflexes stay behind
@@ -156,7 +161,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/ba0918/agentic-rules/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/ba0918/agentic-rules/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/ba0918/agentic-rules/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ba0918/agentic-rules/releases/tag/v0.2.0
