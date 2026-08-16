@@ -198,8 +198,10 @@ first, never quietly.
      comments, then delete the superseded revisions where the platform allows it.
    - A guaranteed purge is a platform-support request. For third-party material, removal plus
      resolving the licence question.
-4. **Prevent recurrence**: add the identifier to a local, untracked list that outgoing text is
-   checked against, and record what allowed it through.
+4. **Prevent recurrence**: add the identifier to a list that outgoing text is checked against,
+   and record what allowed it through. Keep that list outside the working tree, or excluded by
+   the repository's local-only exclude file — untracked is not enough, because one bulk staging
+   commits the very identifiers the list exists to catch.
 
 ## Evidence
 
@@ -217,5 +219,5 @@ Show these outputs rather than asserting nothing leaked.
 - **Revocation**: the provider's confirmation that the old credential is inactive, dated after the
   exposure.
 - **Outgoing text is clean**: a search of the staged diff, the commit message, the branch name,
-  and any outward-bound text (issue or pull request title and body) against a locally kept,
-  untracked list of private identifiers, returning no hits.
+  and any outward-bound text (issue or pull request title and body) against a list of private
+  identifiers held outside the working tree, returning no hits.
