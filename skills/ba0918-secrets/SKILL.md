@@ -211,6 +211,11 @@ first, never quietly.
    working tree, or excluded by the repository's local-only exclude file — untracked is not
    enough, because one bulk staging commits the very identifiers the list exists to catch.
 
+Step 3 rewrites shared history and deletes discussion revisions; both are irreversible, so the
+same gate applies here as in the credential procedure — get explicit approval before executing
+either. Step 1's report is not that approval, and neither is holding pushes until a response is
+agreed: reporting comes first, precisely so the approval can be given.
+
 ## Evidence
 
 Show these outputs rather than asserting nothing leaked.
