@@ -14,10 +14,11 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 - `ba0918-secrets` — confidential context and third-party material as a second protected class
   alongside credentials: internal project and product names, internal hostnames, customer
-  names, confidential document content, and unlicensed copyrighted works are kept out of
-  public destinations (code, documentation, commit logs, issues, pull request text). The test
-  is the destination's audience, not the value's shape; for third-party material the licence
-  decides instead, in any destination, a private one included. The leak-response section gains
+  names and confidential document content are kept out of any destination whose audience is
+  wider than the source's — a public repository's code, documentation, commit logs, issues and
+  pull request text, and a broader private one alike. The test is the destination's audience,
+  not the value's shape; for unlicensed copyrighted works the licence decides instead, in any
+  destination, a private one included. The leak-response section gains
   an information-leak variant where containment replaces revocation, taken per exposed surface
   — history rewritten across every affected commit, ref names, discussion titles, bodies and
   comments with their edit histories — each surface re-checked after the cleanup, since
