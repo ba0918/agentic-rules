@@ -33,6 +33,28 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   beyond it — fetched clones, forks, caches — recorded as unresolved rather than claimed as a
   purge.
 
+### Changed
+
+- **BREAKING** — `ba0918-secrets` moves its two leak-response procedures and the evidence they
+  owe into `references/leak-response.md`, read when a leak actually happens. No rule changed
+  meaning, but an `always`-routed skill is consumed as always-loaded context, and about a
+  quarter of what consumers received by default now sits behind a pointer. `SKILL.md` keeps the
+  part that must not wait — report first, stop what is still moving, and the explicit approval
+  gate on revoking a credential, rewriting shared history or deleting discussion revisions —
+  and names the file to read next.
+- `ba0918-secrets` states each norm once. The approval gate and the report-first rule each
+  stood in five places across rules, judgment and two procedures; `Rules` now covers prevention
+  only and a single `After a leak` section covers response. Three bullets keeping a credential
+  out of commit messages, out of logs and out of prompts became one bullet naming every
+  destination, `Judgment` took back the rationale that had drifted into the evidence checklist,
+  and two sentences that had become hard to parse were rewritten.
+- The design spec gains a division of labour between `SKILL.md` and `references/`. The 500-line
+  cap is a limit, not a budget: what a skill is read for in every session stays in `SKILL.md`,
+  what only a specific situation needs moves to `references/`, safety reflexes stay behind
+  whatever else moves, and a norm written in three or more places inside one skill is
+  consolidated — the accepted duplication between skills is a rule about distribution units,
+  not a licence to repeat a norm within one.
+
 ## [0.4.0] - 2026-08-16
 
 ### Added
