@@ -1,6 +1,6 @@
 ---
 name: ba0918-secrets
-description: "Handling credentials in a working repository — recognising keys, tokens and environment files, keeping them out of staged changes, keeping them out of logs, prompts and commit messages, and the first moves when one leaks. Use when touching configuration or environment files, staging changes, pasting output, writing a commit message, or responding to a suspected credential leak. 日本語キーワード: 機密情報 シークレット 認証情報 APIキー トークン 環境変数 .env 漏洩 露出 失効 ローテーション"
+description: "Handling credentials and confidential material in a working repository — recognising keys, tokens and environment files, keeping them out of staged changes, keeping them out of logs, prompts and commit messages, and the first moves when one leaks. Also keeping confidential context (internal project names, internal hostnames, customer names, confidential documents) and unlicensed third-party works out of public destinations — code, documentation, commit logs, issues, and pull request text. Use when touching configuration or environment files, staging changes, pasting output, writing a commit message, writing anything derived from a private context into a public destination, or responding to a suspected leak. 日本語キーワード: 機密情報 シークレット 認証情報 APIキー トークン 環境変数 .env 漏洩 露出 失効 ローテーション 機密文書 内部情報 プロジェクト名 著作権 著作物 公開リポジトリ"
 metadata:
   ba0918-routing: always
 ---
@@ -15,6 +15,13 @@ files that hold them.
 
 It covers four things: recognising a credential, keeping it out of version control, keeping it
 out of anything that gets recorded or transmitted, and the first moves after a leak.
+
+It applies the same four moves to **confidential context and third-party material**: information
+that identifies or reproduces private or protected content — internal project and product names,
+internal hostnames and domains, customer names, the contents of confidential documents, and
+copyrighted works without a licence to redistribute. The rule surface is every artifact the
+session writes: code and comments, tests, documentation, commit messages, branch names, issues,
+and pull request text.
 
 It does not cover secret storage systems, key management design, or access control policy.
 
@@ -31,6 +38,20 @@ It does not cover secret storage systems, key management design, or access contr
 Treat a value as a credential when it grants access on presentation. Length and randomness are
 hints, not the test.
 
+## Recognising confidential context
+
+| Signal | Examples |
+|---|---|
+| Internal identifiers | project and product codenames, repository names of private work |
+| Internal network names | non-public hostnames, internal domains (`*.local`, `*.corp`), internal URLs and paths |
+| Business relations | customer, partner, and vendor names tied to non-public work |
+| Private documents | text quoted or paraphrased from specs, contracts, or internal reports |
+| Third-party works | code or prose copied from a source whose licence does not permit redistribution |
+
+Treat a value as confidential context when it lets the destination's audience identify, locate,
+or reproduce private or protected material they were never given. A credential grants access;
+confidential context discloses existence — the test is the audience, not the value's shape.
+
 ## Rules
 
 - Never stage a credential. Never commit one.
@@ -46,6 +67,15 @@ hints, not the test.
   credential.
 - Revoke first, clean history second. Urge revocation as the first move; a human executes it, or
   the agent does only under explicit approval.
+- Before writing anywhere, compare the destination's audience with the source's. A public
+  repository's code, documentation, commit log, issues, and pull requests are public
+  destinations; material from a private context crosses that boundary only with its
+  identifiers removed.
+- When private work motivates a public change, keep the structural lesson and drop the
+  identity: "a real project's friction measurement", never the project's name.
+- Never reproduce confidential document content or unlicensed third-party material in any
+  artifact. Refer to it by a pointer the destination's audience can legitimately reach — or
+  not at all.
 
 ## Judgment
 
@@ -76,6 +106,20 @@ the mechanism that makes the rule enforceable.
 **A near-miss is worth recording.** When a credential nearly reached a commit, add the path to
 the ignore file so the same near-miss cannot recur.
 
+**A name grants no access, yet it still discloses.** An internal project name, hostname, or
+customer name passes the credential test and every secret scanner — which is exactly how it
+leaks: nothing flags it. What it reveals is existence and relationships: that the work exists,
+who it is for, where it runs. The audience comparison is applied by hand; no scanner does it.
+
+**Leaked information cannot be revoked.** A credential has a provider that can kill it; a name,
+a document, or a copyrighted text does not. Once pushed, assume it has been fetched — edit
+histories and forks keep copies. Prevention is the only strong control; response after the fact
+is containment, and containment is never complete.
+
+**For third-party works, the licence is the test, not availability.** That a text or a snippet
+is easy to find does not make it redistributable. Copy only under a licence that permits it,
+and carry the licence's obligations (attribution, notices) along with the copy.
+
 ## Examples
 
 A value exposed in a message, and the same fact stated safely:
@@ -95,6 +139,13 @@ Good: PAYMENT_API_KEY=<your-secret-key>
 The Bad line above is written as a description rather than as a literal on purpose: a
 documentation sample shaped like a real credential gets copied verbatim, and gets flagged by
 every scanner that reads this file.
+
+A private project named in a public artifact, and the same motivation stated safely:
+
+```
+Bad:  feat: <社内プロジェクト名> で要件合意の漏れが実害になったためチェックを追加
+Good: feat: 実プロジェクトで要件合意の漏れが実害になったためチェックを追加
+```
 
 Staging that leaks, and staging that does not:
 
@@ -121,6 +172,23 @@ history; both are irreversible — get explicit approval before executing either
 leak and urging revocation are not gated on that approval: they come first, precisely so the
 approval can be given.
 
+### When the leak is information, not a credential
+
+There is nothing to revoke, so containment replaces revocation — and reporting still comes
+first, never quietly.
+
+1. **Report and pause**: state what leaked and where; hold further pushes and edits to the
+   affected destination until the response is agreed.
+2. **Determine the exposure**: commits — including ones made unreachable, since a force-pushed
+   commit can remain fetchable by its hash until garbage collection — issue and pull request
+   bodies **and their edit histories**, forks, clones, mirrors, CI logs.
+3. **Contain**: amend and force-update the affected refs; edit issue and pull request bodies;
+   delete the superseded revisions where the platform allows it; a guaranteed purge is a
+   platform-support request. For third-party material, removal plus resolving the licence
+   question.
+4. **Prevent recurrence**: add the identifier to a local, untracked list that outgoing text is
+   checked against, and record what allowed it through.
+
 ## Evidence
 
 Show these outputs rather than asserting nothing leaked.
@@ -136,3 +204,6 @@ Show these outputs rather than asserting nothing leaked.
   returning no commits.
 - **Revocation**: the provider's confirmation that the old credential is inactive, dated after the
   exposure.
+- **Outgoing text is clean**: a search of the staged diff, the commit message, and any
+  outward-bound text (issue or pull request body) against a locally kept, untracked list of
+  private identifiers, returning no hits.
