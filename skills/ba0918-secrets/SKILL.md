@@ -1,6 +1,6 @@
 ---
 name: ba0918-secrets
-description: "Handling credentials in a working repository — recognising keys, tokens and environment files, keeping them out of staged changes, keeping them out of logs, prompts and commit messages, and the first moves when one leaks. Use when touching configuration or environment files, staging changes, pasting output, writing a commit message, or responding to a suspected credential leak. 日本語キーワード: 機密情報 シークレット 認証情報 APIキー トークン 環境変数 .env 漏洩 露出 失効 ローテーション"
+description: "Handling credentials and confidential material in a working repository — recognising keys, tokens and environment files, keeping them out of staged changes, logs, prompts and commit messages, and the first moves when one leaks. Also keeping confidential context (internal project names, internal hostnames, customer names, confidential documents) out of any destination whose audience is wider than the source's — a public repository's code, documentation, commit logs, issues and pull request text, and a broader private one alike — and copying third-party work only under a licence that permits it, in any destination. Use when touching configuration or environment files, staging changes, pasting output, writing a commit message, writing anything derived from a private context into a wider-audience destination, copying code or prose from an outside source, or responding to a suspected leak. 日本語キーワード: 機密情報 シークレット 認証情報 APIキー トークン 環境変数 .env 漏洩 露出 失効 ローテーション 機密文書 内部情報 プロジェクト名 著作権 著作物 ライセンス 公開リポジトリ"
 metadata:
   ba0918-routing: always
 ---
@@ -15,6 +15,13 @@ files that hold them.
 
 It covers four things: recognising a credential, keeping it out of version control, keeping it
 out of anything that gets recorded or transmitted, and the first moves after a leak.
+
+It applies the same four moves to **confidential context and third-party material**: information
+that identifies or reproduces private or protected content — internal project and product names,
+internal hostnames and domains, customer names, the contents of confidential documents, and
+copyrighted works without a licence to redistribute. The rule surface is every artifact the
+session writes: code and comments, tests, documentation, commit messages, branch names, issues,
+and pull request text.
 
 It does not cover secret storage systems, key management design, or access control policy.
 
@@ -31,6 +38,20 @@ It does not cover secret storage systems, key management design, or access contr
 Treat a value as a credential when it grants access on presentation. Length and randomness are
 hints, not the test.
 
+## Recognising confidential context
+
+| Signal | Examples |
+|---|---|
+| Internal identifiers | project and product codenames, repository names of private work |
+| Internal network names | non-public hostnames, internal domains (`*.local`, `*.corp`), internal URLs and paths |
+| Business relations | customer, partner, and vendor names tied to non-public work |
+| Private documents | text quoted or paraphrased from specs, contracts, or internal reports |
+| Third-party works | code or prose copied from a source whose licence does not permit redistribution |
+
+Treat a value as confidential context when it lets the destination's audience identify, locate,
+or reproduce private or protected material they were never given. A credential grants access;
+confidential context discloses existence — the test is the audience, not the value's shape.
+
 ## Rules
 
 - Never stage a credential. Never commit one.
@@ -46,6 +67,20 @@ hints, not the test.
   credential.
 - Revoke first, clean history second. Urge revocation as the first move; a human executes it, or
   the agent does only under explicit approval.
+- Before writing anywhere, compare the destination's audience with the source's. Any destination
+  whose audience is the wider one crosses the boundary — a public repository's code,
+  documentation, commit log, issues and pull requests most sharply, a more broadly shared
+  private one no less — and material from the narrower context crosses only with its
+  identifiers removed.
+- When private work motivates a public change, keep the structural lesson and drop the
+  identity: "a real project's friction measurement", never the project's name.
+- Never carry confidential document content across an audience boundary. Within the audience
+  already authorised for it, working from it — implementing what it requires in code, tests,
+  or internal documentation — is ordinary work. Outward of that audience, refer to the
+  document by a pointer that audience can legitimately reach, or not at all.
+- Never reproduce third-party material without a licence that permits the copy. Here the
+  licence decides, not the audience: a private destination does not make an unlicensed copy
+  acceptable.
 
 ## Judgment
 
@@ -76,6 +111,20 @@ the mechanism that makes the rule enforceable.
 **A near-miss is worth recording.** When a credential nearly reached a commit, add the path to
 the ignore file so the same near-miss cannot recur.
 
+**A name grants no access, yet it still discloses.** An internal project name, hostname, or
+customer name passes the credential test and every secret scanner — which is exactly how it
+leaks: nothing flags it. What it reveals is existence and relationships: that the work exists,
+who it is for, where it runs. The audience comparison is applied by hand; no scanner does it.
+
+**Leaked information cannot be revoked.** A credential has a provider that can kill it; a name,
+a document, or a copyrighted text does not. Once pushed, assume it has been fetched — edit
+histories and forks keep copies. Prevention is the only strong control; response after the fact
+is containment, and containment is never complete.
+
+**For third-party works, the licence is the test, not availability.** That a text or a snippet
+is easy to find does not make it redistributable. Copy only under a licence that permits it,
+and carry the licence's obligations (attribution, notices) along with the copy.
+
 ## Examples
 
 A value exposed in a message, and the same fact stated safely:
@@ -95,6 +144,13 @@ Good: PAYMENT_API_KEY=<your-secret-key>
 The Bad line above is written as a description rather than as a literal on purpose: a
 documentation sample shaped like a real credential gets copied verbatim, and gets flagged by
 every scanner that reads this file.
+
+A private project named in a public artifact, and the same motivation stated safely:
+
+```
+Bad:  feat: <社内プロジェクト名> で要件合意の漏れが実害になったためチェックを追加
+Good: feat: 実プロジェクトで要件合意の漏れが実害になったためチェックを追加
+```
 
 Staging that leaks, and staging that does not:
 
@@ -121,6 +177,46 @@ history; both are irreversible — get explicit approval before executing either
 leak and urging revocation are not gated on that approval: they come first, precisely so the
 approval can be given.
 
+### When the leak is information, not a credential
+
+There is nothing to revoke, so containment replaces revocation — and reporting still comes
+first, never quietly.
+
+1. **Report and pause**: state what leaked and where; hold further pushes and edits to the
+   affected destination until the response is agreed.
+2. **Name the leaked material, then determine its exposure.** What leaked may be an identifier,
+   or a passage or snippet that carries no stable name — a paraphrased document, copied code.
+   An identifier is located by searching for it; material without one is located from its
+   provenance: the source it came from, and the change sets and discussions where it was
+   written. Either way, trace it across every surface it reached, not just file content —
+   commits, including ones made unreachable, since a force-pushed commit can remain fetchable
+   by its hash until garbage collection; branch and tag names; issue and pull request titles,
+   bodies, comments and review comments, **and their edit histories**; forks, clones, mirrors,
+   CI logs.
+3. **Contain** each surface found, since none of them is corrected by fixing another:
+   - **History**: rewrite every affected commit, not only the tip — amending the tip leaves the
+     original commit in the ancestry of its replacement, still reachable through the ref — then
+     force-update the affected refs, coordinating with anyone who has a clone.
+   - **Ref names**: rename or delete a branch or tag whose name carries the leaked material;
+     updating what a ref points at never changes the ref's own name.
+   - **Discussion text**: edit or delete the affected titles, bodies, comments and review
+     comments, then delete the superseded revisions where the platform allows it.
+   - **Beyond your reach**: platform support can delete revisions the platform still holds, and
+     will say what it deleted; it reaches nothing already fetched into a clone, fork, mirror,
+     notification or cache. Ask, then record what support confirmed — never report a purge.
+   - For third-party material, removal plus resolving the licence question.
+4. **Prevent recurrence**: record what allowed it through, and add what will catch a repeat.
+   For an identifier that is a list outgoing text is checked against; for material with no
+   identifier no search term represents it, so the source itself goes on record as one whose
+   derivatives get the provenance check before they go out. Keep such a list outside the
+   working tree, or excluded by the repository's local-only exclude file — untracked is not
+   enough, because one bulk staging commits the very identifiers the list exists to catch.
+
+Step 3 rewrites shared history and deletes discussion revisions; both are irreversible, so the
+same gate applies here as in the credential procedure — get explicit approval before executing
+either. Step 1's report is not that approval, and neither is holding pushes until a response is
+agreed: reporting comes first, precisely so the approval can be given.
+
 ## Evidence
 
 Show these outputs rather than asserting nothing leaked.
@@ -136,3 +232,22 @@ Show these outputs rather than asserting nothing leaked.
   returning no commits.
 - **Revocation**: the provider's confirmation that the old credential is inactive, dated after the
   exposure.
+- **Outgoing text is clean**: a search of the staged diff, the commit message, the branch name,
+  and any outward-bound text (issue or pull request title and body) against a list of private
+  identifiers held outside the working tree, returning no hits.
+- **Document-derived text is cleared**: for each passage written from a private document, its
+  source named and the destination's audience compared with the source's. An identifier search
+  cannot see a paraphrase that carries no name, so this one is stated and reviewed, not
+  searched — the identifier list does not stand in for it.
+- **Copied material is licensed**: for each copy of third-party material, the source, the
+  licence that permits the copy, and the attribution or notice that licence requires — present
+  in the artifact, not promised.
+- **Containment is accounted for**: after a cleanup, every surface in the exposure inventory
+  carries a stated outcome, with no blanks. The surfaces you control return no hits — a content
+  search across all refs and their full history, the list of ref names, and a re-read of the
+  affected titles, bodies, comments and their edit histories on the platform; where the material
+  has no searchable form, those surfaces are re-read rather than searched. The surfaces beyond
+  reach — fetched clones, forks, mirrors, notifications, caches — are listed as unresolved,
+  together with whatever platform support confirmed it deleted. Each surface is accounted for on
+  its own: cleaning one never clears another, and a cleanup that was not re-checked is not
+  containment. What this evidence shows is a bounded response, never a purge.
