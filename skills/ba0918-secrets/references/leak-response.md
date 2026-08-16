@@ -1,7 +1,8 @@
 # Leak Response
 
-Read this when something protected has already reached somewhere it should not: a credential, or
-information — an internal name, a confidential passage, an unlicensed copy.
+Read this when something protected has reached somewhere it should not, or may have: a
+credential, or information — an internal name, a confidential passage, an unlicensed copy. A
+suspicion is enough to start; confirmation is not a precondition.
 
 Two paths follow. Which one applies is decided by a single question: **can the exposed thing be
 revoked?** A credential can — it has a provider that can kill it, and revocation is the action
@@ -16,8 +17,8 @@ it.
 
 Three actions are gated, and only these three: revoking a credential, rewriting shared history,
 and deleting discussion revisions. Each is irreversible, so a human executes it, or the agent
-does only under explicit approval — and holding pushes while a response is "agreed" is not that
-approval. Everything else proceeds at once: determining the exposure and recording what allowed
+does only under explicit approval — and pausing work while the response is still being decided is
+not that approval. Everything else proceeds at once: determining the exposure and recording what allowed
 it through are reversible, and an active incident is understood sooner for them.
 
 ## When the leak is a credential
