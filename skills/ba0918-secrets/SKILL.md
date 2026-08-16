@@ -196,8 +196,8 @@ first, never quietly.
    - **History**: rewrite every affected commit, not only the tip — amending the tip leaves the
      original commit in the ancestry of its replacement, still reachable through the ref — then
      force-update the affected refs, coordinating with anyone who has a clone.
-   - **Ref names**: rename or delete a branch or tag whose name carries the identifier; updating
-     what a ref points at never changes the ref's own name.
+   - **Ref names**: rename or delete a branch or tag whose name carries the leaked material;
+     updating what a ref points at never changes the ref's own name.
    - **Discussion text**: edit or delete the affected titles, bodies, comments and review
      comments, then delete the superseded revisions where the platform allows it.
    - **Beyond your reach**: platform support can delete revisions the platform still holds, and
