@@ -183,13 +183,21 @@ first, never quietly.
 
 1. **Report and pause**: state what leaked and where; hold further pushes and edits to the
    affected destination until the response is agreed.
-2. **Determine the exposure**: commits — including ones made unreachable, since a force-pushed
-   commit can remain fetchable by its hash until garbage collection — issue and pull request
-   bodies **and their edit histories**, forks, clones, mirrors, CI logs.
-3. **Contain**: amend and force-update the affected refs; edit issue and pull request bodies;
-   delete the superseded revisions where the platform allows it; a guaranteed purge is a
-   platform-support request. For third-party material, removal plus resolving the licence
-   question.
+2. **Determine the exposure**: every surface the identifier reached, not just file content —
+   commits, including ones made unreachable, since a force-pushed commit can remain fetchable
+   by its hash until garbage collection; branch and tag names; issue and pull request titles,
+   bodies, comments and review comments, **and their edit histories**; forks, clones, mirrors,
+   CI logs.
+3. **Contain** each surface found, since none of them is corrected by fixing another:
+   - **History**: rewrite every affected commit, not only the tip — amending the tip leaves the
+     original commit in the ancestry of its replacement, still reachable through the ref — then
+     force-update the affected refs, coordinating with anyone who has a clone.
+   - **Ref names**: rename or delete a branch or tag whose name carries the identifier; updating
+     what a ref points at never changes the ref's own name.
+   - **Discussion text**: edit or delete the affected titles, bodies, comments and review
+     comments, then delete the superseded revisions where the platform allows it.
+   - A guaranteed purge is a platform-support request. For third-party material, removal plus
+     resolving the licence question.
 4. **Prevent recurrence**: add the identifier to a local, untracked list that outgoing text is
    checked against, and record what allowed it through.
 
@@ -208,6 +216,6 @@ Show these outputs rather than asserting nothing leaked.
   returning no commits.
 - **Revocation**: the provider's confirmation that the old credential is inactive, dated after the
   exposure.
-- **Outgoing text is clean**: a search of the staged diff, the commit message, and any
-  outward-bound text (issue or pull request body) against a locally kept, untracked list of
-  private identifiers, returning no hits.
+- **Outgoing text is clean**: a search of the staged diff, the commit message, the branch name,
+  and any outward-bound text (issue or pull request title and body) against a locally kept,
+  untracked list of private identifiers, returning no hits.
