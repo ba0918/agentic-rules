@@ -67,9 +67,10 @@ confidential context discloses existence — the test is the audience, not the v
   credential.
 - Revoke first, clean history second. Urge revocation as the first move; a human executes it, or
   the agent does only under explicit approval.
-- Before writing anywhere, compare the destination's audience with the source's. A public
-  repository's code, documentation, commit log, issues, and pull requests are public
-  destinations; material from a private context crosses that boundary only with its
+- Before writing anywhere, compare the destination's audience with the source's. Any destination
+  whose audience is the wider one crosses the boundary — a public repository's code,
+  documentation, commit log, issues and pull requests most sharply, a more broadly shared
+  private one no less — and material from the narrower context crosses only with its
   identifiers removed.
 - When private work motivates a public change, keep the structural lesson and drop the
   identity: "a real project's friction measurement", never the project's name.
