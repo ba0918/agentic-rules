@@ -14,7 +14,8 @@ access tokens, private keys, passwords, connection strings, session cookies, and
 files that hold them.
 
 It covers four things: recognising a credential, keeping it out of version control, keeping it
-out of anything that gets recorded or transmitted, and the first moves after a leak.
+out of anything that records it or carries it where it was not meant to go, and the first moves
+after a leak.
 
 It applies the same four moves to **confidential context and third-party material**: information
 that identifies or reproduces private or protected content — internal project and product names,
@@ -57,21 +58,18 @@ confidential context discloses existence — the test is the audience, not the v
 - Never stage a credential. Never commit one.
 - Never add an environment or key file to version control; add it to the ignore file instead.
 - Stage files individually and read what you are staging before committing.
-- Keep the real value out of commit messages, branch names, and pull request text.
-- Keep the real value out of logs, error messages, and anything printed to a terminal.
-- Keep the real value out of prompts, issue reports, and pasted output; replace it with a placeholder.
+- Keep the real value out of anything that records it, or carries it somewhere it was not meant
+  to go: commit messages, branch names, pull request text, logs, error messages, terminal
+  output, prompts, issue reports, pasted output. Substitute a placeholder there, at the moment
+  you first handle the value. Presenting the value to the service it authenticates against is
+  its intended use, not a leak.
 - Reference a credential by the name of its variable, never by its value.
 - Use an obviously fake placeholder in documentation and tests, never a real value that is "expired".
-- Report a suspected leak as the first, blocking task — before any fix, and never quietly.
-- While approval for the response is pending, stop external operations that involve the affected
-  credential.
-- Revoke first, clean history second. Urge revocation as the first move; a human executes it, or
-  the agent does only under explicit approval.
-- Before writing anywhere, compare the destination's audience with the source's. Any destination
-  whose audience is the wider one crosses the boundary — a public repository's code,
-  documentation, commit log, issues and pull requests most sharply, a more broadly shared
-  private one no less — and material from the narrower context crosses only with its
-  identifiers removed.
+- Before writing anywhere, compare the destination's audience with the source's. A destination
+  whose audience is wider than the source's crosses the boundary — most sharply a public
+  repository's code, documentation, commit log, issues and pull requests, and no less a more
+  broadly shared private one. Material from the narrower side crosses only with its identifiers
+  removed.
 - When private work motivates a public change, keep the structural lesson and drop the
   identity: "a real project's friction measurement", never the project's name.
 - Never carry confidential document content across an audience boundary. Within the audience
@@ -91,10 +89,8 @@ cleanup matters, but it is the second step, not the first.
 
 **Revocation is irreversible in the same way rewriting shared history is.** A revoked credential
 cannot be un-revoked, and cutting it can break running services far beyond the current session.
-So the agent's part is to raise the alarm and push for revocation, not to execute it: a human
-runs the revocation, or the agent does under explicit approval. Reporting first is not a delay —
-it is what makes the exposure known to the people who own the credential, so containment does not
-depend on one session quietly handling it.
+That blast radius is why the decision belongs to a human: the agent's part is to raise the alarm
+and press for it, not to execute it.
 
 **Redaction has to happen before the value is recorded, not after.** Once a credential reaches a
 log file, a chat transcript, or a model prompt, you no longer control every copy. The moment to
@@ -115,6 +111,8 @@ the ignore file so the same near-miss cannot recur.
 customer name passes the credential test and every secret scanner — which is exactly how it
 leaks: nothing flags it. What it reveals is existence and relationships: that the work exists,
 who it is for, where it runs. The audience comparison is applied by hand; no scanner does it.
+A paraphrase is worse still: strip the names out of a confidential passage and there is no
+search term left, so nothing but knowing where the text came from will catch it.
 
 **Leaked information cannot be revoked.** A credential has a provider that can kill it; a name,
 a document, or a copyrighted text does not. Once pushed, assume it has been fetched — edit
@@ -160,62 +158,20 @@ Good: git status --short   # read it
       git add src/config/loader.ts
 ```
 
-## First moves after a leak
+## After a leak
 
-1. **Revoke and rotate** the credential at its provider, before any cleanup. Report the leak as
-   the first, blocking task and urge immediate revocation; a human executes it, or the agent does
-   only under explicit approval. While that approval is pending, stop external operations that
-   involve the affected credential.
-2. **Determine the exposure**: which commits, branches, remotes, logs, CI runs, and transcripts
-   contain it. Assume anything pushed has been fetched.
-3. **Remove it from history** and force-update the affected refs, coordinating with anyone who
-   has a clone.
-4. **Prevent recurrence**: add the path to the ignore file and record what allowed it through.
+Suspicion is the trigger; confirmation is not a precondition. Report it first: a blocking task,
+before any fix, and never quietly. Stop what is still moving — external operations involving the
+affected credential, further pushes and edits to the affected destination. Establish what
+actually happened after those two moves, not before them.
 
-Executing the revocation in step 1 cuts off a live credential and step 3 rewrites shared
-history; both are irreversible — get explicit approval before executing either. Reporting the
-leak and urging revocation are not gated on that approval: they come first, precisely so the
-approval can be given.
+Revoking a credential, rewriting shared history, and deleting discussion revisions are
+irreversible: a human executes them, or the agent does only under explicit approval. Reporting is
+never gated on that approval — it comes first, precisely so the approval can be given.
 
-### When the leak is information, not a credential
-
-There is nothing to revoke, so containment replaces revocation — and reporting still comes
-first, never quietly.
-
-1. **Report and pause**: state what leaked and where; hold further pushes and edits to the
-   affected destination until the response is agreed.
-2. **Name the leaked material, then determine its exposure.** What leaked may be an identifier,
-   or a passage or snippet that carries no stable name — a paraphrased document, copied code.
-   An identifier is located by searching for it; material without one is located from its
-   provenance: the source it came from, and the change sets and discussions where it was
-   written. Either way, trace it across every surface it reached, not just file content —
-   commits, including ones made unreachable, since a force-pushed commit can remain fetchable
-   by its hash until garbage collection; branch and tag names; issue and pull request titles,
-   bodies, comments and review comments, **and their edit histories**; forks, clones, mirrors,
-   CI logs.
-3. **Contain** each surface found, since none of them is corrected by fixing another:
-   - **History**: rewrite every affected commit, not only the tip — amending the tip leaves the
-     original commit in the ancestry of its replacement, still reachable through the ref — then
-     force-update the affected refs, coordinating with anyone who has a clone.
-   - **Ref names**: rename or delete a branch or tag whose name carries the leaked material;
-     updating what a ref points at never changes the ref's own name.
-   - **Discussion text**: edit or delete the affected titles, bodies, comments and review
-     comments, then delete the superseded revisions where the platform allows it.
-   - **Beyond your reach**: platform support can delete revisions the platform still holds, and
-     will say what it deleted; it reaches nothing already fetched into a clone, fork, mirror,
-     notification or cache. Ask, then record what support confirmed — never report a purge.
-   - For third-party material, removal plus resolving the licence question.
-4. **Prevent recurrence**: record what allowed it through, and add what will catch a repeat.
-   For an identifier that is a list outgoing text is checked against; for material with no
-   identifier no search term represents it, so the source itself goes on record as one whose
-   derivatives get the provenance check before they go out. Keep such a list outside the
-   working tree, or excluded by the repository's local-only exclude file — untracked is not
-   enough, because one bulk staging commits the very identifiers the list exists to catch.
-
-Step 3 rewrites shared history and deletes discussion revisions; both are irreversible, so the
-same gate applies here as in the credential procedure — get explicit approval before executing
-either. Step 1's report is not that approval, and neither is holding pushes until a response is
-agreed: reporting comes first, precisely so the approval can be given.
+Then read **`references/leak-response.md`** and follow it: revocation for a credential,
+containment for information, and the evidence each response owes. Do not improvise the cleanup
+from memory — the order matters, and the surfaces that get missed are the ones no search reaches.
 
 ## Evidence
 
@@ -228,26 +184,14 @@ Show these outputs rather than asserting nothing leaked.
   reviewed line by line.
 - **Ignore coverage**: `git check-ignore -v` naming the rule that excludes each environment or key
   file present in the working tree.
-- **History is clean**: `git log --all --full-history -- <path>` for each credential path,
-  returning no commits.
-- **Revocation**: the provider's confirmation that the old credential is inactive, dated after the
-  exposure.
 - **Outgoing text is clean**: a search of the staged diff, the commit message, the branch name,
   and any outward-bound text (issue or pull request title and body) against a list of private
   identifiers held outside the working tree, returning no hits.
 - **Document-derived text is cleared**: for each passage written from a private document, its
-  source named and the destination's audience compared with the source's. An identifier search
-  cannot see a paraphrase that carries no name, so this one is stated and reviewed, not
-  searched — the identifier list does not stand in for it.
+  source named and the destination's audience compared with the source's — stated and reviewed,
+  not searched.
 - **Copied material is licensed**: for each copy of third-party material, the source, the
   licence that permits the copy, and the attribution or notice that licence requires — present
   in the artifact, not promised.
-- **Containment is accounted for**: after a cleanup, every surface in the exposure inventory
-  carries a stated outcome, with no blanks. The surfaces you control return no hits — a content
-  search across all refs and their full history, the list of ref names, and a re-read of the
-  affected titles, bodies, comments and their edit histories on the platform; where the material
-  has no searchable form, those surfaces are re-read rather than searched. The surfaces beyond
-  reach — fetched clones, forks, mirrors, notifications, caches — are listed as unresolved,
-  together with whatever platform support confirmed it deleted. Each surface is accounted for on
-  its own: cleaning one never clears another, and a cleanup that was not re-checked is not
-  containment. What this evidence shows is a bounded response, never a purge.
+
+After a leak, `references/leak-response.md` names the evidence the response itself owes.
