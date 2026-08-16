@@ -160,62 +160,18 @@ Good: git status --short   # read it
       git add src/config/loader.ts
 ```
 
-## First moves after a leak
+## After a leak
 
-1. **Revoke and rotate** the credential at its provider, before any cleanup. Report the leak as
-   the first, blocking task and urge immediate revocation; a human executes it, or the agent does
-   only under explicit approval. While that approval is pending, stop external operations that
-   involve the affected credential.
-2. **Determine the exposure**: which commits, branches, remotes, logs, CI runs, and transcripts
-   contain it. Assume anything pushed has been fetched.
-3. **Remove it from history** and force-update the affected refs, coordinating with anyone who
-   has a clone.
-4. **Prevent recurrence**: add the path to the ignore file and record what allowed it through.
+Two moves are immediate, and neither waits for anything:
 
-Executing the revocation in step 1 cuts off a live credential and step 3 rewrites shared
-history; both are irreversible — get explicit approval before executing either. Reporting the
-leak and urging revocation are not gated on that approval: they come first, precisely so the
-approval can be given.
+1. **Report it** — the first, blocking task, before any fix, and never quietly.
+2. **Stop** external operations involving the affected credential, and further pushes and edits
+   to the affected destination.
 
-### When the leak is information, not a credential
-
-There is nothing to revoke, so containment replaces revocation — and reporting still comes
-first, never quietly.
-
-1. **Report and pause**: state what leaked and where; hold further pushes and edits to the
-   affected destination until the response is agreed.
-2. **Name the leaked material, then determine its exposure.** What leaked may be an identifier,
-   or a passage or snippet that carries no stable name — a paraphrased document, copied code.
-   An identifier is located by searching for it; material without one is located from its
-   provenance: the source it came from, and the change sets and discussions where it was
-   written. Either way, trace it across every surface it reached, not just file content —
-   commits, including ones made unreachable, since a force-pushed commit can remain fetchable
-   by its hash until garbage collection; branch and tag names; issue and pull request titles,
-   bodies, comments and review comments, **and their edit histories**; forks, clones, mirrors,
-   CI logs.
-3. **Contain** each surface found, since none of them is corrected by fixing another:
-   - **History**: rewrite every affected commit, not only the tip — amending the tip leaves the
-     original commit in the ancestry of its replacement, still reachable through the ref — then
-     force-update the affected refs, coordinating with anyone who has a clone.
-   - **Ref names**: rename or delete a branch or tag whose name carries the leaked material;
-     updating what a ref points at never changes the ref's own name.
-   - **Discussion text**: edit or delete the affected titles, bodies, comments and review
-     comments, then delete the superseded revisions where the platform allows it.
-   - **Beyond your reach**: platform support can delete revisions the platform still holds, and
-     will say what it deleted; it reaches nothing already fetched into a clone, fork, mirror,
-     notification or cache. Ask, then record what support confirmed — never report a purge.
-   - For third-party material, removal plus resolving the licence question.
-4. **Prevent recurrence**: record what allowed it through, and add what will catch a repeat.
-   For an identifier that is a list outgoing text is checked against; for material with no
-   identifier no search term represents it, so the source itself goes on record as one whose
-   derivatives get the provenance check before they go out. Keep such a list outside the
-   working tree, or excluded by the repository's local-only exclude file — untracked is not
-   enough, because one bulk staging commits the very identifiers the list exists to catch.
-
-Step 3 rewrites shared history and deletes discussion revisions; both are irreversible, so the
-same gate applies here as in the credential procedure — get explicit approval before executing
-either. Step 1's report is not that approval, and neither is holding pushes until a response is
-agreed: reporting comes first, precisely so the approval can be given.
+Then read **`references/leak-response.md`** and follow it. It carries both paths — revocation
+for a credential, containment for information — and the evidence each one owes. Do not
+improvise the cleanup from memory: the order matters, and the surfaces that get missed are the
+ones no search reaches.
 
 ## Evidence
 
@@ -230,8 +186,6 @@ Show these outputs rather than asserting nothing leaked.
   file present in the working tree.
 - **History is clean**: `git log --all --full-history -- <path>` for each credential path,
   returning no commits.
-- **Revocation**: the provider's confirmation that the old credential is inactive, dated after the
-  exposure.
 - **Outgoing text is clean**: a search of the staged diff, the commit message, the branch name,
   and any outward-bound text (issue or pull request title and body) against a list of private
   identifiers held outside the working tree, returning no hits.
@@ -242,12 +196,5 @@ Show these outputs rather than asserting nothing leaked.
 - **Copied material is licensed**: for each copy of third-party material, the source, the
   licence that permits the copy, and the attribution or notice that licence requires — present
   in the artifact, not promised.
-- **Containment is accounted for**: after a cleanup, every surface in the exposure inventory
-  carries a stated outcome, with no blanks. The surfaces you control return no hits — a content
-  search across all refs and their full history, the list of ref names, and a re-read of the
-  affected titles, bodies, comments and their edit histories on the platform; where the material
-  has no searchable form, those surfaces are re-read rather than searched. The surfaces beyond
-  reach — fetched clones, forks, mirrors, notifications, caches — are listed as unresolved,
-  together with whatever platform support confirmed it deleted. Each surface is accounted for on
-  its own: cleaning one never clears another, and a cleanup that was not re-checked is not
-  containment. What this evidence shows is a bounded response, never a purge.
+
+After a leak, `references/leak-response.md` names the evidence the response itself owes.
