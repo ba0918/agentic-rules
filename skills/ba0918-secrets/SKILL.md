@@ -57,9 +57,11 @@ confidential context discloses existence — the test is the audience, not the v
 - Never stage a credential. Never commit one.
 - Never add an environment or key file to version control; add it to the ignore file instead.
 - Stage files individually and read what you are staging before committing.
-- Keep the real value out of everything that gets recorded or transmitted: commit messages,
-  branch names, pull request text, logs, error messages, terminal output, prompts, issue
-  reports, pasted output. Substitute a placeholder the moment you first handle the value.
+- Keep the real value out of anything that records it, or carries it somewhere it was not meant
+  to go: commit messages, branch names, pull request text, logs, error messages, terminal
+  output, prompts, issue reports, pasted output. Substitute a placeholder there, at the moment
+  you first handle the value. Presenting the value to the service it authenticates against is
+  its intended use, not a leak.
 - Reference a credential by the name of its variable, never by its value.
 - Use an obviously fake placeholder in documentation and tests, never a real value that is "expired".
 - Before writing anywhere, compare the destination's audience with the source's. A destination
