@@ -20,8 +20,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   decides instead, in any destination. The leak-response section gains an information-leak
   variant where containment replaces revocation, taken per exposed surface — history rewritten
   across every affected commit, ref names, discussion titles, bodies and comments with their
-  edit histories — and evidence gains an outgoing-text check against a list of private
-  identifiers held outside the working tree.
+  edit histories — each surface re-checked after the cleanup, since cleaning one never clears
+  another. Evidence gains four checks that make the new class verifiable rather than asserted:
+  outgoing text against a list of private identifiers held outside the working tree, a named
+  source and audience comparison for document-derived passages (a paraphrase carries no name
+  for a search to find), the licence and its attribution for each copy of third-party
+  material, and the post-containment re-check of every exposed surface.
 
 ## [0.4.0] - 2026-08-16
 
