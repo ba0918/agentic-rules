@@ -57,21 +57,16 @@ confidential context discloses existence — the test is the audience, not the v
 - Never stage a credential. Never commit one.
 - Never add an environment or key file to version control; add it to the ignore file instead.
 - Stage files individually and read what you are staging before committing.
-- Keep the real value out of commit messages, branch names, and pull request text.
-- Keep the real value out of logs, error messages, and anything printed to a terminal.
-- Keep the real value out of prompts, issue reports, and pasted output; replace it with a placeholder.
+- Keep the real value out of everything that gets recorded or transmitted: commit messages,
+  branch names, pull request text, logs, error messages, terminal output, prompts, issue
+  reports, pasted output. Substitute a placeholder the moment you first handle the value.
 - Reference a credential by the name of its variable, never by its value.
 - Use an obviously fake placeholder in documentation and tests, never a real value that is "expired".
-- Report a suspected leak as the first, blocking task — before any fix, and never quietly.
-- While approval for the response is pending, stop external operations that involve the affected
-  credential.
-- Revoke first, clean history second. Urge revocation as the first move; a human executes it, or
-  the agent does only under explicit approval.
-- Before writing anywhere, compare the destination's audience with the source's. Any destination
-  whose audience is the wider one crosses the boundary — a public repository's code,
-  documentation, commit log, issues and pull requests most sharply, a more broadly shared
-  private one no less — and material from the narrower context crosses only with its
-  identifiers removed.
+- Before writing anywhere, compare the destination's audience with the source's. A destination
+  whose audience is wider than the source's crosses the boundary — most sharply a public
+  repository's code, documentation, commit log, issues and pull requests, and no less a more
+  broadly shared private one. Material from the narrower side crosses only with its identifiers
+  removed.
 - When private work motivates a public change, keep the structural lesson and drop the
   identity: "a real project's friction measurement", never the project's name.
 - Never carry confidential document content across an audience boundary. Within the audience
@@ -91,10 +86,8 @@ cleanup matters, but it is the second step, not the first.
 
 **Revocation is irreversible in the same way rewriting shared history is.** A revoked credential
 cannot be un-revoked, and cutting it can break running services far beyond the current session.
-So the agent's part is to raise the alarm and push for revocation, not to execute it: a human
-runs the revocation, or the agent does under explicit approval. Reporting first is not a delay —
-it is what makes the exposure known to the people who own the credential, so containment does not
-depend on one session quietly handling it.
+That blast radius is why the decision belongs to a human: the agent's part is to raise the alarm
+and press for it, not to execute it.
 
 **Redaction has to happen before the value is recorded, not after.** Once a credential reaches a
 log file, a chat transcript, or a model prompt, you no longer control every copy. The moment to
@@ -162,16 +155,17 @@ Good: git status --short   # read it
 
 ## After a leak
 
-Two moves are immediate, and neither waits for anything:
+Report it first: a blocking task, before any fix, and never quietly. Stop what is still moving —
+external operations involving the affected credential, further pushes and edits to the affected
+destination.
 
-1. **Report it** — the first, blocking task, before any fix, and never quietly.
-2. **Stop** external operations involving the affected credential, and further pushes and edits
-   to the affected destination.
+Revoking a credential, rewriting shared history, and deleting discussion revisions are
+irreversible: a human executes them, or the agent does only under explicit approval. Reporting is
+never gated on that approval — it comes first, precisely so the approval can be given.
 
-Then read **`references/leak-response.md`** and follow it. It carries both paths — revocation
-for a credential, containment for information — and the evidence each one owes. Do not
-improvise the cleanup from memory: the order matters, and the surfaces that get missed are the
-ones no search reaches.
+Then read **`references/leak-response.md`** and follow it: revocation for a credential,
+containment for information, and the evidence each response owes. Do not improvise the cleanup
+from memory — the order matters, and the surfaces that get missed are the ones no search reaches.
 
 ## Evidence
 
