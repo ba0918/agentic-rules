@@ -35,6 +35,11 @@ applies to every entry written here.
 - In the changelog, record a change that alters meaning separately from a compatible one, and
   mark it as breaking.
 - Write the changelog entry when the change is made, under an unreleased section.
+- Keep the unreleased section a delta against the latest release, never against the previous
+  commit: a later change to something still unreleased amends or removes the pending entry
+  rather than adding another one, and a defect no release ever shipped gets no fixed entry.
+- Before the first release that baseline is nothing, so the unreleased section describes what
+  the first release delivers — not the history of building it.
 - Promote the unreleased section to a version heading at release time, and make that heading match
   the canonical version exactly.
 - Write each entry so it reads without the conversation, the plan or the session behind it: what
@@ -78,6 +83,15 @@ the unit a consumer reads to decide whether to upgrade and what to re-check. Whe
 unrelated set of changes, that decision gets harder to make from the heading alone, and a later
 revert of one part has to take the unrelated part with it.
 
+**The changelog's reader upgrades from one release to the next.** An entry earns its place by
+changing what that reader does on upgrade — re-check something, adapt something, or see that the
+upgrade matters. A defect introduced and fixed inside the same unreleased span was never
+observable to any consumer, so recording its fix addresses a reader that cannot exist; the same
+holds for renames and reversed decisions nothing external ever depended on. The story of how a
+change came to be — what failed, what was tried, why this shape won — has its home in the commit
+log, which already records it; the entry states the observable difference and what it asks of
+the reader.
+
 **The tag confirms verification; it does not start it.** Run the project's checks on the commit
 a release would tag, and create the tag only once they pass. Running them between the promote
 commit and the tag is the inside of that one operation, not a break in it — the one-operation
@@ -118,6 +132,17 @@ Bad:  - Fixed the point raised in review and updated the rule.
 Good: - **BREAKING** The naming rule now rejects an empty value instead of
         substituting a default. A project relying on the substitution has to
         supply the value explicitly before upgrading.
+```
+
+A fixed entry for a defect no release ever shipped, and the amendment that replaces it:
+
+```
+Bad:  ### Added
+      - The `--filter` option selects entries by prefix.
+      ### Fixed
+      - `--filter` no longer crashes on an empty prefix.  # introduced above, never released
+Good: ### Added
+      - The `--filter` option selects entries by prefix; an empty prefix selects nothing.
 ```
 
 A release left half-issued, and a release issued as one operation:

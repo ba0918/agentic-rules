@@ -10,6 +10,15 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING** — `ba0918-release`: the unreleased changelog section is a delta against the
+  latest release, never against the previous commit. A later change to something still
+  unreleased amends or removes the pending entry rather than adding another one, a defect no
+  release ever shipped gets no fixed entry, and before the first release the section describes
+  what that release delivers rather than the history of building it. A project that has been
+  logging every unreleased change as its own entry folds those entries together on upgrade.
+
 ## [0.5.0] - 2026-08-16
 
 ### Added
