@@ -23,10 +23,6 @@ def rename_skill(repo, old_name, new_name):
     skill_md.write_text(
         skill_md.read_text().replace(f"name: {old_name}", f"name: {new_name}")
     )
-    manifest = repo / ".claude-plugin" / "marketplace.json"
-    manifest.write_text(
-        manifest.read_text().replace(f"./skills/{old_name}", f"./skills/{new_name}")
-    )
 
 
 def test_repository_following_every_convention_reports_no_violations(conforming_repo):
@@ -205,30 +201,6 @@ def test_skill_declaring_no_routing_is_accepted(conforming_repo):
     assert validate.validate_repository(conforming_repo) == []
 
 
-def add_skill(repo, name):
-    directory = repo / "skills" / name
-    directory.mkdir()
-    (directory / "SKILL.md").write_text(
-        f'---\nname: {name}\ndescription: "An added skill. 日本語キーワード: 追加"\n---\n\n# {name}\n'
-    )
-
-
-def test_skill_absent_from_the_marketplace_manifest_is_reported(conforming_repo):
-    add_skill(conforming_repo, "ba0918-unlisted")
-
-    assert rules_of(validate.validate_repository(conforming_repo)) == [
-        "marketplace-missing"
-    ]
-
-
-def test_marketplace_entry_without_a_matching_skill_is_reported(conforming_repo):
-    shutil.rmtree(conforming_repo / "skills" / "ba0918-beta")
-
-    assert rules_of(validate.validate_repository(conforming_repo)) == [
-        "marketplace-orphan"
-    ]
-
-
 def test_skill_document_without_a_frontmatter_block_is_reported(conforming_repo):
     skill_md = conforming_repo / "skills" / "ba0918-alpha" / "SKILL.md"
     skill_md.write_text("# Alpha\n\nNo frontmatter at all.\n")
@@ -245,12 +217,15 @@ def test_command_line_run_on_a_conforming_repository_exits_zero(conforming_repo)
 def test_command_line_run_reports_each_violation_and_exits_nonzero(
     conforming_repo, capsys
 ):
-    shutil.rmtree(conforming_repo / "skills" / "ba0918-beta")
+    skill_md = conforming_repo / "skills" / "ba0918-beta" / "SKILL.md"
+    skill_md.write_text(
+        skill_md.read_text().replace("name: ba0918-beta", "name: ba0918-renamed")
+    )
 
     exit_code = validate.main([str(conforming_repo)])
 
     assert exit_code == 1
-    assert "marketplace-orphan" in capsys.readouterr().out
+    assert "name-mismatch" in capsys.readouterr().out
 
 
 def test_unquoted_frontmatter_value_containing_a_colon_is_reported(conforming_repo):
@@ -304,30 +279,6 @@ def test_description_written_as_a_block_scalar_is_reported(
 
 def edit_manifest(repo, old, new):
     edit_file(repo, ".claude-plugin/marketplace.json", old, new)
-
-
-@pytest.mark.parametrize(
-    "wrong_entry",
-    ["./skil/ba0918-alpha", "ba0918-alpha", "/etc/ba0918-alpha", "./skills/nested/ba0918-alpha"],
-)
-def test_manifest_entry_not_pointing_into_the_skills_directory_is_reported(
-    conforming_repo, wrong_entry
-):
-    edit_manifest(conforming_repo, "./skills/ba0918-alpha", wrong_entry)
-
-    assert rules_of(validate.validate_repository(conforming_repo)) == ["marketplace-path"]
-
-
-def test_skill_listed_twice_in_the_manifest_is_reported(conforming_repo):
-    edit_manifest(
-        conforming_repo,
-        '"./skills/ba0918-alpha",',
-        '"./skills/ba0918-alpha",\n        "./skills/ba0918-alpha",',
-    )
-
-    assert rules_of(validate.validate_repository(conforming_repo)) == [
-        "marketplace-duplicate"
-    ]
 
 
 def test_unparseable_manifest_is_reported_as_unreadable(conforming_repo):
@@ -448,10 +399,6 @@ def test_command_line_run_prints_a_located_violation_as_path_and_line(
     )
 
 
-def subjects_of(violations):
-    return sorted((v.skill, v.rule) for v in violations)
-
-
 @pytest.mark.parametrize(
     "manifest_json",
     [
@@ -460,9 +407,6 @@ def subjects_of(violations):
         '{"plugins": "./skills/ba0918-alpha"}',
         '{"plugins": {"not": "a list"}}',
         '{"plugins": ["not a mapping"]}',
-        '{"plugins": [{"skills": 5}]}',
-        '{"plugins": [{"skills": [7]}]}',
-        '{"plugins": [{"skills": [null]}]}',
     ],
 )
 def test_structurally_invalid_manifest_is_reported_without_crashing(
@@ -472,23 +416,6 @@ def test_structurally_invalid_manifest_is_reported_without_crashing(
 
     assert rules_of(validate.validate_repository(conforming_repo)) == [
         "marketplace-unreadable"
-    ]
-
-
-def test_manifest_entry_using_windows_separators_is_reported_once(conforming_repo):
-    edit_manifest(conforming_repo, "./skills/ba0918-alpha", ".\\\\skills\\\\ba0918-alpha")
-
-    assert rules_of(validate.validate_repository(conforming_repo)) == ["marketplace-path"]
-
-
-def test_manifest_entry_with_a_bad_path_is_not_also_reported_as_an_orphan(
-    conforming_repo,
-):
-    edit_manifest(conforming_repo, "./skills/ba0918-alpha", "./skills/deep/ba0918-ghost")
-
-    assert subjects_of(validate.validate_repository(conforming_repo)) == [
-        ("ba0918-alpha", "marketplace-missing"),
-        ("ba0918-ghost", "marketplace-path"),
     ]
 
 
@@ -645,12 +572,3 @@ def test_repository_declaring_no_version_anywhere_is_accepted(conforming_repo):
     assert validate.validate_repository(conforming_repo) == []
 
 
-def test_repository_without_a_skills_directory_reports_the_listed_skills_as_orphans(
-    conforming_repo,
-):
-    shutil.rmtree(conforming_repo / "skills")
-
-    assert rules_of(validate.validate_repository(conforming_repo)) == [
-        "marketplace-orphan",
-        "marketplace-orphan",
-    ]

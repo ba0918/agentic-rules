@@ -394,32 +394,25 @@ def check_manifest_metadata(manifest: Dict[str, object]) -> List[Violation]:
     return violations
 
 
-def marketplace_entries(repository: Repository) -> Optional[List[str]]:
-    """The skill entries the marketplace manifest advertises.
+def marketplace_readable(repository: Repository) -> bool:
+    """Whether the manifest can be read as a marketplace manifest at all.
 
-    None means the manifest cannot be read as a marketplace manifest at all —
-    absent, unparseable, or misshapen — which is the single condition under
-    which the repository has no distribution metadata to be judged against.
+    Absent, unparseable or misshapen is the single condition under which the
+    repository has no distribution metadata to be judged against.
     """
     document = repository.manifest.document
-    return manifest_entries(document) if document is not None else None
+    return document is not None and manifest_is_shaped(document)
 
 
 def check_manifest(repository: Repository) -> List[Violation]:
-    """Compare the manifest against the skills on disk.
+    """Check the distribution metadata the plugin install command is built from.
 
-    Entries are checked as paths, not as basenames: a manifest naming
-    './skil/ba0918-x' advertises a directory that does not exist, and comparing
-    only the last segment would call that agreement. A trailing slash is
-    accepted, since it denotes the same directory.
-
-    A malformed entry is reported once. Its basename still counts as listed, so
-    the skill it was meant to name is not additionally reported as absent, but
-    it is kept out of the orphan comparison so a typo is not reported twice.
+    The manifest deliberately does not list the skills. A plugin's skills load
+    from the skills/ directory under its source by default, so a list here would
+    only repeat the scan the runtime already performs, while charging every new
+    skill an edit to a file that decides nothing.
     """
-    manifest = repository.manifest.document
-    entries = marketplace_entries(repository)
-    if entries is None:
+    if not marketplace_readable(repository):
         return [
             Violation(
                 REPOSITORY_SUBJECT,
@@ -428,50 +421,7 @@ def check_manifest(repository: Repository) -> List[Violation]:
                 "or is not shaped as a marketplace manifest",
             )
         ]
-
-    violations = check_manifest_metadata(manifest or {})
-    listed: List[str] = []
-    resolvable: List[str] = []
-    for entry in entries:
-        parts = [
-            part
-            for part in PurePosixPath(entry.replace("\\", "/")).parts
-            if part != "."
-        ]
-        name = parts[-1] if parts else entry
-        listed.append(name)
-        if "\\" in entry or len(parts) != 2 or parts[0] != SKILLS_DIRECTORY:
-            violations.append(
-                Violation(
-                    name,
-                    "marketplace-path",
-                    f"manifest entry {entry!r} must be './{SKILLS_DIRECTORY}/<name>'",
-                )
-            )
-        else:
-            resolvable.append(name)
-
-    violations.extend(
-        Violation(
-            name,
-            "marketplace-duplicate",
-            f"{MANIFEST_PATH} lists this skill {listed.count(name)} times",
-        )
-        for name in sorted({n for n in listed if listed.count(n) > 1})
-    )
-    violations.extend(
-        Violation(name, "marketplace-missing", f"skill is absent from {MANIFEST_PATH}")
-        for name in sorted(repository.skill_names - set(listed))
-    )
-    violations.extend(
-        Violation(
-            name,
-            "marketplace-orphan",
-            f"{MANIFEST_PATH} lists a skill that does not exist",
-        )
-        for name in sorted(set(resolvable) - repository.skill_names)
-    )
-    return violations
+    return check_manifest_metadata(repository.manifest.document or {})
 
 
 def declared_version(document: Optional[Dict[str, object]]) -> Optional[str]:
@@ -548,7 +498,7 @@ def check_canonical_version(repository: Repository) -> List[Violation]:
     violation would only restate that the same file could not be read.
     """
     if (
-        marketplace_entries(repository) is None
+        not marketplace_readable(repository)
         or canonical_version(repository) is not None
     ):
         return []
@@ -825,26 +775,17 @@ def read_json_file(root: Path, relative_path: str) -> JsonFile:
     )
 
 
-def manifest_entries(manifest: Dict[str, object]) -> Optional[List[str]]:
-    """The advertised skill entries, or None if the manifest is misshapen.
+def manifest_is_shaped(manifest: Dict[str, object]) -> bool:
+    """Whether the document is shaped as a marketplace manifest.
 
-    Returning None rather than raising keeps a hand-edited typo in the
-    distribution metadata reportable as a named rule instead of a traceback.
+    Only the plugins array is inspected, because it is what every remaining rule
+    reads from: a document whose plugins are not a list of mappings has nothing
+    those rules could judge, and saying so once beats letting each fail apart.
     """
     plugins = manifest.get("plugins", [])
     if not isinstance(plugins, list):
-        return None
-    entries: List[str] = []
-    for plugin in plugins:
-        if not isinstance(plugin, dict):
-            return None
-        skills = plugin.get("skills", [])
-        if not isinstance(skills, list):
-            return None
-        if not all(isinstance(entry, str) for entry in skills):
-            return None
-        entries.extend(skills)
-    return entries
+        return False
+    return all(isinstance(plugin, dict) for plugin in plugins)
 
 
 def scan_repository(root: Path) -> Tuple[List[Skill], List[Violation]]:

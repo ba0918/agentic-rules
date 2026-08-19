@@ -19,7 +19,8 @@ to run the reference validator in CI and the OpenCode plugin hook.
 - `scripts/validate.py` — this repository's own conventions, as a registry of rules
 - `tests/` — pytest suite for the validator
 - `.claude-plugin/marketplace.json` — distribution metadata; `plugins[0].version` is the
-  canonical version of the whole repository
+  canonical version of the whole repository. It names no skills: they load from `skills/`
+  under the plugin's source by default
 - `.claude-plugin/plugin.json` — identity declaration; its `description` must stay identical
   to the one in `marketplace.json`
 - `.opencode/plugins/agentic-rules.js` — OpenCode plugin, config hook only

@@ -9,14 +9,9 @@
   "plugins": [
     {
       "name": "fixture-rules",
-      "version": "0.1.0",
-      "description": "Fixture plugin listing every skill in the fixture repository",
       "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/ba0918-alpha",
-        "./skills/ba0918-beta"
-      ]
+      "version": "0.1.0",
+      "description": "Fixture plugin for the validator tests"
     }
   ]
 }

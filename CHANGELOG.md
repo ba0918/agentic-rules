@@ -12,6 +12,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Changed
 
+- The marketplace manifest no longer lists the skills, and `scripts/validate.py` no longer
+  checks such a list against `skills/`. A plugin's skills load from the `skills/` directory
+  under its source by default, so the list repeated a scan the runtime already performs while
+  charging every skill added an edit to a file that decided nothing. What loads, and from
+  which paths, is unchanged.
+
 - **BREAKING** — `ba0918-release`: the unreleased changelog section is a delta against the
   latest release, never against the previous commit. A later change to something still
   unreleased amends or removes the pending entry rather than adding another one, a defect no

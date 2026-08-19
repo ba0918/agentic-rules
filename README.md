@@ -149,9 +149,10 @@ pytest                               # tests for the validator itself
 
 `scripts/validate.py` uses the Python 3 standard library only — there is nothing to install to
 run it. It checks frontmatter completeness, the naming convention, the 500-line limit, the
-1024-character description limit, the routing value grammar, the absence of references escaping
-a skill directory, and agreement between `.claude-plugin/marketplace.json` and the actual
-contents of `skills/`.
+1024-character description limit, the routing value grammar, and the absence of references
+escaping a skill directory. It does not check the marketplace manifest against `skills/`: the
+manifest does not list the skills, because a plugin's skills load from the `skills/` directory
+under its source by default.
 
 It also checks that the repository names one version. The canonical one is `plugins[0].version`
 in `.claude-plugin/marketplace.json`, and `.claude-plugin/plugin.json`, `package.json` and the
