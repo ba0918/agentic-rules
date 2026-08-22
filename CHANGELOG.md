@@ -10,6 +10,13 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-readability` — a rule for translating technical results into human-readable output
+  without deleting claims, conditions, uncertainty, or traceable evidence. It also keeps decision
+  context near choices and puts long results in a suitable reading surface instead of duplicating
+  them into narrow conversations.
+
 ### Changed
 
 - The marketplace manifest no longer lists the skills, and `scripts/validate.py` no longer

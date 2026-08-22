@@ -2,9 +2,9 @@
 
 Normative rules for AI coding agents, packaged as [Agent Skills](https://agentskills.io).
 
-Design principles, test discipline, information placement, commit conventions and secret
-handling live here once, and are distributed to many projects and many agents from this
-single repository.
+Design principles, test discipline, information placement, human-readable output, commit
+conventions and secret handling live here once, and are distributed to many projects and many
+agents from this single repository.
 
 This repository holds **domain rules only**. Workflow automation (procedures, orchestration)
 belongs elsewhere and must not be depended on from here.
@@ -15,6 +15,7 @@ belongs elsewhere and must not be depended on from here.
 |---|---|---|
 | `ba0918-design` | Design principles, with testability as the supreme goal | `always` |
 | `ba0918-placement` | Where each kind of information belongs: code / tests / commit logs / comments | `always` |
+| `ba0918-readability` | Human-facing output that explains unfamiliar context without losing technical meaning | `always` |
 | `ba0918-secrets` | Handling credentials and confidential material: detection, staging ban, exposure prevention, audience boundary for any wider-audience destination, third-party licence compliance in any destination, incident response | `always` |
 | `ba0918-tdd` | Test-first contract (RED → GREEN → REFACTOR) | `required:implement` |
 | `ba0918-commit` | Commit splitting and message conventions | `required:commit` |
