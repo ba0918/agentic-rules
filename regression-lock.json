@@ -5,7 +5,7 @@
       "file_sha256": {
         "skills/ba0918-readability/SKILL.md": "aece42575d55232d93209de55d005c9744875a3c3cc324465f56136e8576f4ec"
       },
-      "note": "Both approved scenarios passed critical checks and independent review; known noncritical meaning-preservation and provenance warnings are recorded in the cycle evidence.",
+      "note": "Technical-review passed all five critical checks in a blank-slate gpt-5.5 standard run with the current skill body inlined. An empty-body baseline also passed every original critical check and explicitly preserved that fixture setup was mixed into the recorded timings, so it also satisfies the added critical condition and body-specific improvement remains unproven. The carried contextual-decision output attributed its language choice to a repository instruction, but its isolated prompt did not support that provenance.",
       "result": "pass",
       "scenarios": {
         "contextual-decision": {
@@ -15,7 +15,7 @@
         },
         "technical-review": {
           "result": "pass",
-          "scenario_sha256": "23608a1cf02d092d308906b7ad2fc0c5afd80ce765731920831b09f98d4cd5d1",
+          "scenario_sha256": "1f30177a834ae8714bb95d2f22cd91ca377025111e3a7dae2263f5d2a25f7b7d",
           "verified": "2026-08-22"
         }
       },

@@ -24,6 +24,8 @@ expectations:
     critical: true
   - text: The response preserves that the new and old validator results used different inputs and therefore do not establish which validator is more accurate or faster
     critical: true
+  - text: The response preserves that the recorded timings do not isolate validator work from fixture setup, so they do not establish which validator is faster
+    critical: true
   - text: The response distinguishes the reproduced test-identity defect from the unverified performance and accuracy comparison
     critical: true
   - text: The response retains R-17 and R-23 together with their code or evidence locations so the claims remain traceable
