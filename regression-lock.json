@@ -1,0 +1,33 @@
+{
+  "coverage_exempt": {},
+  "skills": {
+    "ba0918-readability": {
+      "file_sha256": {
+        "skills/ba0918-readability/SKILL.md": "aece42575d55232d93209de55d005c9744875a3c3cc324465f56136e8576f4ec"
+      },
+      "note": "Both approved scenarios passed critical checks and independent review; known noncritical meaning-preservation and provenance warnings are recorded in the cycle evidence.",
+      "result": "pass",
+      "scenarios": {
+        "contextual-decision": {
+          "result": "pass",
+          "scenario_sha256": "201f2f7754c7e04e5397db973ef9bf211b85fbe6b18ca3f9ad906c5014279baf",
+          "verified": "2026-08-22"
+        },
+        "technical-review": {
+          "result": "pass",
+          "scenario_sha256": "23608a1cf02d092d308906b7ad2fc0c5afd80ce765731920831b09f98d4cd5d1",
+          "verified": "2026-08-22"
+        }
+      },
+      "structural_sha256": {
+        "skills/ba0918-readability/SKILL.md": "7fa83dfd24aa40b9b13b82ea3bc4c347eb5fb7c61b94c27d8b93041660e8310a"
+      },
+      "surface": [
+        "skills/ba0918-readability/SKILL.md"
+      ],
+      "surface_sha256": "272d92e67d70cb422dfeba0d7265ac02d911d81aef87326cc66b5cb3ac7a9cbd",
+      "verified": "2026-08-22"
+    }
+  },
+  "version": 1
+}
