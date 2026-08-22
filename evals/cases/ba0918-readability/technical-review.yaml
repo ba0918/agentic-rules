@@ -1,0 +1,32 @@
+skill: ba0918-readability
+id: technical-review
+title: A technical review keeps its claims while explaining their meaning
+source: plan:docs/spec/readability-rule.md
+executor_tier: standard
+isolation: worktree
+
+files:
+  - technical-review.md
+
+prompt: |
+  Read technical-review.md and present the review result to the project owner, who can reason
+  about trade-offs but does not know this project's internal vocabulary. The owner must decide
+  whether the reviewed change is ready to accept. Follow the target skill when writing the
+  response.
+expected_output: |
+  A self-contained review that explains the observed behaviour and its impact, preserves the
+  limits of the available comparison, and leaves internal identifiers as traceable references
+  rather than substitutes for meaning.
+expectations:
+  - text: The response explains that matching a caller-supplied label does not prove the same failing test was rerun, so an unrelated always-successful command can be accepted as the fix
+    critical: true
+  - text: The response explains that the premature success can mark a broken change ready and skip the remaining repair work
+    critical: true
+  - text: The response preserves that the new and old validator results used different inputs and therefore do not establish which validator is more accurate or faster
+    critical: true
+  - text: The response distinguishes the reproduced test-identity defect from the unverified performance and accuracy comparison
+    critical: true
+  - text: The response retains R-17 and R-23 together with their code or evidence locations so the claims remain traceable
+    critical: false
+  - text: The response groups information by the decisions the owner must make instead of reproducing the source document's scan order
+    critical: false

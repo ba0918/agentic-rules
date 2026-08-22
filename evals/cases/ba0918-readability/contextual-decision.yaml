@@ -1,0 +1,30 @@
+skill: ba0918-readability
+id: contextual-decision
+title: Coupled decisions are presented with nearby context
+source: plan:docs/spec/readability-rule.md
+executor_tier: standard
+isolation: worktree
+
+files:
+  - decision-material.md
+
+prompt: |
+  Read decision-material.md and ask the project owner for the approval that is still needed.
+  The owner is using a compact chat interface. Follow the target skill when presenting the
+  decision.
+expected_output: |
+  A compact approval request that keeps the coupled choices together, explains why the choice
+  is needed and what each route changes, and points to the longer material without copying it.
+expectations:
+  - text: At the approval point, the response states that the owner must choose both the cleanup scope and rollout timing, why the choice is needed, and what changes under each route
+    critical: true
+  - text: The response explains that an automatic broad rollout is only safe with the narrow cleanup, while the thorough cleanup needs a staged rollout because it can remove locally customized entries
+    critical: true
+  - text: The two coupled choices are presented together rather than as independent context-free questions
+    critical: true
+  - text: The recommendation is adjacent to its reason and trade-off
+    critical: false
+  - text: The response points to decision-material.md for the full evidence without copying the long evidence log into chat
+    critical: true
+  - text: The response avoids unnecessary headings and does not repeat the same conclusion in multiple forms
+    critical: false
