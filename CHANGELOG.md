@@ -10,6 +10,15 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-diff-review` — a rule for presenting a set of changes to a person for review: grouping
+  them by the intent behind each change instead of by file, carrying the reason and the points
+  that need judgment with each group, keeping the rendering faithful to the bytes, and naming the
+  reviewed paths and content identities as the approval target rather than a summary. It also
+  requires a review surface the reviewer can keep and open with their own tools, so that hosting
+  it anywhere stays optional and consented to.
+
 ## [0.6.0] - 2026-08-23
 
 ### Added
