@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-09-01
+
 ### Added
 
 - `ba0918-design` — a seam gate, framed as a facet of testability rather than a second
@@ -200,7 +202,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/ba0918/agentic-rules/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/ba0918/agentic-rules/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/ba0918/agentic-rules/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/ba0918/agentic-rules/compare/v0.3.0...v0.4.0
