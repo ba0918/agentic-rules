@@ -12,6 +12,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Added
 
+- `ba0918-design` — a seam gate, framed as a facet of testability rather than a second
+  principle: an interface, injection point, registry, or configuration switch is introduced only
+  when the same change contains a test that needs it or a second implementation behind it;
+  otherwise the concrete thing is called directly. Judged by counting users in the diff, never
+  by predicted need; evidence is scoped to the seams the change at hand introduces. The existing
+  rule against abstractions justified only by a future replacement stays as its special case.
 - `ba0918-diff-review` — a rule for presenting a set of changes to a person for review: grouping
   them by the intent behind each change instead of by file, carrying the reason and the points
   that need judgment with each group, keeping the rendering faithful to the bytes, and naming the

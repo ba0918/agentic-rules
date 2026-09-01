@@ -43,6 +43,7 @@ because it makes something testable that would otherwise not be.
 - Keep representations specific to a dependency or a storage mechanism inside their declared boundary.
 - When changing a persisted format, test the chosen change path: compatible read, migration, or explicit rejection.
 - Do not add an abstraction whose only justification is a future replacement.
+- Do not introduce an interface, injection point, registry, or configuration switch unless the same change contains a test that needs it or a second implementation behind it. Otherwise call the concrete thing directly.
 
 ## Judgment
 
@@ -79,6 +80,15 @@ format or a public API declared as a contract and covered by contract tests may 
 fixed. The violation is an undeclared implementation detail leaking into stored data or consumers
 with no tested change path. Judge by what is declared and what is tested, never by stated intent.
 
+**A seam is justified by a present user, not a predicted one.** An interface with one
+implementation, an injection point with one caller, a registry with one entry, or a switch nobody
+flips adds a path that no test exercises. Injecting the clock is justified because the isolation
+test that pins the instant exists in the same change; the rule forbids the seam without such a
+test, not injection itself. Reviewers count users in the diff: one implementation behind the
+seam and no test that needs it means the seam is removed and the concrete thing is called
+directly. When the second implementation arrives, the seam is added in that change, together
+with it. "It will be needed later" is a prediction, and predictions are not evidence.
+
 ## Examples
 
 Business logic living in glue code, and the same logic moved down:
@@ -110,6 +120,18 @@ function isExpired(token, now) {
 }
 ```
 
+A seam with no present user, and the same call made directly:
+
+```
+// Bad: one implementation, a factory, and a config key — nothing in this change uses the seam
+interface Notifier { send(msg: Message): Promise<void> }
+class EmailNotifier implements Notifier { ... }
+const notifier: Notifier = createNotifier(config.notifier.kind);
+
+// Good: the concrete call; the interface arrives with the second implementation
+await sendEmail(msg);
+```
+
 ## Evidence
 
 Show these outputs rather than asserting the design is sound.
@@ -130,3 +152,7 @@ Show these outputs rather than asserting the design is sound.
   representation. Scoped to this change — a repository-wide absence proof is not required.
 - **Persisted-format change**: a test run showing a representative value of the old format
   passing through the chosen change path (compatible read, migration, or explicit rejection).
+- **Seam justification**: for each interface, injection point, registry, or configuration switch
+  the change introduces, the test or the second implementation in the same diff that uses it
+  (for example `git diff --stat` listing both). Scoped to this change — existing seams are not
+  audited.
