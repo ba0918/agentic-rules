@@ -10,7 +10,7 @@
     {
       "name": "ba0918-rules",
       "version": "0.6.0",
-      "description": "Design principles, information placement, human-readable output that preserves technical meaning, test-first contract, testing anti-patterns, commit conventions, secret handling, release discipline, delegation and verification discipline, and generation of a project's AGENTS.md routing table",
+      "description": "Design principles, information placement, human-readable output that preserves technical meaning, presentation of changes for human review, test-first contract, testing anti-patterns, commit conventions, secret handling, release discipline, delegation and verification discipline, and generation of a project's AGENTS.md routing table",
       "source": "./"
     }
   ]

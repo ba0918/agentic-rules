@@ -2,8 +2,8 @@
 
 Normative rules for AI coding agents, packaged as [Agent Skills](https://agentskills.io).
 
-Design principles, test discipline, information placement, human-readable output, commit
-conventions and secret handling live here once, and are distributed to many projects and many
+Design principles, test discipline, information placement, human-readable output, change
+presentation for review, commit conventions and secret handling live here once, and are distributed to many projects and many
 agents from this single repository.
 
 This repository holds **domain rules only**. Workflow automation (procedures, orchestration)
@@ -23,6 +23,7 @@ belongs elsewhere and must not be depended on from here.
 | `ba0918-delegation` | Delegation discipline: orchestrator principle, five role contracts, executor table | `required:delegate` |
 | `ba0918-verification` | Verification discipline: evidence demands, worst-of aggregation, hand-off hygiene | `required:review` |
 | `ba0918-reuse` | Reuse-before-build: layer decomposition, an eight-rung search ladder, adopt-or-build records | `required:design` |
+| `ba0918-diff-review` | Presenting a set of changes to a person for review: grouped by intent, each group carrying its reason and the points needing judgment, rendered where differences are legible, with the reviewed bytes named as the approval target | `required:diff-review` |
 | `ba0918-testing` | Testing anti-patterns | fires from its description |
 | `ba0918-scaffold` | Generates `AGENTS.md` / `PROJECT.md` for a consuming project | invoked explicitly |
 

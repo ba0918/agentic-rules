@@ -137,6 +137,7 @@ description による発火(候補としてスキルが読み込まれること)
 | ba0918-delegation | 委譲規範(orchestrator 原則・役割契約 5 種・executor table) | 運用実績の蒸留 |
 | ba0918-verification | 検証規範(証拠要求・worst-of 集約・受け渡し衛生) | 運用実績の蒸留 |
 | ba0918-reuse | 再利用判断(層分解・8 段探索梯子・採用/自作の記録) | 新規(詳細仕様: reuse-rule.md) |
+| ba0918-diff-review | 変更を人にレビューさせるときの提示の規則(意図でのグループ化・理由と判断点の併記・忠実な描画・承認対象の明示) | 新規 |
 
 dependencies / review / 言語別ルールは、必要が実際に発生した時点で追加する
 (changelog 系は ba0918-release として追加済み — 延期トリガー「必要の実発生」の発火による)。
