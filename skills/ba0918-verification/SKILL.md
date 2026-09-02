@@ -48,7 +48,8 @@ obligation on the delegate, and here as a demand by the verifier. Each document 
   specification have split, an irreversible operation is imminent, or findings conflict and
   neither withdraws.
 - Count an oracle — a test, a check, or a fixture — as evidence only when the condition it
-  produces has a named operational producer in a supported environment, its subject is the
+  produces has a named operational producer in a supported environment (untrusted input arriving
+  at a boundary is one), its subject is the
   product or a check rather than the oracle itself, the rule it enforces is stated by the
   specification, and every wording, file layout, or internal name it pins is declared there
   as a contract; an oracle that fails any of these is a cost — do not add it, keep it in the
@@ -58,7 +59,7 @@ obligation on the delegate, and here as a demand by the verifier. Each document 
   disagreement, never a fix.
 - Record a requirement whose only oracle would fail those conditions as UNVERIFIED with the
   reason, and propose its disposition: a human-run check or the platform's own checker when
-  it is not code, dropping the requirement when it is code with its failure joining a generic
+  it is not code; when it is code, dropping the requirement so that its failure joins a generic
   error path a reachable failure already proves — never a fixture to build.
 
 ## Judgment
@@ -100,8 +101,9 @@ spending the human gate.
 
 **An observation made under an unreachable condition is not evidence either.** Like a claim,
 it is detached from the behaviour it sets out to verify: a fabricated failure passing shows only
-that the diagnostic branch exists, not that the product is correct. "The specification" here is
-the project's normative specification document, or, where there is none, its user-facing public
+that the diagnostic branch exists, not that the product is correct. A producer need not be
+benign: untrusted input arriving at a boundary is a producer. "The specification" here is the
+project's normative specification document, or, where there is none, its user-facing public
 documents; "supported environments" are what that document declares as supported.
 
 **An oracle measures its subject, not its own shape.** A check that verifies itself regresses
@@ -112,7 +114,16 @@ behaviour but the rate of change.
 
 **Size is a smell, not a verdict.** A fixture more complex than its subject is a signal to look
 for a condition that is missing. A large fixture is legitimate when its subject is reachable
-behaviour, and a one-line assertion is a violation when it pins an undeclared wording.
+behaviour, and a one-line assertion is a violation when it pins an undeclared wording. The
+conditions apply to the oracles the diff adds and the oracles whose lines it changes; oracles
+the diff leaves alone are not inventoried.
+
+**A requirement recorded UNVERIFIED sits beside the verdict, and an incomplete finding loses one
+disposition.** The per-requirement record does not make the total verdict UNVERIFIED — that axis
+is required-reviewer coverage — and exists to carry the proposed disposition to the person. The
+completeness condition removes only the fix from the choices for a finding that demands a new
+oracle; the three dispositions of every other finding — a fix inside the diff's scope, a
+recorded proposal, or a documented disagreement — are unchanged.
 
 ## Examples
 
@@ -161,9 +172,9 @@ condition that has an operational producer — the difference is not the substit
 the condition has a producer:
 
 ```
-Bad:  The specification fixes a diagnostic for a failure no supported
+Bad:  The specification pins a diagnostic for a failure no supported
       environment produces; a review demands a behaviour test for it; the
-      fixer substitutes libc to fabricate the failure.
+      implementer substitutes libc to fabricate the failure.
 Good: An account record with an empty home field — a condition real users
       produce — is reproduced by the same libc substitution and its handling
       observed.
@@ -204,10 +215,11 @@ Show these outputs rather than asserting the work was verified.
   declares that expression as a contract.
 - **Each demand for a new oracle qualifies the same way**: for every finding that demands a new
   oracle, the same items.
-- **Each removed oracle names its missing condition**: for every oracle the diff removes, the
-  condition it failed.
+- **Each removed oracle names its missing condition**: for every oracle the diff removed on
+  these conditions' grounds, the condition it failed; an oracle removed for another reason — a
+  feature deleted with its tests — owes nothing.
 - **Each UNVERIFIED requirement carries a reason and a disposition**: for every requirement
   recorded as UNVERIFIED, which condition its only oracle would fail and why, and the
   disposition proposed.
 
-These are asked of the diff under review only; no repository-wide proof is required.
+These four are asked of the diff under review only; no repository-wide proof is required.
