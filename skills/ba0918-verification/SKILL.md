@@ -49,11 +49,10 @@ obligation on the delegate, and here as a demand by the verifier. Each document 
   neither withdraws.
 - Count an oracle — a test, a check, or a fixture — as evidence only when the condition it
   produces has a named operational producer in a supported environment (untrusted input arriving
-  at a boundary is one), its subject is the
-  product or a check rather than the oracle itself, the rule it enforces is stated by the
-  specification, and every wording, file layout, or internal name it pins is declared there
-  as a contract; an oracle that fails any of these is a cost — do not add it, keep it in the
-  diff under review, or demand it.
+  at a boundary is one), its subject is the product or a check rather than the oracle itself, the
+  rule it enforces is stated by the specification, and every wording, file layout, or internal
+  name it pins is declared there as a contract; an oracle that fails any of these is a cost — do
+  not add it, keep it in the diff under review, or demand it.
 - Accept a finding that demands a new oracle only when it shows that the oracle meets those
   conditions; a finding that does not becomes a recorded proposal or a documented
   disagreement, never a fix.
