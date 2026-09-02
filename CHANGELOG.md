@@ -10,6 +10,24 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-verification` — the four conditions under which an oracle (a test, a check, or a
+  fixture) counts as evidence: the condition it produces has a named operational producer in a
+  supported environment, its subject is the product or a check rather than the oracle itself,
+  the rule it enforces is stated by the specification, and every wording, file layout, or
+  internal name it pins is declared there as a contract. Framed as an extension of "a claim is
+  not evidence", never as a second principle: an observation made under an unreachable
+  condition is not evidence either. A finding that demands a new oracle is complete only when
+  it shows the oracle meets those conditions; one that does not becomes a recorded proposal or
+  a documented disagreement, never a fix. A requirement whose only oracle would fail them is
+  recorded as UNVERIFIED, per requirement, with the reason and a proposed disposition. Judged
+  by the conditions, never by size; evidence is scoped to the diff under review.
+- `contracts/oracle-evidence.md` — the same conditions in a copyable form for workflow stations
+  that write requirements or plans and do not read the skill. A copy carries the rule name and
+  the agentic-rules release version it was taken from, so a copy left behind by a change to the
+  source is found by comparing versions.
+
 ## [0.7.0] - 2026-09-01
 
 ### Added
