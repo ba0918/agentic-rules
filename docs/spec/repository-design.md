@@ -17,6 +17,9 @@ AI コーディングエージェントに与える「ルール」(設計原則�
 
 ルールからワークフローへの依存は禁止。ワークフローからルールへは
 「スキル名 + 対応バージョン範囲」の宣言でのみ依存する(本文の複製・パス参照はしない)。
+例外は、ルール側が `contracts/` に置いた文書に限る: ルールを読まない工程にその一部を届ける
+ために、写し先に規則名と対応する版を添えて本文を写してよい。digest による自動同期
+(agentic-skill-vendor)への移行は、写しのドリフトが実害を出した時点で判断する。
 
 ## 配布と更新
 
@@ -48,8 +51,8 @@ OpenCode 用の `package.json` は配布用 manifest であり、公開 npm パ�
 CHANGELOG の最新リリース見出しは canonical との一致をバリデータが機械検証する。
 
 canonical は版の表示であると同時に、plugin 型の更新が配信される条件でもある。
-リリース規律として、利用者に見える変更(ルール本文・スキル構成・導入手順の変更)を
-入れるときは必ず canonical を bump する。canonical を据え置いたままの変更は、
+リリース規律として、利用者に見える変更(ルール本文・スキル構成・導入手順・`contracts/` の
+文書の変更)を入れるときは必ず canonical を bump する。canonical を据え置いたままの変更は、
 plugin 型で導入した利用者には届かない。
 
 入手方法と再現性ポリシーは別物として扱う。リポジトリ側の義務は「リリースにタグを打つ」
@@ -135,7 +138,7 @@ description による発火(候補としてスキルが読み込まれること)
 | ba0918-scaffold | AGENTS.md / PROJECT.md / CLAUDE.md シム(`@AGENTS.md` 1 行)の生成 | 新規(メタスキル) |
 | ba0918-release | リリース規律(canonical version・bump・タグ・changelog) | 運用実績の蒸留 |
 | ba0918-delegation | 委譲規範(orchestrator 原則・役割契約 5 種・executor table) | 運用実績の蒸留 |
-| ba0918-verification | 検証規範(証拠要求・worst-of 集約・受け渡し衛生) | 運用実績の蒸留 |
+| ba0918-verification | 検証規範(証拠要求・worst-of 集約・受け渡し衛生)・検証の過剰の規則(詳細仕様: excess-verification-rule.md) | 運用実績の蒸留 + 追記 |
 | ba0918-reuse | 再利用判断(層分解・8 段探索梯子・採用/自作の記録) | 新規(詳細仕様: reuse-rule.md) |
 | ba0918-diff-review | 変更を人にレビューさせるときの提示の規則(意図でのグループ化・理由と判断点の併記・忠実な描画・承認対象の明示) | 新規 |
 
