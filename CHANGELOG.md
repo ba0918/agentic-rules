@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-03
+
 ### Added
 
 - `ba0918-verification` — the four conditions under which an oracle (a test, a check, or a
@@ -220,7 +222,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/ba0918/agentic-rules/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/ba0918/agentic-rules/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/ba0918/agentic-rules/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/ba0918/agentic-rules/compare/v0.4.0...v0.5.0
