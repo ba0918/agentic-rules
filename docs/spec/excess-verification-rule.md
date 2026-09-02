@@ -38,8 +38,9 @@ oracle(テスト・検査・fixture)を作る。各工程に「足す」操作�
 ならない。
 
 1. **到達可能な条件。** oracle が作り出す条件を、対応環境のどれかが運用中に生み出せる。
-   判定は、テストまたは指摘が、その条件の運用上の生み手を名指しできること。生み手が
-   oracle 自身の差し替えしか無い条件は到達不能である。
+   判定は、テストまたは指摘が、その条件の運用上の生み手を名指しできること。生み手は善意で
+   ある必要はなく、境界に届く信頼できない入力も生み手である。生み手が oracle 自身の
+   差し替えしか無い条件は到達不能である。
    例: ユーザーデータベースの home 欄が空 — 生み手は「そういう利用者」で、libc を差し替えて
    再現しても正当。シグナル設定の照会が失敗する — 生み手を名指しできず、到達不能。
 2. **対象が oracle 自身でない。** oracle の対象が製品(そのプロジェクトが作るもの。補助
@@ -78,7 +79,8 @@ repository-design の「共有原典への移行は自動発動しない」と�
 記録し提案する形で述べる。正本と一字一句同じ本文を以下に示す:
 
 > An oracle — a test, a check, or a fixture — counts as evidence only when the condition it
-> produces has a named operational producer in a supported environment, its subject is the
+> produces has a named operational producer in a supported environment (untrusted input arriving
+at a boundary is one), its subject is the
 > product or a check rather than the oracle itself, the rule it enforces is stated by the
 > specification, and every wording, file layout, or internal name it pins is declared there as
 > a contract. An oracle that fails any of these is a cost: do not add it, keep it in a change
@@ -142,7 +144,8 @@ ba0918-reuse の梯子 1 段目(「その層はそもそも要るか」)と重�
 Rules に加える規範(3 行。各行は 1 つの命令とその帰結):
 
 - Count an oracle — a test, a check, or a fixture — as evidence only when the condition it
-  produces has a named operational producer in a supported environment, its subject is the
+  produces has a named operational producer in a supported environment (untrusted input arriving
+at a boundary is one), its subject is the
   product or a check rather than the oracle itself, the rule it enforces is stated by the
   specification, and every wording, file layout, or internal name it pins is declared there
   as a contract; an oracle that fails any of these is a cost — do not add it, keep it in the
@@ -152,25 +155,33 @@ Rules に加える規範(3 行。各行は 1 つの命令とその帰結):
   disagreement, never a fix.
 - Record a requirement whose only oracle would fail those conditions as UNVERIFIED with the
   reason, and propose its disposition: a human-run check or the platform's own checker when
-  it is not code, dropping the requirement when it is code with its failure joining a generic
+  it is not code; when it is code, dropping the requirement so that its failure joins a generic
   error path a reachable failure already proves — never a fixture to build.
 
-Judgment に加える項目(既存と同じく、太字の主張 1 文 + 説明。3 項目):
+Judgment に加える項目(既存と同じく、太字の主張 1 文 + 説明。4 項目):
 
 - **到達不能な条件の下で得た観測も証拠ではない。** 主張と同じく、その観測は検証しようと
   する振る舞いから切り離されている。捏造した失敗が通ることは、診断の分岐が存在することを
-  示すだけで、製品が正しいことを示さない。「仕様」は規範とする仕様文書、無ければ利用者向けの
-  公開文書であり、「対応環境」はその文書が宣言するものである。
+  示すだけで、製品が正しいことを示さない。生み手は善意である必要はなく、境界に届く信頼
+  できない入力も生み手である。「仕様」は規範とする仕様文書、無ければ利用者向けの公開文書
+  であり、「対応環境」はその文書が宣言するものである。
 - **oracle が測るのは対象であって、oracle の形ではない。** 自分自身を検証する検査は無限に
   後退する。仕様に無い規則を検査が強制すると、誰も決めていない要求が製品に課される。宣言の
   無い表現を固定する oracle は、振る舞いを保つ変更で壊れるので、測っているのは振る舞いでは
   なく変更の頻度である。
 - **規模は臭いであって評決ではない。** fixture が対象より複雑なら、条件のどれかが欠けて
   いないかを見る合図である。大きな fixture でも対象が到達可能な振る舞いなら正当で、一行の
-  断言でも宣言の無い文言を固定すれば違反である。
+  断言でも宣言の無い文言を固定すれば違反である。条件を当てる範囲は、差分が足した oracle と
+  差分が行を変更した oracle であり、差分が触れていない oracle は棚卸ししない。
+- **検証できない要件の記録は評決の隣に置かれ、完全性を欠く finding は処遇を 1 つ失う。**
+  要件ごとの UNVERIFIED は全体の評決を UNVERIFIED にしない — その軸は必須レビュアの有無で
+  あり、要件の記録は提案した処遇を人に運ぶためにある。完全性の条件は、新しい oracle を
+  要求する finding から「修正」の選択肢を外すだけで、他の finding の 3 つの処遇は変えない。
 
 Examples に加える対比(2 組。1 組目は手法を両側で同じにし、違いは条件だけにする。2 組目は
-対象の違いを示す):
+対象の違いを示す。英語では役割を ba0918-delegation の語彙どおり "the implementer" と呼び、
+仕様が文言を定める動作は "fixes" ではなく "pins" と書く — "fixed" は本スキルで完了の主張を
+指す語として既に使われている):
 
 - 対応環境では起き得ない失敗のために仕様が診断文言を定め、レビューがその振る舞いテストを
   要求し、修正役が libc を差し替えて失敗を捏造する(Bad)。運用上の生み手がある稀な条件
@@ -185,7 +196,8 @@ Evidence に加える項目(レビュー対象の差分だけに要求する):
 - 差分が足した oracle ごとに、条件の運用上の生み手、対象、規則を述べる仕様の見出し。
   文言・ファイルの構造・内部の名前を固定する oracle に限り、その表現を宣言する仕様の見出しも。
 - 新しい oracle を要求する finding ごとに、同じ項目。
-- 差分が削った oracle ごとに、欠けていた条件。
+- この規則を理由に差分が削った oracle ごとに、欠けていた条件。他の理由で消えた oracle
+  (機能ごと消したテストなど)には求めない。
 - UNVERIFIED と記録した要件ごとに、欠ける条件の理由と、提案した処遇。
 
 リポジトリ全体の証明は要求しない。
