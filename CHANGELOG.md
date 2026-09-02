@@ -23,7 +23,7 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   a documented disagreement, never a fix. A requirement whose only oracle would fail them is
   recorded as UNVERIFIED, per requirement, with the reason and a proposed disposition. Judged
   by the conditions, never by size; evidence is scoped to the diff under review.
-- `contracts/oracle-evidence.md` — the same conditions in a copyable form for workflow stations
+- `contracts/oracle-evidence.md` — the same conditions in a copyable form for the workflow steps
   that write requirements or plans and do not read the skill. A copy carries the rule name and
   the agentic-rules release version it was taken from, so a copy left behind by a change to the
   source is found by comparing versions.

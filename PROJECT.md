@@ -16,6 +16,9 @@ Python 3.12 (standard library only) for the validator; pytest for its tests; Nod
 to run the reference validator in CI and the OpenCode plugin hook.
 
 - `skills/` — the product: rule skills named `ba0918-<domain-noun>`, one directory per skill
+- `contracts/` — documents whose text other repositories copy (currently the copyable oracle
+  evidence conditions); a change there is user-visible and bumps the canonical version, as
+  `docs/spec/repository-design.md` states
 - `scripts/validate.py` — this repository's own conventions, as a registry of rules
 - `tests/` — pytest suite for the validator
 - `.claude-plugin/marketplace.json` — distribution metadata; `plugins[0].version` is the
