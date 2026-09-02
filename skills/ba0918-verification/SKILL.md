@@ -47,6 +47,19 @@ obligation on the delegate, and here as a demand by the verifier. Each document 
 - Escalate to a human on exactly three conditions: interpretations of a contract or
   specification have split, an irreversible operation is imminent, or findings conflict and
   neither withdraws.
+- Count an oracle — a test, a check, or a fixture — as evidence only when the condition it
+  produces has a named operational producer in a supported environment, its subject is the
+  product or a check rather than the oracle itself, the rule it enforces is stated by the
+  specification, and every wording, file layout, or internal name it pins is declared there
+  as a contract; an oracle that fails any of these is a cost — do not add it, keep it in the
+  diff under review, or demand it.
+- Accept a finding that demands a new oracle only when it shows that the oracle meets those
+  conditions; a finding that does not becomes a recorded proposal or a documented
+  disagreement, never a fix.
+- Record a requirement whose only oracle would fail those conditions as UNVERIFIED with the
+  reason, and propose its disposition: a human-run check or the platform's own checker when
+  it is not code, dropping the requirement when it is code with its failure joining a generic
+  error path a reachable failure already proves — never a fixture to build.
 
 ## Judgment
 
@@ -84,6 +97,22 @@ share one property: proceeding without a human either forecloses an option irrev
 picks a side in a dispute the agents cannot settle. Everything else — uncertainty, discomfort,
 a wish for reassurance — is resolved by gathering more evidence, which agents can do without
 spending the human gate.
+
+**An observation made under an unreachable condition is not evidence either.** Like a claim,
+it is detached from the behaviour it sets out to verify: a fabricated failure passing shows only
+that the diagnostic branch exists, not that the product is correct. "The specification" here is
+the project's normative specification document, or, where there is none, its user-facing public
+documents; "supported environments" are what that document declares as supported.
+
+**An oracle measures its subject, not its own shape.** A check that verifies itself regresses
+without end. A check that enforces a rule the specification does not state imposes on the
+product a requirement nobody decided. An oracle that pins an undeclared wording, file layout, or
+internal name breaks under a change that preserves behaviour, so what it measures is not
+behaviour but the rate of change.
+
+**Size is a smell, not a verdict.** A fixture more complex than its subject is a signal to look
+for a condition that is missing. A large fixture is legitimate when its subject is reachable
+behaviour, and a one-line assertion is a violation when it pins an undeclared wording.
 
 ## Examples
 
@@ -127,6 +156,30 @@ Good: Send the diff of the change under review and the plan excerpt it is
         === END DIFF UNDER REVIEW ===
 ```
 
+A failure fabricated for a condition nothing produces, and the same technique observing a rare
+condition that has an operational producer — the difference is not the substitution but whether
+the condition has a producer:
+
+```
+Bad:  The specification fixes a diagnostic for a failure no supported
+      environment produces; a review demands a behaviour test for it; the
+      fixer substitutes libc to fabricate the failure.
+Good: An account record with an empty home field — a condition real users
+      produce — is reproduced by the same libc substitution and its handling
+      observed.
+```
+
+A test that asserts a workflow file's text and step order, and one that executes the helper the
+workflow calls and asserts the specified outcome:
+
+```
+Bad:  A test reads the CI workflow file and asserts the wording and order
+      of its steps.
+Good: A test runs the helper with a fixture and asserts its exit status and
+      the outcome the specification states — stopped or continued; the
+      workflow's structure is left to the platform's own checker.
+```
+
 ## Evidence
 
 Show these outputs rather than asserting the work was verified.
@@ -145,3 +198,16 @@ Show these outputs rather than asserting the work was verified.
   around it.
 - **Escalations match the conditions**: each escalation naming which of the three conditions
   fired; none citing anything else.
+- **Each added oracle qualifies as evidence**: for every oracle the diff adds, the operational
+  producer of its condition, its subject, and the specification heading that states the rule it
+  enforces — and, only where it pins a wording, file layout, or internal name, the heading that
+  declares that expression as a contract.
+- **Each demand for a new oracle qualifies the same way**: for every finding that demands a new
+  oracle, the same items.
+- **Each removed oracle names its missing condition**: for every oracle the diff removes, the
+  condition it failed.
+- **Each UNVERIFIED requirement carries a reason and a disposition**: for every requirement
+  recorded as UNVERIFIED, which condition its only oracle would fail and why, and the
+  disposition proposed.
+
+These are asked of the diff under review only; no repository-wide proof is required.
