@@ -23,6 +23,14 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   evidence it owes is a list-free search of the staged diff and the commit message for
   absolute-path prefixes; `references/leak-response.md` records the same as recurrence control,
   and states that a lesson recorded only where one session reads it is not a control.
+- `ba0918-secrets` — the fields a commit carries besides its message as part of the rule surface:
+  the author and committer identity, and any trailer a tool appends. The surface was defined as
+  every artifact the session writes, which left out the fields git and its tooling fill in, so a
+  personal address and a session URL reached a public commit log the way an absolute path did.
+  A destination wider than the work takes an identity that names no person, and no trailer naming
+  a session, a transcript, or an internal tool URL. Because both are fixed when the commit is
+  made rather than when it is pushed, the check is stated to belong before the commit, with a
+  `git log` reading of the outgoing range as the backstop.
 
 ## [0.8.0] - 2026-09-03
 

@@ -21,8 +21,10 @@ It applies the same four moves to **confidential context and third-party materia
 that identifies or reproduces private or protected content — internal project and product names,
 internal hostnames and domains, customer names, the contents of confidential documents, the
 environment the session itself runs in, and copyrighted works without a licence to redistribute.
-The rule surface is every artifact the session writes: code and comments, tests, documentation,
-plans and working notes, commit messages, branch names, issues, and pull request text.
+The rule surface is every artifact the session writes and every field it fills in on the way out:
+code and comments, tests, documentation, plans and working notes, commit messages, the author and
+committer identity recorded with them, any trailer a tool appends, branch names, issues, and pull
+request text.
 
 It does not cover secret storage systems, key management design, or access control policy.
 
@@ -45,7 +47,7 @@ hints, not the test.
 |---|---|
 | Internal identifiers | project and product codenames, repository names of private work |
 | Internal network names | non-public hostnames, internal domains (`*.local`, `*.corp`), internal URLs and server paths |
-| Local environment | the account a session runs as, the absolute path of its working clone, its home directory, the machine's hostname |
+| Local environment | the account a session runs as, the absolute path of its working clone, its home directory, the machine's hostname, the identity version control is configured with, the session identifiers its tooling appends |
 | Business relations | customer, partner, and vendor names tied to non-public work |
 | Private documents | text quoted or paraphrased from specs, contracts, or internal reports |
 | Third-party works | code or prose copied from a source whose licence does not permit redistribution |
@@ -84,6 +86,12 @@ destination's audience decides on its own.
 - Keep environment-specific facts in session-local working state, or in the text handed to a
   delegate, rather than in a committed document. A plan that records where the work happened is
   the usual carrier.
+- Read the fields a commit carries besides its message: the author and committer identity, and any
+  trailer a tool appends. Both are fixed when the commit is made, so rewording the message later
+  does not correct them.
+- Record an identity that names no person where the destination is wider than the work — the
+  forge's no-reply address rather than a personal one. Append no trailer naming a session, a
+  transcript, or an internal tool URL to a commit bound for a wider audience.
 - When private work motivates a public change, keep the structural lesson and drop the
   identity: "a real project's friction measurement", never the project's name.
 - Never carry confidential document content across an audience boundary. Within the audience
@@ -135,6 +143,11 @@ them. A credential scan clears them too, because a path grants nothing on presen
 also the only class here with a fixed shape: a short set of absolute-path prefixes, the same on
 every machine. That makes this the one class to search for rather than reason about — no list has
 to be right for the search to find it.
+
+Metadata is the harder half. A message can be reworded, but the identity and the trailers a commit
+carries are fixed the moment it is made, so correcting them means rewriting the commit and every
+commit after it. The check therefore belongs before the commit; the one before the push is only a
+backstop.
 
 **Leaked information cannot be revoked.** A credential has a provider that can kill it; a name,
 a document, or a copyrighted text does not. Once pushed, assume it has been fetched — edit
@@ -221,6 +234,10 @@ Show these outputs rather than asserting nothing leaked.
   `git diff --cached | rg -n '/home/|/Users/|/mnt/[a-z]/|[A-Za-z]:\\Users|~/'`, returning no hits
   or only placeholders that are obviously fake. Unlike the check above, this one needs no list of
   identifiers, so it holds the first time it runs.
+- **Outgoing identity is clean**: `git log --format='%an <%ae> | %cn <%ce>' <range>` over the
+  commits about to leave, showing no address that names a person where the destination is wider
+  than the work, and `git log --format=%B <range>` containing no trailer that names a session, a
+  transcript, or an internal tool URL.
 - **Document-derived text is cleared**: for each passage written from a private document, its
   source named and the destination's audience compared with the source's — stated and reviewed,
   not searched.
