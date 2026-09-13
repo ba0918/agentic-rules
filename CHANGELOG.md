@@ -14,23 +14,30 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 - `ba0918-secrets` — the environment a session runs in as a class of confidential context, framed
   as an extension of the existing audience test rather than a second principle: the account a
-  session runs as, the absolute path of its working clone, its home directory and the machine's
-  hostname locate a place and a person the way an internal hostname does. The audience comparison
-  now applies to what a session writes itself and not only to what it carries in, because a path
-  read off the machine has no source document to compare against. A location is named relative to
-  the repository root, and environment-specific facts stay in session-local working state or in
-  delegation text rather than in a committed document. This class alone has a fixed shape, so the
-  evidence it owes is a list-free search of the staged diff and the commit message for
-  absolute-path prefixes; `references/leak-response.md` records the same as recurrence control,
-  and states that a lesson recorded only where one session reads it is not a control.
-- `ba0918-secrets` — the fields a commit carries besides its message as part of the rule surface:
-  the author and committer identity, and any trailer a tool appends. The surface was defined as
-  every artifact the session writes, which left out the fields git and its tooling fill in, so a
-  personal address and a session URL reached a public commit log the way an absolute path did.
-  A destination wider than the work takes an identity that names no person, and no trailer naming
-  a session, a transcript, or an internal tool URL. Because both are fixed when the commit is
-  made rather than when it is pushed, the check is stated to belong before the commit, with a
-  `git log` reading of the outgoing range as the backstop.
+  session runs as, the absolute path of its working clone, its home directory, the machine's
+  hostname, the identity version control is configured with, and the session identifiers its
+  tooling appends all locate a place and a person the way an internal hostname does. The audience
+  comparison now applies to what a session writes itself and not only to what it carries in,
+  because a path read off the machine has no source document to compare against; the rule surface
+  now covers the fields a session fills in on the way out — the author and committer identity, and
+  any trailer a tool appends — and not only the artifacts it writes. A location is named relative
+  to the repository root, environment-specific facts stay in session-local working state or in
+  delegation text rather than in a committed document, and a destination wider than the work takes
+  an identity that names no person and no trailer naming a session, a transcript, or an internal
+  tool URL. This class alone has a fixed shape, so the evidence it owes is mechanical: a list-free
+  search of the staged diff and the commit message for absolute-path prefixes, and a `git log`
+  reading of the outgoing range's identity and trailers. Because metadata is fixed when a commit
+  is made rather than when it is pushed, that check is stated to belong before the commit.
+
+### Changed
+
+- **BREAKING** — `ba0918-secrets`: the list of private identifiers that outgoing text is searched
+  against may no longer live in the repository's local-only exclude file. That file is not cloned,
+  so the next machine, the next fresh checkout and CI each start without the control and nothing
+  reports its absence. The place now has to satisfy both conditions at once — never staged, and
+  still present after a fresh clone — which leaves a location outside the repository or an ignore
+  file the repository itself distributes. `references/leak-response.md` states both, and states
+  that a control the next environment starts without is not a control.
 
 ## [0.8.0] - 2026-09-03
 
