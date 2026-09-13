@@ -67,6 +67,10 @@ There is nothing to revoke, so containment replaces revocation.
    derived from it gets the provenance check before it goes out. Keep such a list outside the
    working tree, or excluded by the repository's local-only exclude file — untracked is not
    enough, because one bulk staging commits the very identifiers the list exists to catch.
+   An identifier with a fixed shape — the absolute-path prefixes of a local environment — is
+   searched for instead of listed, since no list has to be right for the search to work. Wherever
+   the control lands it has to run where the next change is staged: a lesson recorded only where
+   this session can read it is not a control.
 
 ## Evidence of the response
 

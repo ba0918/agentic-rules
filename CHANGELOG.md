@@ -10,6 +10,20 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-secrets` — the environment a session runs in as a class of confidential context, framed
+  as an extension of the existing audience test rather than a second principle: the account a
+  session runs as, the absolute path of its working clone, its home directory and the machine's
+  hostname locate a place and a person the way an internal hostname does. The audience comparison
+  now applies to what a session writes itself and not only to what it carries in, because a path
+  read off the machine has no source document to compare against. A location is named relative to
+  the repository root, and environment-specific facts stay in session-local working state or in
+  delegation text rather than in a committed document. This class alone has a fixed shape, so the
+  evidence it owes is a list-free search of the staged diff and the commit message for
+  absolute-path prefixes; `references/leak-response.md` records the same as recurrence control,
+  and states that a lesson recorded only where one session reads it is not a control.
+
 ## [0.8.0] - 2026-09-03
 
 ### Added
