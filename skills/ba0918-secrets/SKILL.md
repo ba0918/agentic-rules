@@ -94,6 +94,9 @@ destination's audience decides on its own.
   trailer crosses when it points that audience at work it was never shown, and not when the
   identifier it carries is one that audience cannot reach. The forge's no-reply address is the
   usual way to satisfy this, not the rule.
+- Do not commit the output of a command whose scope was wider than this repository — a listing of
+  a parent directory, an inventory of other clones, a dump of the environment. Reproduce only the
+  part that concerns this repository, and name where it came from.
 - When private work motivates a public change, keep the structural lesson and drop the
   identity: "a real project's friction measurement", never the project's name.
 - Never carry confidential document content across an audience boundary. Within the audience
@@ -144,7 +147,10 @@ ambient facts rather than as material with an audience, and the comparison never
 them. A credential scan clears them too, because a path grants nothing on presentation. They are
 also the only class here with a fixed shape: a short set of absolute-path prefixes, the same on
 every machine. That makes this the one class to search for rather than reason about — no list has
-to be right for the search to find it.
+to be right for the search to find it. The search has a blind spot all the same: only the path form
+has a shape. A bare list of names — the directories beside the working clone, the other clones on
+the machine — discloses the same existence and passes every scan, so that half stays judgment, and
+the moment to apply it is when the output is pasted, not when the commit is made.
 
 Metadata is the harder half. A message can be reworded, but the identity and the trailers a commit
 carries are fixed the moment it is made, so correcting them means rewriting the commit and every
@@ -240,9 +246,10 @@ Show these outputs rather than asserting nothing leaked.
   commits about to leave, showing no address that names a person the destination's audience was
   not already given, and `git log --format=%B <range>` whose trailers point that audience at
   nothing it was never shown.
-- **Document-derived text is cleared**: for each passage written from a private document, its
-  source named and the destination's audience compared with the source's — stated and reviewed,
-  not searched.
+- **Provenance of derived text is cleared**: for each passage written from a private document, and
+  for each block of output from a command whose scope was wider than this repository, its source
+  named and the destination's audience compared with the source's — stated and reviewed, not
+  searched.
 - **Copied material is licensed**: for each copy of third-party material, the source, the
   licence that permits the copy, and the attribution or notice that licence requires — present
   in the artifact, not promised.

@@ -25,10 +25,16 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   delegation text rather than in a committed document, and the identity and trailers a commit
   carries are judged by the same audience test as its content — an address naming a person
   crosses, one the owner already publishes does not, and a trailer crosses when it points that
-  audience at work it was never shown. This class alone has a fixed shape, so the evidence it owes is mechanical: a list-free
+  audience at work it was never shown. The path form of this class has a fixed shape where the
+  other kinds of confidential context do not, so the evidence it owes is mechanical: a list-free
   search of the staged diff and the commit message for absolute-path prefixes, and a `git log`
   reading of the outgoing range's identity and trailers. Because metadata is fixed when a commit
-  is made rather than when it is pushed, that check is stated to belong before the commit.
+  is made rather than when it is pushed, that check is stated to belong before the commit. The
+  search's blind spot is stated too: a bare list of names — the directories beside a working clone,
+  the other clones on a machine — discloses the same existence with no shape to search for, so the
+  output of a command whose scope was wider than the repository is not committed at all; only the
+  part concerning the repository is reproduced, with its source named. The provenance evidence item
+  now covers that output alongside passages written from a private document.
 
 ### Changed
 
