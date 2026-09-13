@@ -49,9 +49,10 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   against may no longer live in the repository's local-only exclude file. That file is not cloned,
   so the next machine, the next fresh checkout and CI each start without the control and nothing
   reports its absence. The place now has to satisfy both conditions at once — never staged, and
-  still present after a fresh clone — which leaves a location outside the repository or an ignore
-  file the repository itself distributes. `references/leak-response.md` states both, and states
-  that a control the next environment starts without is not a control.
+  still present after a fresh clone — which leaves a location outside the repository, or a path
+  inside it that the repository's own distributed ignore file excludes.
+  `references/leak-response.md` states both, and states that a control the next environment
+  starts without is not a control.
 
 ## [0.8.0] - 2026-09-03
 
