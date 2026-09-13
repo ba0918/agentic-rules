@@ -22,9 +22,10 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   now covers the fields a session fills in on the way out — the author and committer identity, and
   any trailer a tool appends — and not only the artifacts it writes. A location is named relative
   to the repository root, environment-specific facts stay in session-local working state or in
-  delegation text rather than in a committed document, and a destination wider than the work takes
-  an identity that names no person and no trailer naming a session, a transcript, or an internal
-  tool URL. This class alone has a fixed shape, so the evidence it owes is mechanical: a list-free
+  delegation text rather than in a committed document, and the identity and trailers a commit
+  carries are judged by the same audience test as its content — an address naming a person
+  crosses, one the owner already publishes does not, and a trailer crosses when it points that
+  audience at work it was never shown. This class alone has a fixed shape, so the evidence it owes is mechanical: a list-free
   search of the staged diff and the commit message for absolute-path prefixes, and a `git log`
   reading of the outgoing range's identity and trailers. Because metadata is fixed when a commit
   is made rather than when it is pushed, that check is stated to belong before the commit.

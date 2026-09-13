@@ -89,9 +89,11 @@ destination's audience decides on its own.
 - Read the fields a commit carries besides its message: the author and committer identity, and any
   trailer a tool appends. Both are fixed when the commit is made, so rewording the message later
   does not correct them.
-- Record an identity that names no person where the destination is wider than the work — the
-  forge's no-reply address rather than a personal one. Append no trailer naming a session, a
-  transcript, or an internal tool URL to a commit bound for a wider audience.
+- Judge the identity and the trailers by the same audience test as everything else. An address
+  that names a person crosses; one the owner already publishes to that audience does not. A
+  trailer crosses when it points that audience at work it was never shown, and not when the
+  identifier it carries is one that audience cannot reach. The forge's no-reply address is the
+  usual way to satisfy this, not the rule.
 - When private work motivates a public change, keep the structural lesson and drop the
   identity: "a real project's friction measurement", never the project's name.
 - Never carry confidential document content across an audience boundary. Within the audience
@@ -235,9 +237,9 @@ Show these outputs rather than asserting nothing leaked.
   or only placeholders that are obviously fake. Unlike the check above, this one needs no list of
   identifiers, so it holds the first time it runs.
 - **Outgoing identity is clean**: `git log --format='%an <%ae> | %cn <%ce>' <range>` over the
-  commits about to leave, showing no address that names a person where the destination is wider
-  than the work, and `git log --format=%B <range>` containing no trailer that names a session, a
-  transcript, or an internal tool URL.
+  commits about to leave, showing no address that names a person the destination's audience was
+  not already given, and `git log --format=%B <range>` whose trailers point that audience at
+  nothing it was never shown.
 - **Document-derived text is cleared**: for each passage written from a private document, its
   source named and the destination's audience compared with the source's — stated and reviewed,
   not searched.
