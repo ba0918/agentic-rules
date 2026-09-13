@@ -34,7 +34,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   the other clones on a machine — discloses the same existence with no shape to search for, so the
   output of a command whose scope was wider than the repository is not committed at all; only the
   part concerning the repository is reproduced, with its source named. The provenance evidence item
-  now covers that output alongside passages written from a private document.
+  now covers that output alongside passages written from a private document. The destinations the
+  rule counts now include the calls a session makes outward — a search query, the arguments of an
+  external or MCP tool — and the text handed to a delegate is a sink only once its audience has
+  been checked, since a delegate running on another provider is a wider one. The scope statement
+  says what the rule does not decide: whether a body of material may be processed by a third-party
+  service at all, which is a policy question settled before the session rather than at each paste.
 
 ### Changed
 

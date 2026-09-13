@@ -26,7 +26,9 @@ code and comments, tests, documentation, plans and working notes, commit message
 committer identity recorded with them, any trailer a tool appends, branch names, issues, and pull
 request text.
 
-It does not cover secret storage systems, key management design, or access control policy.
+It does not cover secret storage systems, key management design, or access control policy. Nor
+does it decide whether a body of material may be processed by a third-party service at all: that
+is a policy question, settled before the session rather than at each paste.
 
 ## Recognising a credential
 
@@ -84,8 +86,11 @@ destination's audience decides on its own.
   file, commit message, or outward-bound text, and neither does the account name or hostname it
   spells out.
 - Keep environment-specific facts in session-local working state, or in the text handed to a
-  delegate, rather than in a committed document. A plan that records where the work happened is
-  the usual carrier.
+  delegate whose audience you have checked, rather than in a committed document. A plan that
+  records where the work happened is the usual carrier. A delegate is not automatically this
+  session's audience — one running on another provider is a wider one.
+- Count the calls you make outward as destinations too: a search query, the arguments of an
+  external or MCP tool. An identifier you would not hand that provider does not belong in one.
 - Read the fields a commit carries besides its message: the author and committer identity, and any
   trailer a tool appends. Both are fixed when the commit is made, so rewording the message later
   does not correct them.
