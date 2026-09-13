@@ -10,6 +10,50 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-09-13
+
+### Added
+
+- `ba0918-secrets` — the environment a session runs in as a class of confidential context, framed
+  as an extension of the existing audience test rather than a second principle: the account a
+  session runs as, the absolute path of its working clone, its home directory, the machine's
+  hostname, the identity version control is configured with, and the session identifiers its
+  tooling appends all locate a place and a person the way an internal hostname does. The audience
+  comparison now applies to what a session writes itself and not only to what it carries in,
+  because a path read off the machine has no source document to compare against; the rule surface
+  now covers the fields a session fills in on the way out — the author and committer identity, and
+  any trailer a tool appends — and not only the artifacts it writes. A location is named relative
+  to the repository root, environment-specific facts stay in session-local working state or in
+  delegation text rather than in a committed document, and the identity and trailers a commit
+  carries are judged by the same audience test as its content — an address naming a person
+  crosses, one the owner already publishes does not, and a trailer crosses when it points that
+  audience at work it was never shown. The path form of this class has a fixed shape where the
+  other kinds of confidential context do not, so the evidence it owes is mechanical: a list-free
+  search of the staged diff and the commit message for absolute-path prefixes, and a `git log`
+  reading of the outgoing range's identity and trailers. Because metadata is fixed when a commit
+  is made rather than when it is pushed, that check is stated to belong before the commit. The
+  search's blind spot is stated too: a bare list of names — the directories beside a working clone,
+  the other clones on a machine — discloses the same existence with no shape to search for, so the
+  output of a command whose scope was wider than the repository is not committed at all; only the
+  part concerning the repository is reproduced, with its source named. The provenance evidence item
+  now covers that output alongside passages written from a private document. The destinations the
+  rule counts now include the calls a session makes outward — a search query, the arguments of an
+  external or MCP tool — and the text handed to a delegate is a sink only once its audience has
+  been checked, since a delegate running on another provider is a wider one. The scope statement
+  says what the rule does not decide: whether a body of material may be processed by a third-party
+  service at all, which is a policy question settled before the session rather than at each paste.
+
+### Changed
+
+- **BREAKING** — `ba0918-secrets`: the list of private identifiers that outgoing text is searched
+  against may no longer live in the repository's local-only exclude file. That file is not cloned,
+  so the next machine, the next fresh checkout and CI each start without the control and nothing
+  reports its absence. The place now has to satisfy both conditions at once — never staged, and
+  still present after a fresh clone — which leaves a location outside the repository, or a path
+  inside it that the repository's own distributed ignore file excludes.
+  `references/leak-response.md` states both, and states that a control the next environment
+  starts without is not a control.
+
 ## [0.8.0] - 2026-09-03
 
 ### Added
@@ -222,7 +266,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/ba0918/agentic-rules/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/ba0918/agentic-rules/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/ba0918/agentic-rules/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/ba0918/agentic-rules/compare/v0.5.0...v0.6.0

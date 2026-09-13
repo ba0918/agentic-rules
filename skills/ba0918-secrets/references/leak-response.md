@@ -64,9 +64,20 @@ There is nothing to revoke, so containment replaces revocation.
 4. **Prevent recurrence**: record what allowed it through, and add the check that will catch a
    repeat. An identifier goes on a list that outgoing text is searched against. Material with no
    identifier has no search term to represent it, so the source goes on record instead: anything
-   derived from it gets the provenance check before it goes out. Keep such a list outside the
-   working tree, or excluded by the repository's local-only exclude file — untracked is not
-   enough, because one bulk staging commits the very identifiers the list exists to catch.
+   derived from it gets the provenance check before it goes out. Where such a list lives has two
+   conditions, and both have to hold at once. It is never staged — untracked is not enough,
+   because one bulk staging commits the very identifiers the list exists to catch. And it
+   survives a fresh clone — the repository's local-only exclude file does not, so the next
+   machine, the next fresh checkout and CI each start without the control and nothing reports
+   its absence. What satisfies both is a location outside the repository, or a path inside it that
+   the repository's own distributed ignore file excludes — the ignore file travels, the list does
+   not.
+
+   An identifier with a fixed shape — the absolute-path prefixes of a local environment — is
+   searched for instead of listed, since no list has to be right for the search to work. Wherever
+   the control lands it has to run where the next change is staged, and it has to be there after
+   the next clone: a lesson recorded only where this session can read it is not a control, and
+   neither is one the next environment starts without.
 
 ## Evidence of the response
 

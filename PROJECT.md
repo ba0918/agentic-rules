@@ -60,8 +60,9 @@ to run the reference validator in CI and the OpenCode plugin hook.
   delivered to plugin-type consumers, so "the update will arrive automatically" is false here.
   The bump itself lands at release time as one operation of the release discipline; between
   releases, user-visible changes accumulate under the CHANGELOG's Unreleased heading.
-- `.agents/` is session-local working state, excluded via `.git/info/exclude`; it must never
-  be committed.
+- `.agents/` is session-local working state, excluded via `.gitignore`; it must never be
+  committed. The exclusion is tracked on purpose: a local-only `.git/info/exclude` entry is not
+  cloned, so a fresh checkout — another machine, a remote session, CI — would start without it.
 - CI pins the reference validator (`skills-ref@0.1.5`) so a validator release cannot silently
   change what a green build means; bump the pin deliberately.
 

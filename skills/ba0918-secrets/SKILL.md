@@ -1,6 +1,6 @@
 ---
 name: ba0918-secrets
-description: "Handling credentials and confidential material in a working repository — recognising keys, tokens and environment files, keeping them out of staged changes, logs, prompts and commit messages, and the first moves when one leaks. Also keeping confidential context (internal project names, internal hostnames, customer names, confidential documents) out of any destination whose audience is wider than the source's — a public repository's code, documentation, commit logs, issues and pull request text, and a broader private one alike — and copying third-party work only under a licence that permits it, in any destination. Use when touching configuration or environment files, staging changes, pasting output, writing a commit message, writing anything derived from a private context into a wider-audience destination, copying code or prose from an outside source, or responding to a suspected leak. 日本語キーワード: 機密情報 シークレット 認証情報 APIキー トークン 環境変数 .env 漏洩 露出 失効 ローテーション 機密文書 内部情報 プロジェクト名 著作権 著作物 ライセンス 公開リポジトリ"
+description: "Handling credentials and confidential material in a working repository — recognising keys, tokens and environment files, keeping them out of staged changes, logs, prompts and commit messages, and the first moves when one leaks. Also keeping confidential context (internal project names, internal hostnames, customer names, confidential documents) out of any destination whose audience is wider than the source's — a public repository's code, documentation, commit logs, issues and pull request text, and a broader private one alike — and copying third-party work only under a licence that permits it, in any destination. Use when touching configuration or environment files, staging changes, pasting output, writing a commit message, writing anything derived from a private context into a wider-audience destination, copying code or prose from an outside source, or responding to a suspected leak. 日本語キーワード: 機密情報 シークレット 認証情報 APIキー トークン 環境変数 .env 漏洩 露出 失効 ローテーション 機密文書 内部情報 プロジェクト名 著作権 著作物 ライセンス 公開リポジトリ 絶対パス ユーザ名 環境固有"
 metadata:
   ba0918-routing: always
 ---
@@ -19,12 +19,16 @@ after a leak.
 
 It applies the same four moves to **confidential context and third-party material**: information
 that identifies or reproduces private or protected content — internal project and product names,
-internal hostnames and domains, customer names, the contents of confidential documents, and
-copyrighted works without a licence to redistribute. The rule surface is every artifact the
-session writes: code and comments, tests, documentation, commit messages, branch names, issues,
-and pull request text.
+internal hostnames and domains, customer names, the contents of confidential documents, the
+environment the session itself runs in, and copyrighted works without a licence to redistribute.
+The rule surface is every artifact the session writes, every field it fills in on the way out, and
+every call it sends outward: code and comments, tests, documentation, plans and working notes,
+commit messages, the author and committer identity recorded with them, any trailer a tool appends,
+branch names, issues, pull request text, search queries, and the arguments of an external tool.
 
-It does not cover secret storage systems, key management design, or access control policy.
+It does not cover secret storage systems, key management design, or access control policy. Nor
+does it decide whether a body of material may be processed by a third-party service at all: that
+is a policy question, settled before the session rather than at each paste.
 
 ## Recognising a credential
 
@@ -44,7 +48,8 @@ hints, not the test.
 | Signal | Examples |
 |---|---|
 | Internal identifiers | project and product codenames, repository names of private work |
-| Internal network names | non-public hostnames, internal domains (`*.local`, `*.corp`), internal URLs and paths |
+| Internal network names | non-public hostnames, internal domains (`*.local`, `*.corp`), internal URLs and server paths |
+| Local environment | the account a session runs as, the absolute path of its working clone, its home directory, the machine's hostname, the identity version control is configured with, the session identifiers its tooling appends |
 | Business relations | customer, partner, and vendor names tied to non-public work |
 | Private documents | text quoted or paraphrased from specs, contracts, or internal reports |
 | Third-party works | code or prose copied from a source whose licence does not permit redistribution |
@@ -52,6 +57,10 @@ hints, not the test.
 Treat a value as confidential context when it lets the destination's audience identify, locate,
 or reproduce private or protected material they were never given. A credential grants access;
 confidential context discloses existence — the test is the audience, not the value's shape.
+
+Material the session produced itself counts. An account name or an absolute path read off the
+machine came from no source document, so there is no narrower side to compare against; the
+destination's audience decides on its own.
 
 ## Rules
 
@@ -70,8 +79,31 @@ confidential context discloses existence — the test is the audience, not the v
   repository's code, documentation, commit log, issues and pull requests, and no less a more
   broadly shared private one. Material from the narrower side crosses only with its identifiers
   removed.
+- Apply that comparison to what the session writes itself, not only to what it carries in from a
+  source. When there is no narrower source, the destination's audience is still the test.
 - When private work motivates a public change, keep the structural lesson and drop the
   identity: "a real project's friction measurement", never the project's name.
+- Name a location by a path relative to the repository root. An absolute path from the machine the
+  session runs on — a home directory, a working clone, a user profile — belongs in no tracked
+  file, commit message, or outward-bound text, and neither does the account name or hostname it
+  spells out.
+- Keep environment-specific facts in session-local working state, or in the text handed to a
+  delegate whose audience you have checked, rather than in a committed document. A plan that
+  records where the work happened is the usual carrier. A delegate is not automatically this
+  session's audience — one running on another provider is a wider one.
+- Count the calls you make outward as destinations too: a search query, the arguments of an
+  external or MCP tool. An identifier you would not hand that provider does not belong in one.
+- Read the fields a commit carries besides its message: the author and committer identity, and any
+  trailer a tool appends. Both are fixed when the commit is made, so rewording the message later
+  does not correct them.
+- Judge the identity and the trailers by the same audience test as everything else. An address
+  that names a person crosses; one the owner already publishes to that audience does not. A
+  trailer crosses when it points that audience at work it was never shown, and not when the
+  identifier it carries is one that audience cannot reach. The forge's no-reply address is the
+  usual way to satisfy this, not the rule.
+- Do not commit the output of a command whose scope was wider than this repository — a listing of
+  a parent directory, an inventory of other clones, a dump of the environment. Reproduce only the
+  part that concerns this repository, and name where it came from.
 - Never carry confidential document content across an audience boundary. Within the audience
   already authorised for it, working from it — implementing what it requires in code, tests,
   or internal documentation — is ordinary work. Outward of that audience, refer to the
@@ -108,11 +140,28 @@ the mechanism that makes the rule enforceable.
 the ignore file so the same near-miss cannot recur.
 
 **A name grants no access, yet it still discloses.** An internal project name, hostname, or
-customer name passes the credential test and every secret scanner — which is exactly how it
-leaks: nothing flags it. What it reveals is existence and relationships: that the work exists,
-who it is for, where it runs. The audience comparison is applied by hand; no scanner does it.
-A paraphrase is worse still: strip the names out of a confidential passage and there is no
-search term left, so nothing but knowing where the text came from will catch it.
+customer name passes the credential test and every secret scanner — which is exactly how it leaks:
+nothing flags it. What it reveals is existence and relationships: that the work exists, who it is
+for, where it runs. For these the audience comparison is applied by hand; no scanner does it. A
+paraphrase is worse still: strip the names out of a confidential passage and there is no search
+term left, so nothing but knowing where the text came from will catch it.
+
+**Your own environment is a source.** The account a session runs as, the path of its working
+clone, the hostname of the machine it sits on — nothing handed these over, so they read as
+ambient facts rather than as material with an audience, and the comparison never gets applied to
+them. A credential scan clears them too, because a path grants nothing on presentation. One form of
+them does have a fixed shape, which nothing else in this section has: absolute paths are a short
+set of prefixes, the same on every machine, so the path form is the one thing here to search for
+rather than reason about, and no list has to be right for the search to find it. The rest of the
+class has no shape at all. A bare list of names — the directories beside the working clone, the
+other clones on the machine — discloses the same existence and passes every scan, so that half
+stays judgment, and the moment to apply it is when the output is pasted, not when the commit is
+made.
+
+**Metadata is the harder half.** A message can be reworded, but the identity and the trailers a
+commit carries are fixed the moment it is made, so correcting them means rewriting the commit and
+every commit after it. The check therefore belongs before the commit; the one before the push is
+only a backstop.
 
 **Leaked information cannot be revoked.** A credential has a provider that can kill it; a name,
 a document, or a copyrighted text does not. Once pushed, assume it has been fetched — edit
@@ -148,6 +197,13 @@ A private project named in a public artifact, and the same motivation stated saf
 ```
 Bad:  feat: <社内プロジェクト名> で要件合意の漏れが実害になったためチェックを追加
 Good: feat: 実プロジェクトで要件合意の漏れが実害になったためチェックを追加
+```
+
+A document recording where the session ran, and the same instruction without it:
+
+```
+Bad:  Run the validator in /home/<account>/work/<repo> before pushing.
+Good: Run the validator at the repository root before pushing.
 ```
 
 Staging that leaks, and staging that does not:
@@ -187,9 +243,19 @@ Show these outputs rather than asserting nothing leaked.
 - **Outgoing text is clean**: a search of the staged diff, the commit message, the branch name,
   and any outward-bound text (issue or pull request title and body) against a list of private
   identifiers held outside the working tree, returning no hits.
-- **Document-derived text is cleared**: for each passage written from a private document, its
-  source named and the destination's audience compared with the source's — stated and reviewed,
-  not searched.
+- **No local paths outgoing**: a search of the staged diff and the commit message for
+  absolute-path prefixes, for example
+  `git diff --cached | rg -n '/home/|/Users/|/mnt/[a-z]/|[A-Za-z]:\\Users|~/'`, returning no hits
+  or only placeholders that are obviously fake. Unlike the check above, this one needs no list of
+  identifiers, so it holds the first time it runs.
+- **Outgoing identity is clean**: `git log --format='%an <%ae> | %cn <%ce>' <range>` over the
+  commits about to leave, showing no address that names a person the destination's audience was
+  not already given, and `git log --format=%B <range>` whose trailers point that audience at
+  nothing it was never shown.
+- **Provenance of derived text is cleared**: for each passage written from a private document, and
+  for each block of output from a command whose scope was wider than this repository, its source
+  named and the destination's audience compared with the source's — stated and reviewed, not
+  searched.
 - **Copied material is licensed**: for each copy of third-party material, the source, the
   licence that permits the copy, and the attribution or notice that licence requires — present
   in the artifact, not promised.
