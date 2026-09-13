@@ -21,10 +21,10 @@ It applies the same four moves to **confidential context and third-party materia
 that identifies or reproduces private or protected content — internal project and product names,
 internal hostnames and domains, customer names, the contents of confidential documents, the
 environment the session itself runs in, and copyrighted works without a licence to redistribute.
-The rule surface is every artifact the session writes and every field it fills in on the way out:
-code and comments, tests, documentation, plans and working notes, commit messages, the author and
-committer identity recorded with them, any trailer a tool appends, branch names, issues, and pull
-request text.
+The rule surface is every artifact the session writes, every field it fills in on the way out, and
+every call it sends outward: code and comments, tests, documentation, plans and working notes,
+commit messages, the author and committer identity recorded with them, any trailer a tool appends,
+branch names, issues, pull request text, search queries, and the arguments of an external tool.
 
 It does not cover secret storage systems, key management design, or access control policy. Nor
 does it decide whether a body of material may be processed by a third-party service at all: that
@@ -81,6 +81,8 @@ destination's audience decides on its own.
   removed.
 - Apply that comparison to what the session writes itself, not only to what it carries in from a
   source. When there is no narrower source, the destination's audience is still the test.
+- When private work motivates a public change, keep the structural lesson and drop the
+  identity: "a real project's friction measurement", never the project's name.
 - Name a location by a path relative to the repository root. An absolute path from the machine the
   session runs on — a home directory, a working clone, a user profile — belongs in no tracked
   file, commit message, or outward-bound text, and neither does the account name or hostname it
@@ -102,8 +104,6 @@ destination's audience decides on its own.
 - Do not commit the output of a command whose scope was wider than this repository — a listing of
   a parent directory, an inventory of other clones, a dump of the environment. Reproduce only the
   part that concerns this repository, and name where it came from.
-- When private work motivates a public change, keep the structural lesson and drop the
-  identity: "a real project's friction measurement", never the project's name.
 - Never carry confidential document content across an audience boundary. Within the audience
   already authorised for it, working from it — implementing what it requires in code, tests,
   or internal documentation — is ordinary work. Outward of that audience, refer to the
@@ -140,27 +140,28 @@ the mechanism that makes the rule enforceable.
 the ignore file so the same near-miss cannot recur.
 
 **A name grants no access, yet it still discloses.** An internal project name, hostname, or
-customer name passes the credential test and every secret scanner — which is exactly how it
-leaks: nothing flags it. What it reveals is existence and relationships: that the work exists,
-who it is for, where it runs. The audience comparison is applied by hand; no scanner does it.
-A paraphrase is worse still: strip the names out of a confidential passage and there is no
-search term left, so nothing but knowing where the text came from will catch it.
+customer name passes the credential test and every secret scanner — which is exactly how it leaks:
+nothing flags it. What it reveals is existence and relationships: that the work exists, who it is
+for, where it runs. For these the audience comparison is applied by hand; no scanner does it. A
+paraphrase is worse still: strip the names out of a confidential passage and there is no search
+term left, so nothing but knowing where the text came from will catch it.
 
 **Your own environment is a source.** The account a session runs as, the path of its working
 clone, the hostname of the machine it sits on — nothing handed these over, so they read as
 ambient facts rather than as material with an audience, and the comparison never gets applied to
-them. A credential scan clears them too, because a path grants nothing on presentation. They are
-also the only class here with a fixed shape: a short set of absolute-path prefixes, the same on
-every machine. That makes this the one class to search for rather than reason about — no list has
-to be right for the search to find it. The search has a blind spot all the same: only the path form
-has a shape. A bare list of names — the directories beside the working clone, the other clones on
-the machine — discloses the same existence and passes every scan, so that half stays judgment, and
-the moment to apply it is when the output is pasted, not when the commit is made.
+them. A credential scan clears them too, because a path grants nothing on presentation. One form of
+them does have a fixed shape, which nothing else in this section has: absolute paths are a short
+set of prefixes, the same on every machine, so the path form is the one thing here to search for
+rather than reason about, and no list has to be right for the search to find it. The rest of the
+class has no shape at all. A bare list of names — the directories beside the working clone, the
+other clones on the machine — discloses the same existence and passes every scan, so that half
+stays judgment, and the moment to apply it is when the output is pasted, not when the commit is
+made.
 
-Metadata is the harder half. A message can be reworded, but the identity and the trailers a commit
-carries are fixed the moment it is made, so correcting them means rewriting the commit and every
-commit after it. The check therefore belongs before the commit; the one before the push is only a
-backstop.
+**Metadata is the harder half.** A message can be reworded, but the identity and the trailers a
+commit carries are fixed the moment it is made, so correcting them means rewriting the commit and
+every commit after it. The check therefore belongs before the commit; the one before the push is
+only a backstop.
 
 **Leaked information cannot be revoked.** A credential has a provider that can kill it; a name,
 a document, or a copyrighted text does not. Once pushed, assume it has been fetched — edit

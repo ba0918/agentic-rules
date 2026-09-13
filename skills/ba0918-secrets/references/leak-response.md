@@ -69,8 +69,10 @@ There is nothing to revoke, so containment replaces revocation.
    because one bulk staging commits the very identifiers the list exists to catch. And it
    survives a fresh clone — the repository's local-only exclude file does not, so the next
    machine, the next fresh checkout and CI each start without the control and nothing reports
-   its absence. What satisfies both is a location outside the repository, or an ignore file the
-   repository itself distributes.
+   its absence. What satisfies both is a location outside the repository, or a path inside it that
+   the repository's own distributed ignore file excludes — the ignore file travels, the list does
+   not.
+
    An identifier with a fixed shape — the absolute-path prefixes of a local environment — is
    searched for instead of listed, since no list has to be right for the search to work. Wherever
    the control lands it has to run where the next change is staged, and it has to be there after
