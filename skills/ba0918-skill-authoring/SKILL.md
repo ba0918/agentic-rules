@@ -21,7 +21,8 @@ the whole skill into line is separate work, not a precondition of the edit.
 
 It does not govern how code is designed (the skill `ba0918-design`), how prose for a human reader
 is made understandable (the skill `ba0918-readability`), or which kind of information belongs in
-code, tests, commit logs or comments (the skill `ba0918-placement`). Measuring or evaluating how
+code, tests, commit logs or comments (the skill `ba0918-placement`). For a bundled script, it asks
+only that its requirements be stated; how the script's own code is written is outside this rule. Measuring or evaluating how
 well a skill works is outside this rule too: this rule states how a skill is written.
 
 ## Rules
