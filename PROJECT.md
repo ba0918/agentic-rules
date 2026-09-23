@@ -77,3 +77,7 @@ to run the reference validator in CI and the OpenCode plugin hook.
   absent) that ba0918-scaffold reads to generate a project's AGENTS.md routing table.
 - **Bump** — raising the canonical version; here it is the delivery condition for plugin-type
   consumers, not a cosmetic release step.
+- **Procedural skill** — a skill that carries out a procedure with side effects (such as
+  writing files), as opposed to a rule skill; its side effects run only on an explicit request.
+- **Triggering** — an agent deciding, from a skill's description, to load that skill. Distinct
+  from routing: a skill without routing metadata is loaded by triggering alone.
