@@ -14,16 +14,6 @@ they would notice a real defect. It does not govern the order of writing test an
 Because testability is the point of the design rules, a broken test is a broken safety net. These
 anti-patterns all produce tests that pass while the system is wrong.
 
-## The iron laws
-
-```
-1. Never assert on the behaviour of a mock
-2. Never put a test-only method in production code
-3. Never mock a dependency you do not understand
-4. Never build a partial mock
-5. Never write the tests after the fact
-```
-
 ## Rules
 
 - Assert on behaviour the user or caller can observe, not on the presence of a test double.

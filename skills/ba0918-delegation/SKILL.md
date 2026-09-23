@@ -55,6 +55,9 @@ escalated to a human when it exceeds the orchestrator's mandate.
 - Make every delegation prompt self-contained: inline the contracts to follow, the context
   needed, and the exact paths involved. Never assume the delegate has read a rules file, a
   skill, or the conversation that produced the task.
+- Name, in the delegation prompt, each rule whose contract you inlined, so the delegate treats
+  it as already in force instead of loading it again. Name only what the prompt actually
+  carries; a rule left unnamed is one the delegate still reads.
 - Require the delegate to write its deliverable durably before reporting completion. Where the
   delegate cannot write files, say so in the delegation prompt and have it return the
   deliverable in its reply body for the orchestrator to transcribe.
@@ -96,6 +99,11 @@ different question. The cost of inlining the contract and the paths is paid once
 time; the cost of a presumed context is paid after the work is done, when it is most expensive
 to notice.
 
+**Naming what was inlined keeps the contract single.** A delegate that cannot tell which rules
+arrived in its prompt reloads them all, paying for the same contract twice and meeting it in two
+wordings. Naming the inlined rules settles which copy governs; leaving a rule unnamed is the safe
+default, because the delegate then reads it for itself rather than working without it.
+
 **A completion report without a deliverable is a failed delegation.** "Done" is a claim about
 work; the artifact is the work. A delegation whose result exists only inside the delegate's
 reply — when it was expected as a file — has lost its result the moment the reply scrolls out
@@ -135,6 +143,7 @@ Good: Fix the off-by-one in src/pager.ts (function pageCount) that drops the
       last page when total is an exact multiple of pageSize.
       Contract, inline: test-first; do not touch files outside src/pager.ts
       and its test; commit message in the project's language.
+      Rules inlined above: ba0918-tdd, ba0918-commit.
       Write the result summary to reports/pager-fix.md before reporting done.
 ```
 
@@ -155,6 +164,8 @@ Show these outputs rather than asserting the delegation was disciplined.
   own actions limited to judgment, gating and transcription.
 - **The prompt stands alone**: the delegation prompt as sent, containing the contract, the
   context and the paths inline — readable with the rest of the session deleted.
+- **Inlined rules are named**: the delegation prompt listing each rule whose contract it
+  carries, and no rule it does not carry.
 - **The deliverable exists**: the artifact at its agreed path before or at the completion
   report; or, under the body-return fallback, the orchestrator's transcription of it.
 - **Roles were kept**: the acceptance trace showing the implementer's work approved by someone

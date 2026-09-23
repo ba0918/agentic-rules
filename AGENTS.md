@@ -22,7 +22,10 @@
 | review | ba0918-verification |
 
 Refer to each rule by its skill name. Read every rule that applies before starting the work it
-governs.
+governs. A rule once read stays in force for the rest of the context: read it again only after
+the context has been compacted or cleared, or when the rule itself has changed. On a delegated
+task, a rule the delegation prompt names as already inlined is in force from that prompt — do
+not read it again; read every other rule this table routes to the work as usual.
 
 ## Project Context
 
