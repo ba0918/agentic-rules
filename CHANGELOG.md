@@ -10,6 +10,14 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING** `ba0918-scaffold` — the generated `AGENTS.md` now states how often a routed rule
+  is read: once per context, again only after the context is compacted or cleared or the rule
+  itself changes, and not at all by a delegate whose prompt names that rule as already inlined.
+  Agents following a regenerated `AGENTS.md` stop re-reading the same rules before every piece of
+  work. Regenerate `AGENTS.md` to pick it up; an existing one keeps the old wording until then.
+
 ## [0.9.1] - 2026-09-23
 
 ### Changed
