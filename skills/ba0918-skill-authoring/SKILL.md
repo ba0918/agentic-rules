@@ -117,6 +117,17 @@ with how often the skill fires.
 `references/` is sound, but an agent that has not yet recognised the incident will not open that
 file. The first move — report, or stop for approval — stays in the text that is always read.
 
+**A name survives where a path breaks.** Skills are installed one by one, so a neighbour may
+simply be absent. A reference by name then degrades to a skill that is not read; a path, or a
+step that leans on one runtime's command or frontmatter field, breaks the skill outright in the
+environments that lack it. Stating a bundled script's requirements is the same courtesy: the
+reader learns what must exist before the first run fails.
+
+**Other text points at a skill's words.** Headings, the skill name and the meaning of a rule are
+what other skills, documents and users' habits refer to. Adding a section leaves every existing
+reference true; rewriting a rule in place silently changes what those references mean, which is
+why a meaning change is declared rather than passed off as rewording.
+
 **Duplication across skills beats a shared source.** A skill directory is installed on its own.
 A rule pulled out into one shared document makes every skill depend on it, and one edit there
 changes all of them without anyone reviewing each. Within a single skill, duplication has no such
