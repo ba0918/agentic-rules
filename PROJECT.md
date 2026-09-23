@@ -69,7 +69,8 @@ to run the reference validator in CI and the OpenCode plugin hook.
 ## Glossary
 
 - **Rule skill** — a skill that states norms (what good work looks like), as opposed to a
-  workflow skill that automates a procedure. Only rule skills belong in this repository.
+  workflow skill that automates a procedure. Only rule skills, plus the scaffold meta-skill that
+  generates their routing table, belong in this repository.
 - **Canonical version** — the single version number of this repository as a distribution,
   held in `marketplace.json` `plugins[0].version`; every other version-looking field follows it.
 - **Routing** — the `ba0918-routing` frontmatter metadata (`always` / `required:<trigger>` /
