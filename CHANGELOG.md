@@ -10,6 +10,19 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-skill-authoring` — a rule for writing agent skills, loaded from its description when a
+  skill is written, revised, split or merged rather than from the routing table: one domain per
+  skill with its scope and neighbours stated first; size treated as a cost paid on every read,
+  with situational content moved to `references/` while safety reflexes stay in `SKILL.md`; no
+  dependence on a single tool, model or runtime, and other skills referred to by name only;
+  extension by addition, with meaning changes declared; descriptions that carry the triggers
+  rather than the rules; and wording chosen by the kind of rule, with importance conveyed by
+  reasons rather than emphasis. For procedural skills it requires the conditions for running
+  side effects in both the body and the description, and running them only on an explicit
+  request.
+
 ## [0.10.0] - 2026-09-23
 
 ### Added
