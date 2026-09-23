@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-09-24
+
 ### Added
 
 - `ba0918-skill-authoring` — a rule for writing agent skills, loaded from its description when a
@@ -298,7 +300,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/ba0918/agentic-rules/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/ba0918/agentic-rules/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/ba0918/agentic-rules/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/ba0918/agentic-rules/compare/v0.7.0...v0.8.0
