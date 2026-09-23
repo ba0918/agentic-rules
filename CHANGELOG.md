@@ -10,6 +10,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Changed
+
+- `ba0918-tdd` — test command detection now names where a project declares its command
+  (its `PROJECT.md`, a manifest's test script, or a build target) before falling back to the
+  ecosystem's conventional command, instead of listing marker files and their default commands.
+
 ## [0.9.0] - 2026-09-13
 
 ### Added

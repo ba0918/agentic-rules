@@ -22,8 +22,9 @@ pure configuration with no behaviour of its own.
 NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
 ```
 
-If code was written before its test, delete it and implement again from the test. Do not keep it
-for reference, do not adapt it while writing the test, do not read it.
+If code was written before its test, delete it and implement again from the test. A test written
+with the earlier code still at hand describes that code instead of the behaviour, and passes
+without ever having failed.
 
 ## Rules
 
@@ -66,18 +67,10 @@ what changed or what made a change unnecessary.
 behaviour cannot be reached without a database or a live clock, the problem is the shape of the
 code. Change the design rather than growing the harness.
 
-**Detecting the test command is part of the cycle.** Use what the project already uses, taking the
-marker file as the signal:
-
-| Marker file | Test command |
-|---|---|
-| `package.json` with a `test` script | `npm test` (or `npx vitest` / `npx jest`) |
-| `Cargo.toml` | `cargo test` |
-| `go.mod` | `go test ./...` |
-| `pyproject.toml`, `setup.py`, `pytest.ini` | `pytest` |
-| `Makefile` with a `test` target | `make test` |
-
-When detection is ambiguous, ask rather than inventing a command.
+**Detecting the test command is part of the cycle.** Use the command the project already
+declares — its `PROJECT.md`, a manifest's test script, or a build target. When nothing is
+declared, use the ecosystem's one conventional command. When neither settles it, ask rather than
+inventing a command.
 
 ## Red flags
 
