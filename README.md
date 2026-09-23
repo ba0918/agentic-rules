@@ -3,8 +3,8 @@
 Normative rules for AI coding agents, packaged as [Agent Skills](https://agentskills.io).
 
 Design principles, test discipline, information placement, human-readable output, change
-presentation for review, commit conventions and secret handling live here once, and are distributed to many projects and many
-agents from this single repository.
+presentation for review, commit conventions, secret handling and skill authoring live here once,
+and are distributed to many projects and many agents from this single repository.
 
 This repository holds **domain rules only**. Workflow automation (procedures, orchestration)
 belongs elsewhere and must not be depended on from here.
@@ -25,6 +25,7 @@ belongs elsewhere and must not be depended on from here.
 | `ba0918-reuse` | Reuse-before-build: layer decomposition, an eight-rung search ladder, adopt-or-build records | `required:design` |
 | `ba0918-diff-review` | Presenting a set of changes to a person for review: grouped by intent, each group carrying its reason and the points needing judgment, rendered where differences are legible, with the reviewed bytes named as the approval target | `required:diff-review` |
 | `ba0918-testing` | Testing anti-patterns | fires from its description |
+| `ba0918-skill-authoring` | Writing a skill: scope and boundaries, reading cost, runtime independence, structure that survives change, descriptions that trigger, wording by rule kind | fires from its description |
 | `ba0918-scaffold` | Generates `AGENTS.md` / `PROJECT.md` for a consuming project | invoked explicitly |
 
 Each skill directory is the unit of distribution and is self-contained: it never refers to a
@@ -137,8 +138,8 @@ match the directory name.
 
 ## Skill document structure
 
-Every `SKILL.md` presents Scope, Rules, Judgment, Examples and Evidence in that relative order,
-and the conventions governing them are defined in
+Every rule skill's `SKILL.md` presents Scope, Rules, Judgment, Examples and Evidence in that
+relative order, and the conventions governing them are defined in
 [docs/spec/repository-design.md](docs/spec/repository-design.md). Section order is a review
 concern; the validator does not check it.
 

@@ -69,10 +69,15 @@ to run the reference validator in CI and the OpenCode plugin hook.
 ## Glossary
 
 - **Rule skill** — a skill that states norms (what good work looks like), as opposed to a
-  workflow skill that automates a procedure. Only rule skills belong in this repository.
+  workflow skill that automates a procedure. Only rule skills, plus the scaffold meta-skill that
+  generates their routing table, belong in this repository.
 - **Canonical version** — the single version number of this repository as a distribution,
   held in `marketplace.json` `plugins[0].version`; every other version-looking field follows it.
 - **Routing** — the `ba0918-routing` frontmatter metadata (`always` / `required:<trigger>` /
   absent) that ba0918-scaffold reads to generate a project's AGENTS.md routing table.
 - **Bump** — raising the canonical version; here it is the delivery condition for plugin-type
   consumers, not a cosmetic release step.
+- **Procedural skill** — a skill that carries out a procedure with side effects (such as
+  writing files), as opposed to a rule skill; its side effects run only on an explicit request.
+- **Triggering** — an agent deciding, from a skill's description, to load that skill. Distinct
+  from routing: a skill without routing metadata is loaded by triggering alone.
