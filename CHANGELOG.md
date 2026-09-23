@@ -10,6 +10,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-delegation` — a delegation prompt names each rule whose contract it inlined, so the
+  delegate treats those as already in force instead of reading them again; a rule left unnamed
+  is still read by the delegate. Pairs with the read-once wording of the generated `AGENTS.md`.
+
 ### Changed
 
 - **BREAKING** `ba0918-scaffold` — the generated `AGENTS.md` now states how often a routed rule
