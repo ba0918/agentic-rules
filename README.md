@@ -3,8 +3,8 @@
 Normative rules for AI coding agents, packaged as [Agent Skills](https://agentskills.io).
 
 Design principles, test discipline, information placement, human-readable output, change
-presentation for review, commit conventions, secret handling and skill authoring live here once, and are distributed to many projects and many
-agents from this single repository.
+presentation for review, commit conventions, secret handling and skill authoring live here once,
+and are distributed to many projects and many agents from this single repository.
 
 This repository holds **domain rules only**. Workflow automation (procedures, orchestration)
 belongs elsewhere and must not be depended on from here.
