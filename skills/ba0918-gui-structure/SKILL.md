@@ -1,5 +1,5 @@
 ---
-name: ba0918-gui
+name: ba0918-gui-structure
 description: "GUI screen structure — how a screen is split into components, who owns each piece of state, which way data and events flow, where dialogs and focus are decided, what gets redrawn, and how those rules are enforced and tested. Use when designing, implementing, changing or reviewing GUI code: adding or changing a screen, region, dialog or keyboard shortcut, deciding or moving where state lives, or fixing a whole-window redraw or sluggish input. 日本語キーワード: GUI 画面 画面構成 部品 コンポーネント 状態管理 状態の持ち主 イベント ダイアログ フォーカス キーボード操作 描き直し 再描画 表示用データ デスクトップアプリ"
 metadata:
   ba0918-routing: required:gui

@@ -1,4 +1,4 @@
-# GUI の画面構成の規約(ba0918-gui)
+# GUI の画面構成の規約(ba0918-gui-structure)
 
 ## 目的
 
@@ -181,7 +181,7 @@ GUI を持つアプリの画面を組むコード。デスクトップ・Web・�
 
 ## リポジトリへの組み込み
 
-- `skills/ba0918-gui/SKILL.md` を追加する
+- `skills/ba0918-gui-structure/SKILL.md` を追加する
 - README の冒頭の領域の列挙と、スキル表に 1 行(Routing 列は `required:gui`)
 - CHANGELOG の Unreleased に追加の記載
 - `repository-design.md` の「初期スキル」表に 1 行
@@ -195,7 +195,7 @@ GUI を持つアプリの画面を組むコード。デスクトップ・Web・�
 
 - 人による確認: SKILL.md を、この仕様の各節の合格条件と 1 つずつ突き合わせる
 - 既存チェッカー: `python3 scripts/validate.py` と
-  `npx --yes skills-ref@0.1.5 validate skills/ba0918-gui/` が通る
+  `npx --yes skills-ref@0.1.5 validate skills/ba0918-gui-structure/` が通る
 
 この規約を機械検査するルールはバリデータに足さない。
 
@@ -209,7 +209,10 @@ GUI を持つアプリの画面を組むコード。デスクトップ・Web・�
 ## 却下
 
 - スキル本文に GUI 設計の型の名前を出す — その型の一般的な解釈が持ち込まれ、意図とずれる
-- `ba0918-gui-architecture` などの長い名前 — 命名規約は短い一般語 1〜2 語
+- `ba0918-gui` という名前 — GUI の規則すべてを扱うように読める。見た目やアクセシビリティは
+  この規約の対象外で、扱うなら領域が違うので別スキルになる。そのとき名前が紛らわしく、
+  公開後の改名は各プロジェクトの AGENTS.md の行を壊す
+- `ba0918-ui` という名前 — ターミナルの画面まで対象を広げることになる。この規約は GUI に限る
 - `always` のルーティング — GUI を持たないプロジェクトにまで毎回読ませる
 - ルーティングなし(description だけの発火) — scaffold が生成するルーティング表に行が出ず、
   プロジェクトの AGENTS.md から名指しできない

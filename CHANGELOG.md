@@ -12,18 +12,18 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Added
 
-- `ba0918-gui` — a rule for the structure of GUI screens, independent of any framework and routed
-  to GUI work (`required:gui`): a screen built from one top-level component and one component per
-  region, each drawing itself; one owner for every piece of state, with saved and cross-region
-  state owned by the application state and held in the UI by the top-level component alone, and
-  region-local state kept in its component; read-only view data flowing down and user actions
-  flowing up as events that only the top-level component mediates, with keyboard input left to
-  the framework's own child-to-parent propagation; at most one open dialog, held as one state with
-  its priority written in one place; redraw by component; drawing that never writes state; focus
-  moves between regions decided by the top-level component; machine-checkable rules enforced by
-  types, visibility and quality gates, the rest checked in review; and components tested from
-  view data alone alongside integration tests through the top-level component. How the rules are
-  realised in a given framework is left to each project's own documentation.
+- `ba0918-gui-structure` — a rule for the structure of GUI screens, independent of any framework
+  and routed to GUI work (`required:gui`): a screen built from one top-level component and one
+  component per region, each drawing itself; one owner for every piece of state, with saved and
+  cross-region state owned by the application state and held in the UI by the top-level component
+  alone, and region-local state kept in its component; read-only view data flowing down and user
+  actions flowing up as events that only the top-level component mediates, with keyboard input
+  left to the framework's own child-to-parent propagation; at most one open dialog, held as one
+  state with its priority written in one place; redraw by component; drawing that never writes
+  state; focus moves between regions decided by the top-level component; machine-checkable rules
+  enforced by types, visibility and quality gates, the rest checked in review; and components
+  tested from view data alone alongside integration tests through the top-level component. How the
+  rules are realised in a given framework is left to each project's own documentation.
 
 ## [0.11.0] - 2026-09-24
 

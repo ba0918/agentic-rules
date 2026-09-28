@@ -17,7 +17,7 @@
 | delegate | ba0918-delegation |
 | design | ba0918-reuse |
 | diff-review | ba0918-diff-review |
-| gui | ba0918-gui |
+| gui | ba0918-gui-structure |
 | implement | ba0918-tdd |
 | release | ba0918-release |
 | review | ba0918-verification |
