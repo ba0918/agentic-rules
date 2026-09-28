@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-09-28
+
 ### Added
 
 - `ba0918-gui-structure` — a rule for the structure of GUI screens, independent of any framework
@@ -315,7 +317,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/ba0918/agentic-rules/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/ba0918/agentic-rules/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/ba0918/agentic-rules/compare/v0.8.0...v0.9.0
