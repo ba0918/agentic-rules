@@ -10,6 +10,23 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-09-28
+
+### Added
+
+- `ba0918-gui-structure` — a rule for the structure of GUI screens, independent of any framework
+  and routed to GUI work (`required:gui`): a screen built from one top-level component and one
+  component per region, each drawing itself; one owner for every piece of state, with saved and
+  cross-region state owned by the application state and held in the UI by the top-level component
+  alone, and region-local state kept in its component; read-only view data flowing down and user
+  actions flowing up as events that only the top-level component mediates, with keyboard input
+  left to the framework's own child-to-parent propagation; at most one open dialog, held as one
+  state with its priority written in one place; redraw by component; drawing that never writes
+  state; focus moves between regions decided by the top-level component; machine-checkable rules
+  enforced by types, visibility and quality gates, the rest checked in review; and components
+  tested from view data alone alongside integration tests through the top-level component. How the
+  rules are realised in a given framework is left to each project's own documentation.
+
 ## [0.11.0] - 2026-09-24
 
 ### Added
@@ -300,7 +317,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/ba0918/agentic-rules/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/ba0918/agentic-rules/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/ba0918/agentic-rules/compare/v0.8.0...v0.9.0

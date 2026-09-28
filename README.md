@@ -2,9 +2,10 @@
 
 Normative rules for AI coding agents, packaged as [Agent Skills](https://agentskills.io).
 
-Design principles, test discipline, information placement, human-readable output, change
-presentation for review, commit conventions, secret handling and skill authoring live here once,
-and are distributed to many projects and many agents from this single repository.
+Design principles, GUI screen structure, test discipline, information placement,
+human-readable output, change presentation for review, commit conventions, secret handling and
+skill authoring live here once, and are distributed to many projects and many agents from this
+single repository.
 
 This repository holds **domain rules only**. Workflow automation (procedures, orchestration)
 belongs elsewhere and must not be depended on from here.
@@ -24,6 +25,7 @@ belongs elsewhere and must not be depended on from here.
 | `ba0918-verification` | Verification discipline: evidence demands, worst-of aggregation, hand-off hygiene | `required:review` |
 | `ba0918-reuse` | Reuse-before-build: layer decomposition, an eight-rung search ladder, adopt-or-build records | `required:design` |
 | `ba0918-diff-review` | Presenting a set of changes to a person for review: grouped by intent, each group carrying its reason and the points needing judgment, rendered where differences are legible, with the reviewed bytes named as the approval target | `required:diff-review` |
+| `ba0918-gui-structure` | GUI screen structure: components per region, one owner per piece of state, view data down and events up through the top-level component, one dialog state, redraw by component, and enforcement by visibility and tests | `required:gui` |
 | `ba0918-testing` | Testing anti-patterns | fires from its description |
 | `ba0918-skill-authoring` | Writing a skill: scope and boundaries, reading cost, runtime independence, structure that survives change, descriptions that trigger, wording by rule kind | fires from its description |
 | `ba0918-scaffold` | Generates `AGENTS.md` / `PROJECT.md` for a consuming project | invoked explicitly |
