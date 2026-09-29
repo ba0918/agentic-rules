@@ -177,6 +177,7 @@ heading of [CHANGELOG.md](CHANGELOG.md) agree with the canonical version,
 `plugins[0].version` in `.claude-plugin/marketplace.json`. It exits 0 when nothing is wrong,
 1 on a violation, and 2 when the path given to it is not a directory.
 
-CI also runs the Agent Skills reference validator, `npx skills-ref validate`, over every
-skill. It checks the published specification, while the local validator checks this
-repository's conventions. Both must pass.
+CI also runs the Agent Skills reference validator, `skills-ref validate`, over every skill,
+installed from the Agent Skills repository at a pinned commit. It checks the published
+specification, while the local validator checks this repository's conventions. Both must
+pass.

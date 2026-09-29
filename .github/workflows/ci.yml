@@ -5,9 +5,10 @@ on:
     branches: ["**"]
   pull_request:
 
-# The job runs a third-party npm package (npx skills-ref) with the workflow token
-# in its environment. Nothing here writes to the repository, so the token is held
-# to read access instead of whatever the repository default happens to be.
+# The job runs third-party code (the skills-ref validator and the packages it
+# pulls from PyPI) with the workflow token in its environment. Nothing here
+# writes to the repository, so the token is held to read access instead of
+# whatever the repository default happens to be.
 permissions:
   contents: read
 
@@ -30,16 +31,20 @@ jobs:
       - name: Validate this repository's conventions
         run: python scripts/validate.py
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+      # The reference validator is the Agent Skills project's own skills-ref,
+      # installed from that project's repository at a fixed commit, so the code
+      # that runs is traceable to its source and an upstream change cannot alter
+      # what CI means.
+      # Upstream labels it a demonstration library; here it only checks our files
+      # and is never shipped.
+      - name: Install the Agent Skills reference validator
+        run: python -m pip install "skills-ref @ git+https://github.com/agentskills/agentskills@f130f348f502d9804278a617f86929846896d2e9#subdirectory=skills-ref"
 
       # The reference validator checks the published Agent Skills specification;
       # scripts/validate.py checks the conventions this repository adds on top.
-      # The version is pinned so a release of the validator cannot change what CI means.
       - name: Validate skills against the Agent Skills reference validator
         run: |
           for skill in skills/*/; do
             echo "== $skill"
-            npx --yes skills-ref@0.1.5 validate "$skill"
+            skills-ref validate "$skill"
           done

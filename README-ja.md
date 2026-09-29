@@ -179,6 +179,7 @@ uv run --with pytest -- pytest tests/    # バリデータ自身のテスト
 （`.claude-plugin/marketplace.json` の `plugins[0].version`）と一致することも検査します。
 違反がなければ 0、違反があれば 1、渡したパスがディレクトリでなければ 2 で終了します。
 
-CI では Agent Skills のリファレンスバリデータ `npx skills-ref validate` もすべてのスキルに
-実行します。こちらは公開仕様を、ローカルのバリデータはこのリポジトリの規約を検査します。
-両方とも通る必要があります。
+CI では Agent Skills のリファレンスバリデータ `skills-ref validate` もすべてのスキルに
+実行します。このバリデータは Agent Skills のリポジトリから、固定したコミットで
+インストールします。こちらは公開仕様を、ローカルのバリデータはこのリポジトリの規約を
+検査します。両方とも通る必要があります。

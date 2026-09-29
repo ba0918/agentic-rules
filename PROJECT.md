@@ -12,8 +12,8 @@ on from here.
 
 ## Stack and layout
 
-Python 3.12 (standard library only) for the validator; pytest for its tests; Node is used only
-to run the reference validator in CI and the OpenCode plugin hook.
+Python 3.12 (standard library only) for the validator; pytest for its tests; the Agent Skills
+reference validator (`skills-ref`, Python) in CI; Node only for the OpenCode plugin hook.
 
 - `skills/` — the product: rule skills named `ba0918-<domain-noun>`, one directory per skill
 - `contracts/` — documents whose text other repositories copy (currently the copyable oracle
@@ -36,7 +36,7 @@ to run the reference validator in CI and the OpenCode plugin hook.
 | Install | none — the validator is stdlib-only; pytest is fetched per-run via `uv` |
 | Build | none — skills are distributed as-is |
 | Test | `timeout 180 uv run --with pytest -- pytest tests/ -q` |
-| Lint | `python3 scripts/validate.py` (repo conventions) / `npx --yes skills-ref@0.1.5 validate skills/<name>/` (Agent Skills spec) |
+| Lint | `python3 scripts/validate.py` (repo conventions) / `uvx --from "git+https://github.com/agentskills/agentskills@<pinned commit>#subdirectory=skills-ref" skills-ref validate skills/<name>/` (Agent Skills spec; the pinned commit is in `.github/workflows/ci.yml`) |
 | Run locally | n/a — nothing runs; this repository is consumed by installing its skills |
 
 ## Conventions specific to this project
@@ -63,8 +63,10 @@ to run the reference validator in CI and the OpenCode plugin hook.
 - `.agents/` is session-local working state, excluded via `.gitignore`; it must never be
   committed. The exclusion is tracked on purpose: a local-only `.git/info/exclude` entry is not
   cloned, so a fresh checkout — another machine, a remote session, CI — would start without it.
-- CI pins the reference validator (`skills-ref@0.1.5`) so a validator release cannot silently
-  change what a green build means; bump the pin deliberately.
+- CI pins the reference validator to a commit of the Agent Skills repository
+  (`agentskills/agentskills`, `skills-ref/`) so an upstream change cannot silently change what a
+  green build means; move the pin deliberately. The npm package named `skills-ref` is published
+  by a third party, not by the Agent Skills project, and is not a substitute.
 
 ## Glossary
 
