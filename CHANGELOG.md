@@ -10,6 +10,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Changed
+
+- The README is reorganised: a route comparison table leads the install section, per-agent
+  instructions keep only what a user needs, and the skill list is grouped by the kind of work
+  each skill governs.
+
 ## [0.12.0] - 2026-09-28
 
 ### Added

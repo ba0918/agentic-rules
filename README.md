@@ -1,79 +1,48 @@
 # agentic-rules
 
-Normative rules for AI coding agents, packaged as [Agent Skills](https://agentskills.io).
+English | [日本語](README-ja.md)
 
-Design principles, GUI screen structure, test discipline, information placement,
-human-readable output, change presentation for review, commit conventions, secret handling and
-skill authoring live here once, and are distributed to many projects and many agents from this
+Normative rules for AI coding agents, packaged as [Agent Skills](https://agentskills.io).
+Each rule is written once here and distributed to many projects and many agents from this
 single repository.
 
 This repository holds **domain rules only**. Workflow automation (procedures, orchestration)
 belongs elsewhere and must not be depended on from here.
 
-## Skills
-
-| Skill | Scope | Routing |
-|---|---|---|
-| `ba0918-design` | Design principles, with testability as the supreme goal | `always` |
-| `ba0918-placement` | Where each kind of information belongs: code / tests / commit logs / comments | `always` |
-| `ba0918-readability` | Human-facing output that explains unfamiliar context without losing technical meaning | `always` |
-| `ba0918-secrets` | Handling credentials and confidential material: detection, staging ban, exposure prevention, audience boundary for any wider-audience destination, third-party licence compliance in any destination, incident response | `always` |
-| `ba0918-tdd` | Test-first contract (RED → GREEN → REFACTOR) | `required:implement` |
-| `ba0918-commit` | Commit splitting and message conventions | `required:commit` |
-| `ba0918-release` | Release discipline: canonical version, bump, breaking changes, changelog, tag | `required:release` |
-| `ba0918-delegation` | Delegation discipline: orchestrator principle, five role contracts, executor table | `required:delegate` |
-| `ba0918-verification` | Verification discipline: evidence demands, worst-of aggregation, hand-off hygiene | `required:review` |
-| `ba0918-reuse` | Reuse-before-build: layer decomposition, an eight-rung search ladder, adopt-or-build records | `required:design` |
-| `ba0918-diff-review` | Presenting a set of changes to a person for review: grouped by intent, each group carrying its reason and the points needing judgment, rendered where differences are legible, with the reviewed bytes named as the approval target | `required:diff-review` |
-| `ba0918-gui-structure` | GUI screen structure: components per region, one owner per piece of state, view data down and events up through the top-level component, one dialog state, redraw by component, and enforcement by visibility and tests | `required:gui` |
-| `ba0918-testing` | Testing anti-patterns | fires from its description |
-| `ba0918-skill-authoring` | Writing a skill: scope and boundaries, reading cost, runtime independence, structure that survives change, descriptions that trigger, wording by rule kind | fires from its description |
-| `ba0918-scaffold` | Generates `AGENTS.md` / `PROJECT.md` for a consuming project | invoked explicitly |
-
-Each skill directory is the unit of distribution and is self-contained: it never refers to a
-path outside itself. Skills mention each other by name only.
-
-`Routing` is the `metadata.ba0918-routing` field in each `SKILL.md`. `ba0918-scaffold` reads it
-to generate a consuming project's routing table. Only two forms are valid: `always` and
-`required:<trigger>`.
-
 ## Install
 
-Three kinds of route are supported — plugin, package manager and copy. They differ in how
-updates reach you, not in what you get. Claude Code, Codex CLI and OpenCode install by the
-plugin route, each from the metadata already in this repository; APM installs by the
-package-manager route; `gh skill` and `npx skills` install by the copy route.
+Pick the route that matches how you want updates to arrive. Every route delivers the same
+skills.
 
-### Claude Code (plugin marketplace)
+| Route | Agents | How updates arrive | Suited to |
+|---|---|---|---|
+| Plugin | Claude Code, Codex CLI, OpenCode | When the version is bumped (see below) | Following each published release |
+| Package manager | APM | `apm update`, from the commit pinned in `apm.lock.yaml` | Several agents provisioned from one manifest |
+| Copy | `gh skill`, `npx skills` | Run the install command again | Projects, teams and CI that pin a revision |
 
-Updates arrive when the plugin's version is bumped. The marketplace entry declares
-`plugins[0].version`, and an installed copy follows that version rather than the latest commit,
-so a change that leaves the version untouched does not reach it. Suited to a personal
-environment.
+An installed plugin follows the version declared in `.claude-plugin/marketplace.json`, not the
+latest commit. A change reaches plugin users only in a release that bumps that version.
+
+### Claude Code
 
 ```
 /plugin marketplace add ba0918/agentic-rules
 /plugin install ba0918-rules@agentic-rules
 ```
 
-### Codex CLI (plugin marketplace)
+### Codex CLI
 
-Codex reads the same `.claude-plugin/marketplace.json`, and the skills appear to the model
-under the plugin name, as `ba0918-rules:ba0918-design` and so on. Updates are bump-driven here
-too, since the version is declared in that same manifest.
+Codex reads the same marketplace manifest. The skills appear under the plugin name, as
+`ba0918-rules:ba0918-design` and so on.
 
 ```
 codex plugin marketplace add ba0918/agentic-rules
 codex plugin add ba0918-rules@agentic-rules
 ```
 
-Codex installs from the marketplace manifest alone; `.claude-plugin/plugin.json` is not
-required by it. That file is kept because it is where the plugin's own identity — its version,
-license and repository — is declared for the agents that read it.
+### OpenCode
 
-### OpenCode (plugin)
-
-Add the repository to `plugin` in `opencode.json` — either the project's or the global
+Add the repository to `plugin` in `opencode.json` — the project's or the global
 `~/.config/opencode/opencode.json` — and restart OpenCode.
 
 ```json
@@ -83,92 +52,131 @@ Add the repository to `plugin` in `opencode.json` — either the project's or th
 }
 ```
 
-The repository is public, so the `git+https` form above is expected to work as written.
+The plugin only registers `skills/` as a skill path. The skills load through OpenCode's own
+`skill` tool, and nothing is injected into the session.
 
-`.opencode/plugins/agentic-rules.js` registers `skills/` as a skill path and does nothing
-else: the skills become loadable through OpenCode's native `skill` tool, and nothing is
-injected into the session. `package.json` exists to make this repository installable by that
-plugin route. It is a distribution manifest, not a published npm package — `private: true`
-keeps it off the registry.
+### APM
 
-### APM (package manager)
-
-[APM](https://github.com/microsoft/apm) manages skills and configuration for several AI
-agents from one manifest, the way npm manages packages: installing adds one dependency line
-to the project's `apm.yml`, `apm.lock.yaml` pins the resolved commit, and `apm update` moves
-it forward. Suited to a project that provisions more than one agent from the same
-declaration.
+[APM](https://github.com/microsoft/apm) manages skills for several agents from one `apm.yml`,
+the way npm manages packages.
 
 ```
 apm install ba0918/agentic-rules --target claude
 apm install -g ba0918/agentic-rules
 ```
 
-The first form installs into the project: for Claude Code the skills land in
-`.claude/skills/`, while `--target opencode` and the other cross-tool targets (Copilot,
-Cursor, Codex and others) place them in the shared `.agents/skills/`. The second form
-installs into the user scope under `~/.apm/`. APM warns when a dependency is unpinned; pin a
-commit SHA today, or a release tag (`ba0918/agentic-rules#v{version}`) once releases are
-tagged.
+The first form installs into the project: `.claude/skills/` for Claude Code, and the shared
+`.agents/skills/` for `--target opencode` and the other cross-tool targets (Copilot, Cursor,
+Codex and others). The second installs into the user scope under `~/.apm/`. Pin a release tag
+(`ba0918/agentic-rules#v<version>`) or a commit SHA; APM warns about an unpinned dependency.
 
-This repository carries no APM-specific file: APM resolves a repository holding
-`.claude-plugin/plugin.json` as a plugin collection and discovers `skills/` on its own. For
-OpenCode alone the plugin route above is enough; APM earns its place when several agents are
+For OpenCode alone the plugin route is enough. APM earns its place when several agents are
 managed from one manifest.
 
 ### Copy (`gh skill` / `npx skills`)
 
-Skills are copied into the project at install time, and updates are pulled by running the
-command again. Because `gh skill` can pin a commit or tag (`@<ref>`), this route suits
-projects, teams and CI.
+The skills are copied into the project at install time.
 
 ```
 gh skill install ba0918/agentic-rules
 npx skills add ba0918/agentic-rules
 ```
 
-Pin a commit SHA when reproducibility matters, or a release tag (`v{version}`) once releases
-are tagged. Changes that alter the meaning of a rule are recorded separately in
+`gh skill` accepts `@<ref>`; pin a release tag (`v<version>`) or a commit SHA when
+reproducibility matters.
+
+Changes that alter the meaning of a rule are marked **BREAKING** in
 [CHANGELOG.md](CHANGELOG.md).
 
-## Naming
+## Skills
+
+The skills are grouped below by the kind of work they govern. **Loaded by** says how an agent
+comes to read each one.
+
+### Always on
+
+| Skill | Scope | Loaded by |
+|---|---|---|
+| [`ba0918-design`](skills/ba0918-design/SKILL.md) | Design principles, with testability as the supreme goal | `always` |
+| [`ba0918-placement`](skills/ba0918-placement/SKILL.md) | Where each kind of information belongs: code, tests, commit logs or comments | `always` |
+| [`ba0918-readability`](skills/ba0918-readability/SKILL.md) | Human-facing output that explains unfamiliar context without losing technical meaning | `always` |
+| [`ba0918-secrets`](skills/ba0918-secrets/SKILL.md) | Credentials and confidential material: detection, staging ban, audience boundaries, third-party licences, incident response | `always` |
+
+### Writing code
+
+| Skill | Scope | Loaded by |
+|---|---|---|
+| [`ba0918-tdd`](skills/ba0918-tdd/SKILL.md) | Test-first contract (RED → GREEN → REFACTOR) | `required:implement` |
+| [`ba0918-reuse`](skills/ba0918-reuse/SKILL.md) | Reuse before build: layer decomposition, an eight-rung search ladder, adopt-or-build records | `required:design` |
+| [`ba0918-gui-structure`](skills/ba0918-gui-structure/SKILL.md) | GUI screen structure: components per region, one owner per piece of state, data down and events up, one dialog state | `required:gui` |
+| [`ba0918-testing`](skills/ba0918-testing/SKILL.md) | Testing anti-patterns | its description |
+
+### Delivering changes
+
+| Skill | Scope | Loaded by |
+|---|---|---|
+| [`ba0918-commit`](skills/ba0918-commit/SKILL.md) | Commit splitting and message conventions | `required:commit` |
+| [`ba0918-diff-review`](skills/ba0918-diff-review/SKILL.md) | Presenting changes for review: grouped by intent, with reasons and judgment points, the reviewed bytes named as the approval target | `required:diff-review` |
+| [`ba0918-release`](skills/ba0918-release/SKILL.md) | Release discipline: canonical version, bump, breaking changes, changelog, tag | `required:release` |
+
+### Working with other agents
+
+| Skill | Scope | Loaded by |
+|---|---|---|
+| [`ba0918-delegation`](skills/ba0918-delegation/SKILL.md) | Delegation discipline: orchestrator principle, five role contracts, executor table | `required:delegate` |
+| [`ba0918-verification`](skills/ba0918-verification/SKILL.md) | Verification discipline: evidence demands, worst-of aggregation, hand-off hygiene | `required:review` |
+
+### Skills and project setup
+
+| Skill | Scope | Loaded by |
+|---|---|---|
+| [`ba0918-skill-authoring`](skills/ba0918-skill-authoring/SKILL.md) | Writing a skill: scope, reading cost, runtime independence, descriptions that trigger, wording by rule kind | its description |
+| [`ba0918-scaffold`](skills/ba0918-scaffold/SKILL.md) | Generates `AGENTS.md` / `PROJECT.md` for a consuming project | explicit request |
+
+### How skills are loaded
+
+`always` and `required:<trigger>` are the value of `metadata.ba0918-routing` in each
+`SKILL.md`, and these are its only two valid forms. `ba0918-scaffold` reads them to generate a
+consuming project's `AGENTS.md` routing table: `always` rules are read for every task, and a
+`required:<trigger>` rule before the work its trigger names.
+
+A skill without that field is not in the routing table. The agent loads it when the skill's
+description matches the task, or when a person asks for it by name.
+
+## Developing this repository
+
+### Naming
 
 Skill names are `ba0918-<domain noun>`. `ba0918` is the owner's user ID, used purely to avoid
 collisions in a flat global skill namespace, and never changes. The domain noun is one or two
 short common words. Names are lowercase alphanumerics and hyphens, at most 64 characters, and
 match the directory name.
 
-## Skill document structure
+Each skill directory is the unit of distribution and is self-contained: it never refers to a
+path outside itself. Skills mention each other by name only.
+
+### Skill document structure
 
 Every rule skill's `SKILL.md` presents Scope, Rules, Judgment, Examples and Evidence in that
-relative order, and the conventions governing them are defined in
-[docs/spec/repository-design.md](docs/spec/repository-design.md). Section order is a review
-concern; the validator does not check it.
+relative order. The conventions governing them are defined in
+[docs/spec/repository-design.md](docs/spec/repository-design.md), the authoritative design
+spec. Section order is a review concern; the validator does not check it.
 
-## Verification
+### Verification
 
 ```
-python3 scripts/validate.py          # repository-specific rules
-pytest                               # tests for the validator itself
+python3 scripts/validate.py              # this repository's conventions
+uv run --with pytest -- pytest tests/    # tests for the validator itself
 ```
 
-`scripts/validate.py` uses the Python 3 standard library only — there is nothing to install to
-run it. It checks frontmatter completeness, the naming convention, the 500-line limit, the
-1024-character description limit, the routing value grammar, and the absence of references
-escaping a skill directory. It does not check the marketplace manifest against `skills/`: the
-manifest does not list the skills, because a plugin's skills load from the `skills/` directory
-under its source by default.
+`scripts/validate.py` uses the Python standard library only. It checks each skill's
+frontmatter, its name, the 500-line limit, the 1024-character description limit and the
+routing value, that no reference escapes a skill
+directory, and that `.claude-plugin/plugin.json`, `package.json` and the newest release
+heading of [CHANGELOG.md](CHANGELOG.md) agree with the canonical version,
+`plugins[0].version` in `.claude-plugin/marketplace.json`. It exits 0 when nothing is wrong,
+1 on a violation, and 2 when the path given to it is not a directory.
 
-It also checks that the repository names one version. The canonical one is `plugins[0].version`
-in `.claude-plugin/marketplace.json`, and `.claude-plugin/plugin.json`, `package.json` and the
-newest release heading of [CHANGELOG.md](CHANGELOG.md) are required to agree with it.
-
-It exits 0 when it finds no violation, 1 when it reports at least one, and 2 when the path
-given to it is not a directory.
-
-`pytest` is the only development dependency. If it is not installed, `uv run --with pytest --
-pytest` runs the suite without installing anything permanently.
-
-CI additionally runs the reference validator from the Agent Skills project,
-`npx skills-ref validate`, over every skill. It checks the published specification; the local
-validator checks the conventions of this repository. Both must pass.
+CI also runs the Agent Skills reference validator, `npx skills-ref validate`, over every
+skill. It checks the published specification, while the local validator checks this
+repository's conventions. Both must pass.
