@@ -18,4 +18,4 @@ also owns a `references/` file.
 
 ## Evidence
 
-- `python3 scripts/validate.py tests/fixtures/valid` exits 0.
+- The validator reports no violation for the repository the tests build from this fixture.

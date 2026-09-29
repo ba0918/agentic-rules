@@ -17,4 +17,4 @@ Applies to nothing real. This document exists so the validator has a conforming 
 
 ## Evidence
 
-- `python3 scripts/validate.py tests/fixtures/valid` exits 0.
+- The validator reports no violation for the repository the tests build from this fixture.
