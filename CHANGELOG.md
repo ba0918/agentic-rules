@@ -10,6 +10,11 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `README-ja.md`, a Japanese translation of the README, linked from the top of both files. The
+  English README remains the authoritative text.
+
 ### Changed
 
 - The README is reorganised: a route comparison table leads the install section, per-agent

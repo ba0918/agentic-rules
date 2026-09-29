@@ -23,6 +23,7 @@
     "skills/",
     ".opencode/",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "README-ja.md"
   ]
 }
