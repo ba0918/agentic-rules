@@ -21,6 +21,13 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
   instructions keep only what a user needs, and the skill list is grouped by the kind of work
   each skill governs.
 
+### Fixed
+
+- The validator's test fixtures no longer appear as installable skills. `gh skill` finds
+  `SKILL.md` outside `skills/` too, and offered the two fixture skills, `ba0918-alpha` and
+  `ba0918-beta`, alongside the real ones; their documents are now stored under another name and
+  restored only in the copy the tests build.
+
 ## [0.12.0] - 2026-09-28
 
 ### Added
