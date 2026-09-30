@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-09-30
+
 ### Added
 
 - `ba0918-worktree` — a rule for version-control worktrees, whoever creates them, routed to
@@ -344,7 +346,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/ba0918/agentic-rules/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/ba0918/agentic-rules/compare/v0.9.0...v0.10.0
