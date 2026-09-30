@@ -128,6 +128,7 @@ npx skills add ba0918/agentic-rules
 |---|---|---|
 | [`ba0918-delegation`](skills/ba0918-delegation/SKILL.md) | 委譲の規律：オーケストレータ原則、5 つの役割契約、実行役の表 | `required:delegate` |
 | [`ba0918-verification`](skills/ba0918-verification/SKILL.md) | 検証の規律：証拠の要求、最悪値での集約、受け渡しの衛生 | `required:review` |
+| [`ba0918-worktree`](skills/ba0918-worktree/SKILL.md) | worktree の運用：置き場所は 1 か所、名前はブランチとタスクに対応、書き手 1 つに作業ツリー 1 つ、成果を届けてから片付ける | `required:worktree` |
 
 ### スキルとプロジェクトの準備
 

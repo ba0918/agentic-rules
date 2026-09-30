@@ -12,6 +12,15 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Added
 
+- `ba0918-worktree` — a rule for version-control worktrees, whoever creates them, routed to
+  worktree work (`required:worktree`): every worktree of a repository in one directory,
+  `.agents/worktrees/` unless the project declares another, excluded from version control and
+  from tools that ignore the ignore file; one worktree per branch and task, its directory named
+  after the branch and never left with a tool-generated name, based on an explicitly chosen
+  branch; one writer per working tree with no written resource shared between worktrees; work
+  pushed before a task is reported done, worktrees removed through version control once their
+  branch is merged or abandoned, no force removal of unpushed work or deletion of an unmerged
+  branch without approval, and the worktree list kept as a ledger of live tasks.
 - `README-ja.md`, a Japanese translation of the README, linked from the top of both files. The
   English README remains the authoritative text.
 
