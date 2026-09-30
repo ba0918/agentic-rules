@@ -21,6 +21,7 @@
 | implement | ba0918-tdd |
 | release | ba0918-release |
 | review | ba0918-verification |
+| worktree | ba0918-worktree |
 
 Refer to each rule by its skill name. Read every rule that applies before starting the work it
 governs. A rule once read stays in force for the rest of the context: read it again only after
