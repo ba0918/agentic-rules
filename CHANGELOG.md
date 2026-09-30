@@ -10,8 +10,19 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-09-30
+
 ### Added
 
+- `ba0918-worktree` — a rule for version-control worktrees, whoever creates them, routed to
+  worktree work (`required:worktree`): every worktree of a repository in one directory,
+  `.agents/worktrees/` unless the project declares another, excluded from version control and
+  from tools that ignore the ignore file; one worktree per branch and task, its directory named
+  after the branch and never left with a tool-generated name, based on an explicitly chosen
+  branch; one writer per working tree with no written resource shared between worktrees; work
+  pushed before a task is reported done, worktrees removed through version control once their
+  branch is merged or abandoned, no force removal of unpushed work or deletion of an unmerged
+  branch without approval, and the worktree list kept as a ledger of live tasks.
 - `README-ja.md`, a Japanese translation of the README, linked from the top of both files. The
   English README remains the authoritative text.
 
@@ -335,7 +346,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/ba0918/agentic-rules/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/ba0918/agentic-rules/compare/v0.9.0...v0.10.0

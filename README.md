@@ -125,6 +125,7 @@ comes to read each one.
 |---|---|---|
 | [`ba0918-delegation`](skills/ba0918-delegation/SKILL.md) | Delegation discipline: orchestrator principle, five role contracts, executor table | `required:delegate` |
 | [`ba0918-verification`](skills/ba0918-verification/SKILL.md) | Verification discipline: evidence demands, worst-of aggregation, hand-off hygiene | `required:review` |
+| [`ba0918-worktree`](skills/ba0918-worktree/SKILL.md) | Worktree discipline: one declared location, names tied to a branch and a task, one writer per working tree, removal once the work is delivered | `required:worktree` |
 
 ### Skills and project setup
 
