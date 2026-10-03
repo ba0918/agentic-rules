@@ -116,6 +116,7 @@ comes to read each one.
 | Skill | Scope | Loaded by |
 |---|---|---|
 | [`ba0918-commit`](skills/ba0918-commit/SKILL.md) | Commit splitting and message conventions | `required:commit` |
+| [`ba0918-documents`](skills/ba0918-documents/SKILL.md) | Document discipline: one tree of document kinds, search before creating, one home per fact, a lifetime per kind, stale documents pruned in the change that makes them false | `required:document` |
 | [`ba0918-diff-review`](skills/ba0918-diff-review/SKILL.md) | Presenting changes for review: grouped by intent, with reasons and judgment points, the reviewed bytes named as the approval target | `required:diff-review` |
 | [`ba0918-release`](skills/ba0918-release/SKILL.md) | Release discipline: canonical version, bump, breaking changes, changelog, tag | `required:release` |
 

@@ -10,6 +10,27 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-03
+
+### Added
+
+- `ba0918-documents` — a rule for a repository's hand-written documents, routed to document work
+  (`required:document`): one tree of kinds under `docs/` (entry point, `spec/`, `architecture/`,
+  `decision/adr/`, `decision/records/`, `plans/`, `guides/`, `notes/`) with session notes in
+  `.agents/`, a location declared by the project or a document tool taking precedence; no new
+  directory on an agent's own judgment; a search before creating, one topic per document and no
+  content copied from another document or a machine-readable source; a lifetime per kind
+  (current, record, expiring) with stale documents corrected or deleted in the change that makes
+  them false, overturned records marked, no archive directories, and records never read as
+  current fact; a minimal format without status or history notes in current documents; and
+  `docs/README.md` as the entry point.
+
+### Changed
+
+- `ba0918-placement` points to `ba0918-documents` for document files, and adds two rules that
+  apply in every session: a change that makes a document false corrects or deletes it in the same
+  change, and decision or discussion records are not read as evidence of current behaviour.
+
 ## [0.13.0] - 2026-09-30
 
 ### Added
@@ -346,7 +367,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/ba0918/agentic-rules/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/ba0918/agentic-rules/compare/v0.10.0...v0.11.0
