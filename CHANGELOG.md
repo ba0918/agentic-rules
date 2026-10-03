@@ -10,6 +10,21 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-10-03
+
+### Added
+
+- `ba0918-ci` — a rule for CI/CD pipeline definitions, routed to CI work (`required:ci`): follow
+  the repository's existing pipelines and fix their breaches rather than copy them; refer to every
+  external action, reusable workflow, image or downloaded tool by an immutable reference with the
+  version as a comment, keep pins current with an update tool, and treat an adopted lockfile as the
+  source of truth; declare token permissions with read-only as the default, use OIDC, and pass a
+  secret only to the step that uses it; never run untrusted contributors' code with secrets or
+  write access, never paste event data into script text, and restore no cache in release jobs; a
+  time limit on every job, superseded runs cancelled, and shell steps that stop on failure; logic
+  in repository scripts and stable names for required checks. The GitHub Actions form of each rule,
+  a starting skeleton, and the actionlint and zizmor evidence are in `references/github-actions.md`.
+
 ## [0.14.0] - 2026-10-03
 
 ### Added
@@ -369,7 +384,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/ba0918/agentic-rules/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...v0.14.0
 [0.13.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...c6018a7bd7aa7c59c96798d60f705cd9f893ad6f
 [0.12.0]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...v0.12.0
