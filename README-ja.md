@@ -119,6 +119,7 @@ npx skills add ba0918/agentic-rules
 | スキル | 範囲 | 読み込まれ方 |
 |---|---|---|
 | [`ba0918-commit`](skills/ba0918-commit/SKILL.md) | コミットの分割とメッセージの規約 | `required:commit` |
+| [`ba0918-documents`](skills/ba0918-documents/SKILL.md) | 文書の規律：種類ごとのツリー、作る前に探す、事実の置き場所は 1 か所、種類ごとの寿命、偽になった文書はその変更の中で剪定する | `required:document` |
 | [`ba0918-diff-review`](skills/ba0918-diff-review/SKILL.md) | レビューへの変更の提示：意図ごとにまとめ、理由と判断点を添え、承認対象のバイト列を明示する | `required:diff-review` |
 | [`ba0918-release`](skills/ba0918-release/SKILL.md) | リリースの規律：正のバージョン、bump、破壊的変更、変更履歴、タグ | `required:release` |
 
