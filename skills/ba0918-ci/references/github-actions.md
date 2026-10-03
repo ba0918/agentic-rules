@@ -53,8 +53,11 @@ jobs:
 - A local action or workflow in the same repository (`uses: ./...`) is versioned with the
   repository and needs no hash.
 - A container image (`container:`, `services:`, `docker://`) is pinned by `@sha256:<digest>`.
-- Resolve a tag to its commit with `git ls-remote https://github.com/<owner>/<repo> refs/tags/<tag>`.
-  For an annotated tag, take the line ending in `^{}`, which is the commit.
+- Resolve a tag with
+  `git ls-remote https://github.com/<owner>/<repo> 'refs/tags/<tag>' 'refs/tags/<tag>^{}'`.
+  For an annotated tag, use the line ending in `^{}`: the other line is a tag object, not a
+  commit. For a lightweight tag, use the plain tag line. Request both refs explicitly; the
+  plain tag pattern alone does not return the peeled commit. See [git ls-remote](https://git-scm.com/docs/git-ls-remote).
 - Keep pins current with Dependabot's `github-actions` ecosystem (`.github/dependabot.yml`) or
   Renovate. Both update the hash and the version comment together. Set a cooldown (Dependabot's
   `cooldown.default-days`, Renovate's `minimumReleaseAge`) so a new release is proposed only after
@@ -114,8 +117,10 @@ jobs:
   `hashFiles('<lockfile>')`.
 - `defaults.run.shell: bash` runs steps with `bash --noprofile --norc -eo pipefail`. The implicit
   default shell on Linux omits `-o pipefail`.
-- `runs-on: ubuntu-latest` moves to a new image without notice; a versioned label such as
-  `ubuntu-24.04` moves only when changed.
+- `runs-on: ubuntu-latest` can migrate to a newer OS version. A versioned label such as
+  `ubuntu-24.04` selects the OS version, but its image and preinstalled tools still receive
+  updates; it is not an immutable image pin. Select required tool versions explicitly rather
+  than relying on the image's defaults. See the [runner image update policy](https://github.com/actions/runner-images#image-releases).
 
 ### Structure
 
