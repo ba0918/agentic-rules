@@ -38,7 +38,7 @@ docs/
   plans/           implementation plans, one plan per file
   guides/          how-to guides people follow step by step
   notes/           findings worth sharing that do not yet belong to another kind
-.agents/           session-local working notes; ignored, never committed
+.agents/scratch/   session-local working notes; ignored, never committed
 ```
 
 - Put every document in exactly one of these kinds.
@@ -56,12 +56,20 @@ docs/
 
 ### Creating and sizing
 
-- Before creating a document, search for an existing one on the same topic. If one exists,
-  extend or rewrite it. Never hold one topic in two documents.
+- Before creating a document, search for a current document of the same kind and purpose. If one
+  exists, extend or rewrite it. Never keep two current documents of the same kind and purpose.
+- A record of a later decision or a later discussion is a new document, even when an older record
+  covers the same topic: write it, leave the older record's content as it is, and mark the older
+  one as overturned (see Lifetime and pruning). Likewise, plans for different branches against the
+  same specification are separate documents.
 - Give each document one topic: an ADR one decision, a plan one branch of work, a record one
   discussion.
 - Do not turn into a document what ends with the conversation: working lists, logs of attempts,
-  summaries of the session. Keep them in `.agents/` if the session needs them.
+  summaries of the session. Keep them in `.agents/scratch/` if the session needs them.
+- Exclude `.agents/scratch/` itself in the repository's ignore file. Do not widen the exclusion
+  to the whole `.agents/` directory: tools keep tracked files under it, such as installed skills,
+  and new files there would silently drop out of ordinary commits. A project that already ignores
+  all of `.agents/` on purpose is covered as it is.
 - Do not write in a document what code, tests, a commit message or a comment can carry.
 - Do not copy content from another document or from code; link to it. Where a machine-readable
   source exists — a schema, migrations, an API definition file — it is the authority: describe

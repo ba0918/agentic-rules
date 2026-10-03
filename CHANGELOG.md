@@ -17,8 +17,9 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `ba0918-documents` — a rule for a repository's hand-written documents, routed to document work
   (`required:document`): one tree of kinds under `docs/` (entry point, `spec/`, `architecture/`,
   `decision/adr/`, `decision/records/`, `plans/`, `guides/`, `notes/`) with session notes in
-  `.agents/`, a location declared by the project or a document tool taking precedence; no new
-  directory on an agent's own judgment; a search before creating, one topic per document and no
+  `.agents/scratch/` (only that subdirectory ignored), a location declared by the project or a document tool taking precedence; no new
+  directory on an agent's own judgment; a search before creating, one current document per kind and purpose (a later
+  decision or discussion is recorded as a new record) and no
   content copied from another document or a machine-readable source; a lifetime per kind
   (current, record, expiring) with stale documents corrected or deleted in the change that makes
   them false, overturned records marked, no archive directories, and records never read as
