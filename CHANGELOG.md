@@ -14,6 +14,7 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Added
 
+- GitHub Releases with automatically generated release notes when a version tag is pushed.
 - `ba0918-documents` — a rule for a repository's hand-written documents, routed to document work
   (`required:document`): one tree of kinds under `docs/` (entry point, `spec/`, `architecture/`,
   `decision/adr/`, `decision/records/`, `plans/`, `guides/`, `notes/`) with session notes in
@@ -28,7 +29,7 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ### Changed
 
-- `ba0918-placement` points to `ba0918-documents` for document files, and adds two rules that
+- **BREAKING** `ba0918-placement` points to `ba0918-documents` for document files, and adds two rules that
   apply in every session: a change that makes a document false corrects or deletes it in the same
   change, and decision or discussion records are not read as evidence of current behaviour.
 
@@ -369,8 +370,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
 [Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.14.0...HEAD
-[0.14.0]: https://github.com/ba0918/agentic-rules/compare/v0.13.0...v0.14.0
-[0.13.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...v0.13.0
+[0.14.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...v0.14.0
+[0.13.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...c6018a7bd7aa7c59c96798d60f705cd9f893ad6f
 [0.12.0]: https://github.com/ba0918/agentic-rules/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/ba0918/agentic-rules/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/ba0918/agentic-rules/compare/v0.9.0...v0.10.0
