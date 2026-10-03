@@ -59,8 +59,10 @@ docs/
 - Before creating a document, search for a current document of the same kind and purpose. If one
   exists, extend or rewrite it. Never keep two current documents of the same kind and purpose.
 - A record of a later decision or a later discussion is a new document, even when an older record
-  covers the same topic: write it, leave the older record's content as it is, and mark the older
-  one as overturned (see Lifetime and pruning). Likewise, plans for different branches against the
+  covers the same topic: write it and leave the older record's content as it is. Only when the new
+  decision actually overturns the older one, add the older one's new status and a link to the new
+  record (see Lifetime and pruning); an older record the new one confirms or leaves standing stays
+  untouched. Likewise, plans for different branches against the
   same specification are separate documents.
 - Give each document one topic: an ADR one decision, a plan one branch of work, a record one
   discussion.
