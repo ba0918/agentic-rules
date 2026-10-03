@@ -13,6 +13,7 @@
 | When | Read |
 |---|---|
 | Always | ba0918-design, ba0918-placement, ba0918-readability, ba0918-secrets |
+| ci | ba0918-ci |
 | commit | ba0918-commit |
 | delegate | ba0918-delegation |
 | design | ba0918-reuse |
