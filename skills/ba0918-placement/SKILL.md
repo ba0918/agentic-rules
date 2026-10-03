@@ -11,7 +11,8 @@ metadata:
 
 Applies whenever you are about to write prose about code: a comment, a test name, a commit
 subject or body, or a docstring. It decides where a given piece of information belongs, not
-whether the code itself is well structured.
+whether the code itself is well structured. Which document file a piece of information belongs
+in, and how long that document lives, is the subject of the skill `ba0918-documents`.
 
 ## The four homes
 
@@ -35,6 +36,9 @@ itself is broken — see Judgment.
 - Do not put a mock name, an internal method name, or a private field name in a test name.
 - Do not write `TODO: explain later`. Why not can only be recorded while you still know it.
 - When you cannot state why the change was needed, split the commit until each part has one reason.
+- When a change makes a document false, correct or delete that document in the same change.
+- Do not read a decision record or a discussion record as evidence of current behaviour; current
+  fact is in the code, the tests and the current documents.
 
 ## Judgment
 
