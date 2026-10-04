@@ -117,6 +117,7 @@ comes to read each one.
 |---|---|---|
 | [`ba0918-commit`](skills/ba0918-commit/SKILL.md) | Commit splitting and message conventions | `required:commit` |
 | [`ba0918-ci`](skills/ba0918-ci/SKILL.md) | CI pipeline discipline: follow the existing workflows, pin external code, least privilege, no untrusted input executed, bounded runs, logic in scripts | `required:ci` |
+| [`ba0918-mutation-testing`](skills/ba0918-mutation-testing/SKILL.md) | Mutation testing operations: resource bounds that protect the machine, speed in a fixed order, scope in tiers, no hooks and no waiting, zero survivors in the diff as the gate | `required:mutation` |
 | [`ba0918-documents`](skills/ba0918-documents/SKILL.md) | Document discipline: one tree of document kinds, search before creating, one home per fact, a lifetime per kind, stale documents pruned in the change that makes them false | `required:document` |
 | [`ba0918-diff-review`](skills/ba0918-diff-review/SKILL.md) | Presenting changes for review: grouped by intent, with reasons and judgment points, the reviewed bytes named as the approval target | `required:diff-review` |
 | [`ba0918-release`](skills/ba0918-release/SKILL.md) | Release discipline: canonical version, bump, breaking changes, changelog, tag | `required:release` |
