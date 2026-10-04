@@ -10,7 +10,7 @@ groups or be renamed; `cargo clippy --explain <name>` confirms that a name exist
 
 | Rule in SKILL.md | Lint | Group | Where to set it |
 |---|---|---|---|
-| Suppress with `expect` | `clippy::allow_attributes` | restriction | workspace |
+| Suppress with `expect` | `clippy::allow_attributes` (outer attributes only) | restriction | workspace |
 | Give a reason | `clippy::allow_attributes_without_reason` | restriction | workspace |
 | No unwrap outside tests | `clippy::unwrap_used` + `allow-unwrap-in-tests = true` in `clippy.toml` | restriction | workspace |
 | No wildcard on an owned enum | `clippy::wildcard_enum_match_arm` | restriction | workspace, when the crate mostly matches its own enums (see below) |
@@ -22,8 +22,11 @@ groups or be renamed; `cargo clippy --explain <name>` confirms that a name exist
 | No output from a library | `clippy::print_stdout`, `clippy::print_stderr` | restriction | each library crate's root, as `#![deny(...)]` |
 | No unfinished markers | `clippy::todo`, `clippy::unimplemented`, `clippy::dbg_macro` | restriction | workspace |
 
-No lint covers these; they stay with review:
+These gaps stay with review:
 
+- inner `#![allow(...)]` attributes: `allow_attributes` ignores them, so a reasoned inner
+  `allow` can pass both suppression lints without detecting a stale suppression; use `expect`
+  here too (see the [lint's documented scope](https://rust-lang.github.io/rust-clippy/master/index.html#allow_attributes))
 - an error type with a variant per failure, rather than a `String` error
 - `expect` messages that say why the call cannot fail
 - shared mutable state used where the ownership could be restructured

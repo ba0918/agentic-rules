@@ -66,7 +66,8 @@ whether to adopt a crate at all (the skill `ba0918-reuse`).
 ### Suppressing a lint
 
 - Suppress with the form that warns when it stops being needed (`expect`, not `allow`), and give
-  a reason. Enforce both with lints.
+  a reason. Enforce what the lints detect, and review inner `#![allow(...)]` attributes: the
+  `allow_attributes` lint only detects outer attributes.
 - Never suppress a warning to finish a task.
 
 ### Errors and panics
