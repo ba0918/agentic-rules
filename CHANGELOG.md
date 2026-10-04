@@ -10,6 +10,21 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-mutation-testing` — a rule for running mutation testing, routed to mutation-testing work
+  (`required:mutation`): run inside a boundary that caps memory and CPU for the whole process tree,
+  at lower priority on a shared machine, with a per-mutant time limit, leftover processes reaped,
+  an outer cap on WSL or a VM, and the same boundary in CI; get speed by making the suite fast
+  first, then per-mutant test selection after comparison, then shards, and same-machine
+  concurrency only when measured faster; gate merges on the diff from the merge base, run the whole
+  code base on a schedule as issues, and gate releases on the diff from the previous release; never
+  run it in commit or push hooks and never make an agent wait on it inside its implementation loop;
+  gate on zero survivors after reasoned, refutation-checked equivalent declarations, with no skip
+  annotations or exclusion settings, unfinished runs treated as failures and the tool version
+  pinned. Linux, container, WSL and CI resource limits are in `references/resource-bounds.md`, and
+  the cargo-mutants form in `references/cargo-mutants.md`.
+
 ## [0.16.0] - 2026-10-04
 
 ### Changed
