@@ -21,6 +21,7 @@
 | document | ba0918-documents |
 | gui | ba0918-gui-structure |
 | implement | ba0918-tdd |
+| mutation | ba0918-mutation-testing |
 | release | ba0918-release |
 | review | ba0918-verification |
 | worktree | ba0918-worktree |
