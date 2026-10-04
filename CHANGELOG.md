@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-10-04
+
 ### Changed
 
 - **BREAKING** `ba0918-verification` and `contracts/oracle-evidence.md` tighten the third evidence
@@ -392,7 +394,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.16.0...HEAD
+[0.16.0]: https://github.com/ba0918/agentic-rules/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/ba0918/agentic-rules/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...v0.14.0
 [0.13.0]: https://github.com/ba0918/agentic-rules/compare/v0.12.0...c6018a7bd7aa7c59c96798d60f705cd9f893ad6f
