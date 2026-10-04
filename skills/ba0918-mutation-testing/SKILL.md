@@ -48,8 +48,8 @@ or whether to adopt a mutation testing tool (the skill `ba0918-reuse`).
    its survivors against the full suite on the same mutants.
 3. Split the mutants across separate machines (shards).
 4. Raise the number of mutants run at once on one machine last, and only when a measurement on
-   the same mutants shows it faster. Keep build jobs × concurrent mutants at or below the core
-   count.
+   the same mutants shows it faster. Keep build jobs × concurrent mutants at or below the cores
+   the run may use — the CPU cap when one is set, otherwise the core count.
 
 ### Scope the runs in tiers
 

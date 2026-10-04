@@ -102,7 +102,8 @@ sudo --preserve-env systemd-run --scope --quiet \
   `nice -n 19 ionice -c 3` where priority matters.
 - Size both caps to the runner: keep memory below its available memory and CPU quota below its
   total CPU capacity, leaving room for the runner agent itself. `200%` is two cores' worth;
-  reduce it on a two-core runner, or adjust it for a larger runner.
+  reduce it on a two-core runner, or adjust it for a larger runner. Lower the build's job count
+  to match the quota: four build jobs under `200%` contend for two cores' worth of time.
 
 Running the job in a container (`docker run` as above, or the platform's job container with
 resource options) is the alternative where `sudo` is not available.

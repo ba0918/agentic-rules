@@ -69,7 +69,8 @@ define these cases. A zero-candidate run does not establish that the baseline te
 
 - `-j <n>` runs n mutants at once on one machine, each in its own copy of the tree. Keep it at 1
   until a measurement on the same mutants shows a higher value is faster. Keep
-  `CARGO_BUILD_JOBS` × n at or below the core count.
+  `CARGO_BUILD_JOBS` × n at or below the cores the run may use: the `CPUQuota` divided by 100 %
+  when a quota is set, otherwise the core count.
 - `--shard k/n` (k from 0) runs one of n disjoint parts. Run each shard as its own CI job, and make
   a single summary job that depends on all of them the required check, so changing n needs no
   change to branch protection.
