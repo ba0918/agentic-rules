@@ -19,8 +19,16 @@ not to be rebuilt. The tests then ran against the unmutated code and reported su
 not exist. Use the nightly toolchain with content-hash freshness:
 
 ```bash
-CARGO_UNSTABLE_CHECKSUM_FRESHNESS=true cargo +nightly mutants ...
+CARGO_UNSTABLE_CHECKSUM_FRESHNESS=true CARGO_BUILD_FINGERPRINT=content \
+  cargo +nightly mutants ...
 ```
+
+Both settings are required by the current [Cargo interface](https://doc.rust-lang.org/nightly/cargo/reference/unstable.html#checksum-freshness).
+Use a dated nightly that supports `build.fingerprint` (the upstream
+[testing requirements](https://github.com/rust-lang/cargo/issues/14136#issuecomment-5519248462)
+name Cargo 1.100.0-nightly, commit `2e2b193f8` dated 2026-09-02). Replace `+nightly` in these
+examples with the same verified `+nightly-YYYY-MM-DD` on workstations and in CI, and re-check
+freshness behaviour when updating it. Build-script `rerun-if-changed` still uses mtimes.
 
 ## Run the whole workspace's tests
 
@@ -111,6 +119,7 @@ systemd-run --user --wait --collect --pipe --same-dir \
   -p Nice=19 -p IOSchedulingClass=idle \
   --setenv=PATH="$PATH" --setenv=HOME="$HOME" \
   --setenv=CARGO_UNSTABLE_CHECKSUM_FRESHNESS=true \
+  --setenv=CARGO_BUILD_FINGERPRINT=content \
   --setenv=CARGO_BUILD_JOBS=4 --setenv=TMPDIR="$run_dir" \
   -- cargo +nightly mutants -j 1 --no-config --workspace --test-workspace=true \
      -o . --in-diff "$run_dir/diff.patch"
