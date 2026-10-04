@@ -136,7 +136,7 @@ SKILL.md と `references/` の分担(読まれるすべての場面で要る内�
 | ba0918-testing | テストのアンチパターン | 既存文書の移植 |
 | ba0918-commit | コミット規約 | 既存文書の移植 |
 | ba0918-secrets | 機密情報の扱い・機密文脈(内部識別子・機密文書・実行環境)の露出防止(出所より読者が広い宛先すべて、私的宛先間を含む)・実行環境の規則(詳細仕様: local-environment-rule.md)・第三者著作物のライセンス遵守(宛先を問わない) | 新規(スコープ: 検出・ステージング禁止・露出防止・宛先境界・ライセンス) + 追記 |
-| ba0918-scaffold | AGENTS.md / PROJECT.md / CLAUDE.md シム(`@AGENTS.md` 1 行)の生成 | 新規(メタスキル) |
+| ba0918-scaffold | AGENTS.md / PROJECT.md の生成(CLAUDE.md は作らない。Claude Code v2.1.277 以降は CLAUDE.md が無ければ AGENTS.md を読む) | 新規(メタスキル) |
 | ba0918-release | リリース規律(canonical version・bump・タグ・changelog) | 運用実績の蒸留 |
 | ba0918-delegation | 委譲規範(orchestrator 原則・役割契約 5 種・executor table) | 運用実績の蒸留 |
 | ba0918-verification | 検証規範(証拠要求・worst-of 集約・受け渡し衛生)・検証の過剰の規則(詳細仕様: excess-verification-rule.md) | 運用実績の蒸留 + 追記 |

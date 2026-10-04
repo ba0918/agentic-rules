@@ -10,6 +10,14 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Removed
+
+- `ba0918-scaffold` no longer generates the `CLAUDE.md` shim (`@AGENTS.md`). Claude Code
+  v2.1.277 and later reads `AGENTS.md` directly when no `CLAUDE.md` or `CLAUDE.local.md` exists
+  in the working directory or above it. The scaffold now reports an existing `CLAUDE.md` that
+  does not reference `AGENTS.md`, since it hides the router. A shim generated earlier keeps
+  working and can stay; delete it only if every Claude Code in use is v2.1.277 or later.
+
 ## [0.18.0] - 2026-10-04
 
 ### Added
