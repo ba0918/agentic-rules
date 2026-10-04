@@ -10,13 +10,16 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
-### Removed
+### Changed
 
-- `ba0918-scaffold` no longer generates the `CLAUDE.md` shim (`@AGENTS.md`). Claude Code
-  v2.1.277 and later reads `AGENTS.md` directly when no `CLAUDE.md` or `CLAUDE.local.md` exists
-  in the working directory or above it. The scaffold now reports an existing `CLAUDE.md` that
-  does not reference `AGENTS.md`, since it hides the router. A shim generated earlier keeps
-  working and can stay; delete it only if every Claude Code in use is v2.1.277 or later.
+- **BREAKING** `ba0918-scaffold` no longer generates the `CLAUDE.md` shim (`@AGENTS.md`). Its
+  reachability report now checks `CLAUDE.md`, `.claude/CLAUDE.md` and `CLAUDE.local.md` from the
+  working directory through all ancestors, accounting for effective imports and the Project
+  instructions setting. It reports when the router and its routed rules cannot load, without
+  creating, changing or deleting Claude instruction files. For older Claude Code or sessions
+  without native `AGENTS.md` support, users must manually create a `CLAUDE.md` beside
+  `AGENTS.md` containing `@AGENTS.md`, including on new setups. Existing working shims can stay;
+  remove one manually only after confirming every session can load the router without it.
 
 ## [0.18.0] - 2026-10-04
 

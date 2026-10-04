@@ -125,6 +125,18 @@ SKILL.md と `references/` の分担(読まれるすべての場面で要る内�
 抜け落ちないよう、例外は委譲元の明示に限る。Codex の実測で、`always` スキルの読み込みの
 約半数が同じ文脈内での再読、約 7 割が委譲先での読み込みだったことが根拠。
 
+scaffold は Claude 用の指示ファイルを作成・変更・削除しない。ルーターへの到達性は、
+Claude Code の作業ディレクトリからファイルシステムのルートまで各階層の `CLAUDE.md`、
+`.claude/CLAUDE.md`、`CLAUDE.local.md` を読み取り専用で確認する。既定の自動読み込みを
+妨げるファイルと、実際に読み込まれる指示から `AGENTS.md` への有効な import または
+シンボリックリンクがあるかを報告する。到達できなければルーティングされたルールも
+読み込まれないと明記し、確認できない場合は到達性未確認とする。
+個人用・組織管理の `CLAUDE.md` と `.claude/rules/` はこの自動読み込みの阻害要因に数えない。
+ネイティブ対応版では Project instructions 設定も考慮する。旧版や対応が無効なセッションを
+使う新規導入では、利用者が `AGENTS.md` と同じ階層に `@AGENTS.md` を記した `CLAUDE.md` を
+手動で用意する。既存の import は保持できる。読み込み条件の根拠は
+[Claude Code の公式仕様](https://code.claude.com/docs/en/memory#when-claude-code-reads-agents-md)。
+
 ## 初期スキル
 
 | スキル | 内容 | 種 |
@@ -136,7 +148,7 @@ SKILL.md と `references/` の分担(読まれるすべての場面で要る内�
 | ba0918-testing | テストのアンチパターン | 既存文書の移植 |
 | ba0918-commit | コミット規約 | 既存文書の移植 |
 | ba0918-secrets | 機密情報の扱い・機密文脈(内部識別子・機密文書・実行環境)の露出防止(出所より読者が広い宛先すべて、私的宛先間を含む)・実行環境の規則(詳細仕様: local-environment-rule.md)・第三者著作物のライセンス遵守(宛先を問わない) | 新規(スコープ: 検出・ステージング禁止・露出防止・宛先境界・ライセンス) + 追記 |
-| ba0918-scaffold | AGENTS.md / PROJECT.md の生成(CLAUDE.md は作らない。Claude Code v2.1.277 以降は CLAUDE.md が無ければ AGENTS.md を読む) | 新規(メタスキル) |
+| ba0918-scaffold | AGENTS.md / PROJECT.md の生成(Claude 用の指示ファイルは変更せず、上記の読み込み条件に従いルーターへの到達性を報告する) | 新規(メタスキル) |
 | ba0918-release | リリース規律(canonical version・bump・タグ・changelog) | 運用実績の蒸留 |
 | ba0918-delegation | 委譲規範(orchestrator 原則・役割契約 5 種・executor table) | 運用実績の蒸留 |
 | ba0918-verification | 検証規範(証拠要求・worst-of 集約・受け渡し衛生)・検証の過剰の規則(詳細仕様: excess-verification-rule.md) | 運用実績の蒸留 + 追記 |

@@ -68,8 +68,12 @@ untouched.
 - Refer to skills by name. Never write a path to a skill directory.
 - Do not overwrite an existing `AGENTS.md`. Show the difference and let a human apply it.
 - Do not overwrite an existing `PROJECT.md`.
-- Do not create, change or delete `CLAUDE.md`. If one exists and does not reference
-  `AGENTS.md`, report that Claude Code will read it instead of the router.
+- Do not create, change or delete Claude instruction files. Inspect `CLAUDE.md`,
+  `.claude/CLAUDE.md` and `CLAUDE.local.md` in Claude Code's working directory and every ancestor
+  up to the filesystem root. Report files that block default `AGENTS.md` loading and whether a
+  loaded instruction file reaches the router through an effective import or symlink. If neither
+  direct loading nor that path reaches it, report that the router and its routed rules will not
+  load; if the loading conditions cannot be established, report reachability as unverified.
 - Keep project-specific content out of `AGENTS.md`; it belongs in `PROJECT.md`.
 - Report a skill whose routing value is malformed instead of guessing what was meant.
 - Report which skill locations were searched, so an empty table can be distinguished from a failed search.
@@ -93,13 +97,16 @@ exists so the router can be regenerated freely.
 search looked in the wrong place. Always state the locations searched so the reader can tell
 which.
 
-**Claude Code reads the router without a shim.** Since v2.1.277 Claude Code reads `AGENTS.md`
-when no `CLAUDE.md` or `CLAUDE.local.md` exists in the working directory or above it, so a
-generated `CLAUDE.md` would only be an extra file to keep in sync. The fallback stops the moment
-any `CLAUDE.md` or `CLAUDE.local.md` appears: an existing one that does not import `AGENTS.md`
-hides the router, which is why it is reported rather than silently left. A project that must
-support older Claude Code, or sessions without `AGENTS.md` support, keeps a hand-written
-`CLAUDE.md` containing `@AGENTS.md`; the scaffold leaves it alone.
+**Claude Code reads the router without a shim when its loading conditions permit it.** Native
+`AGENTS.md` support starts at v2.1.277. By default, any of the three project instruction files
+listed above suppresses that fallback, including files outside the repository. User-scope and
+managed `CLAUDE.md` files and `.claude/rules/` do not suppress it. Account for the active Project
+instructions setting: `claude-md-and-agents-md` loads both, while `claude-md` needs an import
+and `managed-only` does not load the project router at startup. A prose mention of `AGENTS.md`
+is not an import; resolve import paths relative to the importing file and check that they reach
+this router. For older Claude Code or sessions without native support, users must manually
+create a `CLAUDE.md` beside `AGENTS.md` containing `@AGENTS.md`, including on new setups. An
+existing working import can stay; the scaffold leaves all Claude instruction files alone.
 
 **Skills without routing metadata are not omissions.** A skill that fires from its description is
 deliberately outside the table. Adding it as a row would make it mandatory, which is a change of
@@ -136,5 +143,7 @@ Show these outputs rather than asserting the scaffold is correct.
   of enumerated skills, with no name in one and not the other.
 - **Nothing was overwritten**: `git status --short` showing `AGENTS.md` as added, or the diff that
   was presented for a human decision instead of applied.
-- **Router reachability**: whether a `CLAUDE.md` or `CLAUDE.local.md` exists at the project root,
-  and if so whether it references `AGENTS.md`.
+- **Router reachability**: the working directory and ancestor locations checked for all three
+  Claude instruction filenames, the files found, the effective import or symlink path to this
+  router (if any), and the applicable native-support and Project instructions setting. Report
+  unreachable routed rules or unverified reachability, with the blocking file or condition.
