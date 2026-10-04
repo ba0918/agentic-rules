@@ -52,8 +52,18 @@ with and without it on the same mutants before dropping `--test-workspace=true`.
 | Release | `--in-diff` with the diff from the previous release tag; whole code base when there is none |
 | One file on a workstation | `--file <path>` (repeatable) |
 
-When the diff contains no Rust source, cargo-mutants writes no result file and exits 0. Treat that
-case as a pass, and every other missing result file as a failure.
+In 27.1.0, zero candidates can produce exit 0 without `outcomes.json`: a diff with no Rust
+source, changes only to comments, imports or tests that intersect no mutants, or an empty shard.
+Accept a missing result only when the run exits 0 and candidate discovery confirms zero for the
+same source tree, scope, configuration and shard. For example, retain the output and successful
+exit status of `cargo mutants --list` with the run's same `--no-config`, workspace, `--in-diff`
+or `--file`, and `--shard` arguments. A failed listing or a nonempty candidate list is not proof
+of an empty run. Treat every other missing result as a failure.
+
+The version's [discovery and shard selection](https://github.com/sourcefrog/cargo-mutants/blob/v27.1.0/src/main.rs),
+[empty lab return](https://github.com/sourcefrog/cargo-mutants/blob/v27.1.0/src/lab.rs) and
+[diff exit codes](https://github.com/sourcefrog/cargo-mutants/blob/v27.1.0/src/in_diff.rs)
+define these cases. A zero-candidate run does not establish that the baseline tests passed.
 
 ## Concurrency and shards
 
@@ -103,7 +113,8 @@ Exit codes in 27.1.0, and what they mean for the gate:
 | 70 | Internal error | no |
 
 Accept only 0, 2 and 3 as a finished run, then decide pass or fail from `outcomes.json` after
-removing declared equivalents. Any other code — including a run killed by a signal — is a failure
+removing declared equivalents, except for the verified zero-candidate case in Scope above.
+Any other code — including a run killed by a signal — is a failure
 even when a partial `outcomes.json` exists.
 
 ## Putting it together

@@ -78,7 +78,8 @@ or whether to adopt a mutation testing tool (the skill `ba0918-reuse`).
 - Do not use in-source skip annotations or the tool's exclusion settings. The gate fails when it
   finds one.
 - Treat a run that did not finish — interrupted, a failing baseline, an internal tool error — as a
-  failure, never as a partial pass. Regenerate the result file on every run.
+  failure, never as a partial pass. Regenerate the result file on every run. A successful run
+  with no result file passes only with evidence of zero candidates in the same scope and shard.
 - Pin the tool's version.
 - Require a passing baseline and no flaky tests before gating.
 - Report timeouts separately from survivors.
