@@ -113,6 +113,7 @@ npx skills add ba0918/agentic-rules
 | [`ba0918-reuse`](skills/ba0918-reuse/SKILL.md) | 作る前に再利用を探す：層への分解、8 段の探索、採用か自作かの記録 | `required:design` |
 | [`ba0918-gui-structure`](skills/ba0918-gui-structure/SKILL.md) | GUI の画面構成：領域ごとの部品、状態ごとに 1 つの持ち主、データは下へ・イベントは上へ、ダイアログ状態は 1 つ | `required:gui` |
 | [`ba0918-testing`](skills/ba0918-testing/SKILL.md) | テストのアンチパターン | description |
+| [`ba0918-rust`](skills/ba0918-rust/SKILL.md) | Rust の規約：版は記憶ではなく出所で選ぶ、ワークスペースで一度だけ宣言する、整形・lint・テストの関門と 1 つずつ選ぶ lint、型つきのエラー、自前の enum にワイルドカードを書かない、注記つきの unsafe、ライブラリから出力しない | `required:rust` |
 
 ### 変更を届ける
 

@@ -24,6 +24,7 @@
 | mutation | ba0918-mutation-testing |
 | release | ba0918-release |
 | review | ba0918-verification |
+| rust | ba0918-rust |
 | worktree | ba0918-worktree |
 
 Refer to each rule by its skill name. Read every rule that applies before starting the work it
