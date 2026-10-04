@@ -10,6 +10,12 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-verification` と `contracts/oracle-evidence.md` の証拠の条件の3つ目「規則を仕様が述べている」に、
+  oracle に強制する対象を与える以外の理由で仕様に置かれていることを加えた。テストを正当にするために CI の設定や
+  リリース手順を仕様へ書き足しても、その規則は数えない。写しを持つ workflow 側のスキルは次の版で写し直す。
+
 ## [0.15.0] - 2026-10-03
 
 ### Added

@@ -48,7 +48,12 @@ oracle(テスト・検査・fixture)を作る。各工程に「足す」操作�
    exit と出力を観測するのも、対象は製品や検査であり正当。検査やヘルパが自分自身を検証する
    のは違反。
 3. **仕様が述べた規則。** 検査が強制する規則を仕様が述べている。仕様に無い規則(例: 変更履歴の
-   日付が実在の暦日であること)を検査が強制するのは違反。
+   日付が実在の暦日であること)を検査が強制するのは違反。規則は oracle と独立の理由で仕様に
+   置かれていなければならない。oracle に強制する対象を与えるためだけに仕様へ規則を書き足すと、
+   仕様に書けば何でも証拠になる循環になるので、そうして書き足した規則は数えない。判定は、
+   その規則を仕様に置く理由が「oracle が要る」以外に言えるか(例: 利用者に見える振る舞いである)。
+   出典は、指示に忠実なエージェントが CI の設定やリリース手順を仕様に書き足し、それに
+   テストを書いた事例である(2026-10-04)。
 4. **契約として宣言された表現。** oracle が固定する文言・ファイルの構造・内部の名前を、
    仕様が契約として宣言している。判定は「仕様の振る舞いを全て保ったまま行える変更で、
    この oracle は壊れるか」。壊れるなら振る舞いの証拠ではない。仕様が宣言した表現(例:
@@ -81,9 +86,10 @@ repository-design の「共有原典への移行は自動発動しない」と�
 > An oracle — a test, a check, or a fixture — counts as evidence only when the condition it
 > produces has a named operational producer in a supported environment (untrusted input arriving
 > at a boundary is one), its subject is the product or a check rather than the oracle itself, the
-> rule it enforces is stated by the specification, and every wording, file layout, or internal
-> name it pins is declared there as a contract. An oracle that fails any of these is a cost: do
-> not add it, keep it in a change under review, or demand it.
+> rule it enforces is stated by the specification for a reason other than giving the oracle
+> something to enforce, and every wording, file layout, or internal name it pins is declared there
+> as a contract. An oracle that fails any of these is a cost: do not add it, keep it in a change
+> under review, or demand it.
 >
 > A requirement whose only oracle would fail these conditions is not mechanically verifiable:
 > when it is not code, verify it by a human-run check or by the platform's own checker; when it
@@ -145,9 +151,10 @@ Rules に加える規範(3 行。各行は 1 つの命令とその帰結):
 - Count an oracle — a test, a check, or a fixture — as evidence only when the condition it
   produces has a named operational producer in a supported environment (untrusted input arriving
   at a boundary is one), its subject is the product or a check rather than the oracle itself, the
-  rule it enforces is stated by the specification, and every wording, file layout, or internal
-  name it pins is declared there as a contract; an oracle that fails any of these is a cost — do
-  not add it, keep it in the diff under review, or demand it.
+  rule it enforces is stated by the specification for a reason other than giving the oracle
+  something to enforce, and every wording, file layout, or internal name it pins is declared
+  there as a contract; an oracle that fails any of these is a cost — do not add it, keep it in
+  the diff under review, or demand it.
 - Accept a finding that demands a new oracle only when it shows that the oracle meets those
   conditions; a finding that does not becomes a recorded proposal or a documented
   disagreement, never a fix.
@@ -164,7 +171,8 @@ Judgment に加える項目(既存と同じく、太字の主張 1 文 + 説明�
   できない入力も生み手である。「仕様」は規範とする仕様文書、無ければ利用者向けの公開文書
   であり、「対応環境」はその文書が宣言するものである。
 - **oracle が測るのは対象であって、oracle の形ではない。** 自分自身を検証する検査は無限に
-  後退する。仕様に無い規則を検査が強制すると、誰も決めていない要求が製品に課される。宣言の
+  後退する。仕様に無い規則を検査が強制すると、誰も決めていない要求が製品に課される。検査に
+  強制させるためだけに仕様へ書き足した規則も、決まったように見えるだけの同じ要求である。宣言の
   無い表現を固定する oracle は、振る舞いを保つ変更で壊れるので、測っているのは振る舞いでは
   なく変更の頻度である。
 - **規模は臭いであって評決ではない。** fixture が対象より複雑なら、条件のどれかが欠けて

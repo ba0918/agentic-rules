@@ -50,9 +50,10 @@ obligation on the delegate, and here as a demand by the verifier. Each document 
 - Count an oracle — a test, a check, or a fixture — as evidence only when the condition it
   produces has a named operational producer in a supported environment (untrusted input arriving
   at a boundary is one), its subject is the product or a check rather than the oracle itself, the
-  rule it enforces is stated by the specification, and every wording, file layout, or internal
-  name it pins is declared there as a contract; an oracle that fails any of these is a cost — do
-  not add it, keep it in the diff under review, or demand it.
+  rule it enforces is stated by the specification for a reason other than giving the oracle
+  something to enforce, and every wording, file layout, or internal name it pins is declared
+  there as a contract; an oracle that fails any of these is a cost — do not add it, keep it in
+  the diff under review, or demand it.
 - Accept a finding that demands a new oracle only when it shows that the oracle meets those
   conditions; a finding that does not becomes a recorded proposal or a documented
   disagreement, never a fix.
@@ -107,9 +108,10 @@ documents; "supported environments" are what that document declares as supported
 
 **An oracle measures its subject, not its own shape.** A check that verifies itself regresses
 without end. A check that enforces a rule the specification does not state imposes on the
-product a requirement nobody decided. An oracle that pins an undeclared wording, file layout, or
-internal name breaks under a change that preserves behaviour, so what it measures is not
-behaviour but the rate of change.
+product a requirement nobody decided, and writing that rule into the specification only so that
+the check has something to enforce is the same requirement nobody decided, made to look decided.
+An oracle that pins an undeclared wording, file layout, or internal name breaks under a change
+that preserves behaviour, so what it measures is not behaviour but the rate of change.
 
 **Size is a smell, not a verdict.** A fixture more complex than its subject is a signal to look
 for a condition that is missing. A large fixture is legitimate when its subject is reachable
