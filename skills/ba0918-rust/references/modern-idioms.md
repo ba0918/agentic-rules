@@ -13,7 +13,7 @@ column. Below that version, the older form is the correct one. Versions were che
 | `once_cell::sync::OnceCell` | `std::sync::OnceLock` | 1.70 |
 | `once_cell::unsync::Lazy` | `std::cell::LazyCell` | 1.80 |
 | `atty` crate | `std::io::IsTerminal` | 1.70 |
-| `#[async_trait]` on a trait never used as `dyn` | `async fn` in the trait | 1.75 |
+| `#[async_trait]` on a trait never used as `dyn`, with no required `Send` guarantee on its futures | `async fn` in the trait | 1.75 |
 | `match` / `if let` with an early return in the `else` arm | `let ... else` | 1.65 |
 | `#[allow(lint)]` | `#[expect(lint, reason = "...")]` | 1.81 |
 | `Option::map_or(false, ...)` | `Option::is_some_and` | 1.70 |
@@ -22,8 +22,12 @@ column. Below that version, the older form is the correct one. Versions were che
 | `try!(...)` | `?` | 1.13 |
 | `"{}", x` in a format string | `"{x}"` (inline argument) | 1.58 |
 
-`async_trait` is still needed when the trait is used as `dyn Trait`: an `async fn` in a trait is
-not object-safe.
+An `async fn` in a trait is not dyn-compatible. Keep `async_trait` or an equivalent boxed-future
+interface when dynamic dispatch is required. Even without `dyn`, a plain `async fn` does not
+promise a `Send` future to generic callers. When callers need that guarantee, preserve it with
+`fn ... -> impl Future<Output = ...> + Send` or keep the existing interface; removing the macro
+alone can break callers that spawn the future on a multithreaded executor. See the
+[Rust team's explanation of async trait bounds](https://blog.rust-lang.org/2023/12/21/async-fn-rpit-in-traits/).
 
 When a new row is added, check its version in the release notes, and keep the table to forms
 an agent actually writes.

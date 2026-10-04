@@ -200,6 +200,8 @@ ba0918-design の「副作用を domain に置かない」の Rust の形であ�
 
 - std が同じことをするなら、古いクレートや古い書き方を使わない。対応表を references に置き、
   各行に安定化した版を書く。使う前に MSRV で使えるかを確かめる。
+  置換では必要な API の契約も保つ。たとえば async trait は、dyn を使わなくても、返す Future の
+  Send 保証が必要なら単なる async fn に置き換えられない。
 
 合格条件: 上の 1 点が述べられ、references に対応表がある。
 反例: MSRV が対応する版以上なのに `lazy_static!` や `once_cell` を足す。

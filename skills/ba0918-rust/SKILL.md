@@ -112,7 +112,8 @@ whether to adopt a crate at all (the skill `ba0918-reuse`).
 ### Current idioms
 
 - Do not add a crate or an older form for what the standard library or the language now does.
-  Check the version it became stable in against the MSRV first.
+  Check the version it became stable in against the MSRV first, and preserve the API guarantees
+  the callers need when replacing an older form.
 
 ### Dependencies
 
