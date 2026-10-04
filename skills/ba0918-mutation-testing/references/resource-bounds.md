@@ -91,7 +91,7 @@ drop back to the runner's user:
 ```bash
 sudo --preserve-env systemd-run --scope --quiet \
   --uid="$(id -un)" --gid="$(id -gn)" \
-  -p MemoryMax=12G -p MemorySwapMax=0 \
+  -p MemoryMax=12G -p MemorySwapMax=0 -p CPUQuota=200% \
   -- env "PATH=$PATH" <mutation tool command>
 ```
 
@@ -100,7 +100,9 @@ sudo --preserve-env systemd-run --scope --quiet \
   `sudo` runs.
 - A scope does not accept `Nice=` or `IOSchedulingClass=`; prefix the command with
   `nice -n 19 ionice -c 3` where priority matters.
-- Size the cap below the runner's memory, leaving room for the runner agent itself.
+- Size both caps to the runner: keep memory below its available memory and CPU quota below its
+  total CPU capacity, leaving room for the runner agent itself. `200%` is two cores' worth;
+  reduce it on a two-core runner, or adjust it for a larger runner.
 
 Running the job in a container (`docker run` as above, or the platform's job container with
 resource options) is the alternative where `sudo` is not available.
