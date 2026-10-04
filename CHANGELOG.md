@@ -10,6 +10,22 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Added
+
+- `ba0918-rust` — a rule for Rust code and its build configuration, routed to Rust work
+  (`required:rust`): choose the edition, toolchain and crate versions from the official source
+  or the registry rather than from memory; declare the edition, MSRV and lints once at the
+  workspace and inherit them, check the MSRV in CI and pin the toolchain; gate on the formatter's
+  check, the linter with warnings as errors over all targets, and the whole workspace's tests,
+  with lints chosen one at a time and never by group; suppress with a reasoned `expect`; typed
+  library errors instead of `String`, no unwrap outside tests and `expect` only with the reason
+  it cannot fail; no wildcard arm on the crate's own enums; unsafe forbidden where not needed and
+  every unsafe block commented; borrow before cloning; no output or exit from library code;
+  current standard-library idioms checked against the MSRV; the lockfile committed; no `todo!()`
+  or `dbg!()` left in finished work. The manifest, toolchain and gate form is in
+  `references/project-setup.md`, the rule-to-lint map in `references/lints.md`, and the
+  older-to-current idiom table in `references/modern-idioms.md`.
+
 ## [0.17.0] - 2026-10-04
 
 ### Added

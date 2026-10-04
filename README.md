@@ -110,6 +110,7 @@ comes to read each one.
 | [`ba0918-reuse`](skills/ba0918-reuse/SKILL.md) | Reuse before build: layer decomposition, an eight-rung search ladder, adopt-or-build records | `required:design` |
 | [`ba0918-gui-structure`](skills/ba0918-gui-structure/SKILL.md) | GUI screen structure: components per region, one owner per piece of state, data down and events up, one dialog state | `required:gui` |
 | [`ba0918-testing`](skills/ba0918-testing/SKILL.md) | Testing anti-patterns | its description |
+| [`ba0918-rust`](skills/ba0918-rust/SKILL.md) | Rust: versions from the source not from memory, workspace-wide declarations, fmt, clippy and test gates with lints chosen one by one, typed errors, no wildcard on owned enums, documented unsafe, no output from libraries | `required:rust` |
 
 ### Delivering changes
 
