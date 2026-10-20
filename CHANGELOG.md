@@ -10,6 +10,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+## [0.20.0] - 2026-10-20
+
 ### Changed
 
 - **BREAKING** `ba0918-diff-review` asks for more than the reason behind each group: explain what
@@ -454,7 +456,8 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 - `.claude-plugin/marketplace.json` — distribution metadata for the Claude Code plugin route.
 - CI running the validator, the validator's tests, and `npx skills-ref validate`.
 
-[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.19.0...HEAD
+[Unreleased]: https://github.com/ba0918/agentic-rules/compare/v0.20.0...HEAD
+[0.20.0]: https://github.com/ba0918/agentic-rules/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/ba0918/agentic-rules/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/ba0918/agentic-rules/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/ba0918/agentic-rules/compare/v0.16.0...v0.17.0
