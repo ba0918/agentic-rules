@@ -10,6 +10,18 @@ examples — is a breaking change and is listed under `Changed` with a **BREAKIN
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING** `ba0918-diff-review` asks for more than the reason behind each group: explain what
+  the group does — the behaviour, mechanism, or model it introduces — well enough that the reviewer
+  can judge it without reading every line, with diagrams for structure and flow, pseudocode for
+  logic, concrete before-and-after examples, and coined terms defined. Scale the explanation to the
+  consequence rather than the diff size, giving specifications and plans the fullest one. Before
+  handing it over, check the explanation against the bytes: a reader who has not seen the work
+  restates the change from the explanation alone, then compares it with the diff. A presentation
+  that carries only reasons, judgment points, and a pointer to the diff no longer satisfies the
+  rule.
+
 ## [0.19.0] - 2026-10-04
 
 ### Changed
